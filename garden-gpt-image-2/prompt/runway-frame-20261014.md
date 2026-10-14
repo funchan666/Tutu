@@ -1,0 +1,1 @@
+Original transparent circular chrome and orchid-pink ribbon avatar frame, transparent center, ribbon folds lower right and lavender star charm lower left. Fashion runway invitation mood; no text, face, or background.

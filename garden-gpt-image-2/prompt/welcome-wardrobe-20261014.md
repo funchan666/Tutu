@@ -1,0 +1,1 @@
+Original transparent 3D open wardrobe gift trunk, glossy orchid pink and lavender, lifting satin ribbon, chrome clothes hanger and three gold star coin tokens. Crisp contemporary fashion backstage mood. No text or background. Native UI overlays welcome message and granted amount.
