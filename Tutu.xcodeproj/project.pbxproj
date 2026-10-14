@@ -1,0 +1,447 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06699A782DF3DDD62CF259BF /* RoomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEC435F652A788A0F08EB8D /* RoomViews.swift */; };
+		117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBD63FE692C4012229EDFE /* BrowseViews.swift */; };
+		1AB3B4D06E35FC4376E0B6C2 /* SettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F83B3EA9972A04286AAC2 /* SettingsViews.swift */; };
+		2A1A47BD6AB3E519F6207C10 /* TutuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1587ED47D831BA823E8FC734 /* TutuApp.swift */; };
+		40E2D1E8EEAE48FC45DF31DD /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637FBB04D9A570B5B6288EF8 /* MailComposer.swift */; };
+		4BF860FDD9C0DAE760BE571C /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05F9F7BD9E5F502670AE096 /* Components.swift */; };
+		63311C560A944062AB2BB508 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B132E31CE5BAEA85D1C459 /* WalletService.swift */; };
+		63FE6F9E07722AD5774DAF50 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F316A58D53DE847DBA818ECC /* ProfileViews.swift */; };
+		6AA62EEA317A6FBFDB011C49 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EE02D4E79019B9510E679A /* AppStore.swift */; };
+		7F6464DCECC01C1B0890B631 /* MediaServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */; };
+		80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D8DA50E15561B9B5E88865B /* Assets.xcassets */; };
+		863776EA9813F71721B14EB4 /* AccountVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EB1C4D7935142077A8C7BB /* AccountVault.swift */; };
+		879D056FB9EDC1B2601481C5 /* LookViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F023FFD81FBC513DAF71C9 /* LookViews.swift */; };
+		925E24DC0B585E8919D2EFE3 /* WalletViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */; };
+		A25E6AA547B9878BC28092C4 /* ChatViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */; };
+		A718236EEDC9F0C4C2B50BEC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */; };
+		A7EB491ACF5415BC7BD3AF40 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378C292FE1097359FDB0948C /* WelcomeView.swift */; };
+		AAFEC27F17A1148510831157 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE6E12FF0DFA83EA65D9B /* CameraService.swift */; };
+		B1557116800FB82589BCED22 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F9ECD309AD0F4899EF0801 /* Models.swift */; };
+		E8406FC1B1F3DD190130AB54 /* StylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A36CEC4F9E84BE9137764B /* StylistViews.swift */; };
+		F955C0D474182123C6668E44 /* StylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		05EE02D4E79019B9510E679A /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		0ABBD63FE692C4012229EDFE /* BrowseViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViews.swift; sourceTree = "<group>"; };
+		1587ED47D831BA823E8FC734 /* TutuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutuApp.swift; sourceTree = "<group>"; };
+		22EB1C4D7935142077A8C7BB /* AccountVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVault.swift; sourceTree = "<group>"; };
+		2D8DA50E15561B9B5E88865B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		32B132E31CE5BAEA85D1C459 /* WalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
+		34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViews.swift; sourceTree = "<group>"; };
+		378C292FE1097359FDB0948C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		3AA57621CCA688DA5568FC2C /* Tutu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tutu.entitlements; sourceTree = "<group>"; };
+		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		44225B7DD0FDDA64BBE5B954 /* Tutu-Simulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tutu-Simulator.entitlements"; sourceTree = "<group>"; };
+		47F1960AD6832795FB7602F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
+		8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaServices.swift; sourceTree = "<group>"; };
+		90A36CEC4F9E84BE9137764B /* StylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistViews.swift; sourceTree = "<group>"; };
+		A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViews.swift; sourceTree = "<group>"; };
+		A4F023FFD81FBC513DAF71C9 /* LookViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookViews.swift; sourceTree = "<group>"; };
+		A9F9ECD309AD0F4899EF0801 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		AF0F83B3EA9972A04286AAC2 /* SettingsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViews.swift; sourceTree = "<group>"; };
+		BB4DE6E12FF0DFA83EA65D9B /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		C05F9F7BD9E5F502670AE096 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistService.swift; sourceTree = "<group>"; };
+		ECEC435F652A788A0F08EB8D /* RoomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViews.swift; sourceTree = "<group>"; };
+		F316A58D53DE847DBA818ECC /* ProfileViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViews.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		08ACB1019FF7343C3F3D8390 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				C05F9F7BD9E5F502670AE096 /* Components.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		18519358F754C23BB69B1FE0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BB4DE6E12FF0DFA83EA65D9B /* CameraService.swift */,
+				637FBB04D9A570B5B6288EF8 /* MailComposer.swift */,
+				8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */,
+				EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */,
+				32B132E31CE5BAEA85D1C459 /* WalletService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		26F70900D4ACA99362184EB0 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				0ABBD63FE692C4012229EDFE /* BrowseViews.swift */,
+				34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */,
+				A4F023FFD81FBC513DAF71C9 /* LookViews.swift */,
+				F316A58D53DE847DBA818ECC /* ProfileViews.swift */,
+				ECEC435F652A788A0F08EB8D /* RoomViews.swift */,
+				AF0F83B3EA9972A04286AAC2 /* SettingsViews.swift */,
+				90A36CEC4F9E84BE9137764B /* StylistViews.swift */,
+				A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */,
+				378C292FE1097359FDB0948C /* WelcomeView.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		492463D7631279A02F68F133 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1587ED47D831BA823E8FC734 /* TutuApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5BDF2E10BC3BEFB2C9FEE05E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				612ACA35758497C2F998DB6F /* Tutu.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AABE0E246FC2796F535BB8E0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2D8DA50E15561B9B5E88865B /* Assets.xcassets */,
+				3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */,
+			);
+			name = Resources;
+			path = Tutu/Resources;
+			sourceTree = "<group>";
+		};
+		C2A569B078877665B499CE8B /* Tutu */ = {
+			isa = PBXGroup;
+			children = (
+				47F1960AD6832795FB7602F0 /* Info.plist */,
+				44225B7DD0FDDA64BBE5B954 /* Tutu-Simulator.entitlements */,
+				3AA57621CCA688DA5568FC2C /* Tutu.entitlements */,
+				492463D7631279A02F68F133 /* App */,
+				F9BFEFAB506F9E944B1DBAE0 /* Core */,
+				08ACB1019FF7343C3F3D8390 /* Design */,
+				26F70900D4ACA99362184EB0 /* Features */,
+				18519358F754C23BB69B1FE0 /* Services */,
+			);
+			path = Tutu;
+			sourceTree = "<group>";
+		};
+		C92ACD06723CF0506CDA36BA = {
+			isa = PBXGroup;
+			children = (
+				AABE0E246FC2796F535BB8E0 /* Resources */,
+				C2A569B078877665B499CE8B /* Tutu */,
+				5BDF2E10BC3BEFB2C9FEE05E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F9BFEFAB506F9E944B1DBAE0 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				22EB1C4D7935142077A8C7BB /* AccountVault.swift */,
+				05EE02D4E79019B9510E679A /* AppStore.swift */,
+				A9F9ECD309AD0F4899EF0801 /* Models.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9915FD2F8F5FA085256C78BC /* Tutu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1AF90010B5A7FD9F14D709D /* Build configuration list for PBXNativeTarget "Tutu" */;
+			buildPhases = (
+				DB6F22DF9EACC1082C4BA653 /* Sources */,
+				9DB7CC228E8B743F22086189 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tutu;
+			packageProductDependencies = (
+			);
+			productName = Tutu;
+			productReference = 612ACA35758497C2F998DB6F /* Tutu.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		335CA6A7B1719ADF3D213320 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					9915FD2F8F5FA085256C78BC = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 1F69ACF6CAAE6D1974FE256A /* Build configuration list for PBXProject "Tutu" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C92ACD06723CF0506CDA36BA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9915FD2F8F5FA085256C78BC /* Tutu */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9DB7CC228E8B743F22086189 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */,
+				A718236EEDC9F0C4C2B50BEC /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DB6F22DF9EACC1082C4BA653 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				863776EA9813F71721B14EB4 /* AccountVault.swift in Sources */,
+				6AA62EEA317A6FBFDB011C49 /* AppStore.swift in Sources */,
+				117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */,
+				AAFEC27F17A1148510831157 /* CameraService.swift in Sources */,
+				A25E6AA547B9878BC28092C4 /* ChatViews.swift in Sources */,
+				4BF860FDD9C0DAE760BE571C /* Components.swift in Sources */,
+				879D056FB9EDC1B2601481C5 /* LookViews.swift in Sources */,
+				40E2D1E8EEAE48FC45DF31DD /* MailComposer.swift in Sources */,
+				7F6464DCECC01C1B0890B631 /* MediaServices.swift in Sources */,
+				B1557116800FB82589BCED22 /* Models.swift in Sources */,
+				63FE6F9E07722AD5774DAF50 /* ProfileViews.swift in Sources */,
+				06699A782DF3DDD62CF259BF /* RoomViews.swift in Sources */,
+				1AB3B4D06E35FC4376E0B6C2 /* SettingsViews.swift in Sources */,
+				F955C0D474182123C6668E44 /* StylistService.swift in Sources */,
+				E8406FC1B1F3DD190130AB54 /* StylistViews.swift in Sources */,
+				2A1A47BD6AB3E519F6207C10 /* TutuApp.swift in Sources */,
+				63311C560A944062AB2BB508 /* WalletService.swift in Sources */,
+				925E24DC0B585E8919D2EFE3 /* WalletViews.swift in Sources */,
+				A7EB491ACF5415BC7BD3AF40 /* WelcomeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		42258064936479854BFFCB0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		8936C58CF4F4A672B9B73B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		B573ECCF0092EA8BD69F3D81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Tutu/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BC10440645CA373AF811A5F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Tutu/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F69ACF6CAAE6D1974FE256A /* Build configuration list for PBXProject "Tutu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42258064936479854BFFCB0E /* Debug */,
+				8936C58CF4F4A672B9B73B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A1AF90010B5A7FD9F14D709D /* Build configuration list for PBXNativeTarget "Tutu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B573ECCF0092EA8BD69F3D81 /* Debug */,
+				BC10440645CA373AF811A5F9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 335CA6A7B1719ADF3D213320 /* Project object */;
+}

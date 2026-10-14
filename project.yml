@@ -1,0 +1,60 @@
+name: Tutu
+options:
+  bundleIdPrefix: com.tutu
+  deploymentTarget:
+    iOS: '17.0'
+  xcodeVersion: '26.0'
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    TARGETED_DEVICE_FAMILY: '1'
+    GENERATE_INFOPLIST_FILE: NO
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  Tutu:
+    type: application
+    platform: iOS
+    sources:
+      - path: Tutu
+        excludes:
+          - Resources
+      - path: Tutu/Resources
+        buildPhase: resources
+    info:
+      path: Tutu/Info.plist
+      properties:
+        CFBundleDisplayName: Tutu
+        CFBundleShortVersionString: '1.0.0'
+        CFBundleVersion: '1'
+        LSRequiresIPhoneOS: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIUserInterfaceStyle: Light
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+          UIImageName: brand-mascot
+        NSCameraUsageDescription: Take a profile photo, capture a look, or use your camera in a call.
+        NSMicrophoneUsageDescription: Record a voice message or use your microphone in a call.
+        NSPhotoLibraryUsageDescription: Choose photos and videos for your looks, album, and profile.
+        NSPhotoLibraryAddUsageDescription: Save your captured looks to your photo library.
+    entitlements:
+      path: Tutu/Tutu.entitlements
+      properties:
+        com.apple.developer.applesignin: [Default]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tutu.style
+        CODE_SIGN_STYLE: Automatic
+        "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": Tutu/Tutu-Simulator.entitlements
+        MARKETING_VERSION: '1.0.0'
+        CURRENT_PROJECT_VERSION: '1'
+schemes:
+  Tutu:
+    build:
+      targets:
+        Tutu: all
+    run:
+      config: Debug
+    archive:
+      config: Release

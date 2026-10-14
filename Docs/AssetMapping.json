@@ -1,0 +1,875 @@
+[
+  {
+    "asset": "brand-mascot",
+    "source": "sucai/image 75@2x.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "screen-background",
+    "source": "sucai/Group 903@2x.png",
+    "size": [
+      780,
+      1688
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "welcome-background",
+    "source": "sucai/Group 940@2x.png",
+    "size": [
+      780,
+      1688
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "profile-background",
+    "source": "sucai/Group 920@2x.png",
+    "size": [
+      780,
+      868
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "checkin-background",
+    "source": "sucai/Group 1024@2x.png",
+    "size": [
+      780,
+      1688
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "leaderboard-background",
+    "source": "sucai/Group 994@2x.png",
+    "size": [
+      780,
+      1520
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "heading-style-live",
+    "source": "sucai/Style Live@2x.png",
+    "size": [
+      256,
+      78
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "heading-party",
+    "source": "sucai/Party@2x.png",
+    "size": [
+      161,
+      74
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "heading-studio",
+    "source": "sucai/Create Your Look@2x.png",
+    "size": [
+      438,
+      67
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "heading-discover",
+    "source": "sucai/Discover@2x.png",
+    "size": [
+      224,
+      70
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "heading-feed",
+    "source": "sucai/Feed@2x.png",
+    "size": [
+      139,
+      67
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "heading-profile",
+    "source": "sucai/Profile@2x.png",
+    "size": [
+      186,
+      70
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-back",
+    "source": "sucai/Frame 151@2x.png",
+    "size": [
+      60,
+      60
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-close",
+    "source": "sucai/Group 945@2x.png",
+    "size": [
+      60,
+      60
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-more",
+    "source": "sucai/Group 927@2x.png",
+    "size": [
+      74,
+      74
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-search",
+    "source": "sucai/Group 954@2x.png",
+    "size": [
+      72,
+      72
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-create",
+    "source": "sucai/Group 953@2x.png",
+    "size": [
+      72,
+      72
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-settings",
+    "source": "sucai/Frame@2x.png",
+    "size": [
+      56,
+      56
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "nav-help",
+    "source": "sucai/Frame@2x(21).png",
+    "size": [
+      34,
+      34
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-live-active",
+    "source": "sucai/Frame@2x(26).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-live",
+    "source": "sucai/Frame@2x(29).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-party-active",
+    "source": "sucai/Frame 176@2x(5).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-party",
+    "source": "sucai/Frame 176@2x(1).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-studio-active",
+    "source": "sucai/Frame@2x(7).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-studio",
+    "source": "sucai/Frame@2x(1).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-discover-active",
+    "source": "sucai/Frame 178@2x(2).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-discover",
+    "source": "sucai/Frame 178@2x(5).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-profile-active",
+    "source": "sucai/Frame 175@2x.png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "tab-profile",
+    "source": "sucai/Frame 177@2x(1).png",
+    "size": [
+      64,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-content-follow",
+    "source": "sucai/Group 957@2x.png",
+    "size": [
+      70,
+      56
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-content-followed",
+    "source": "sucai/Group 956@2x.png",
+    "size": [
+      70,
+      56
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-check",
+    "source": "sucai/Group 934@2x.png",
+    "size": [
+      40,
+      40
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-selected",
+    "source": "sucai/Group 933@2x.png",
+    "size": [
+      100,
+      100
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-follow",
+    "source": "sucai/Group 931@2x.png",
+    "size": [
+      100,
+      100
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-tick",
+    "source": "sucai/Group 956@2x.png",
+    "size": [
+      70,
+      56
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "control-on",
+    "source": "sucai/Group 1019@2x.png",
+    "size": [
+      122,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "control-off",
+    "source": "sucai/Group 1018@2x.png",
+    "size": [
+      122,
+      64
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-base",
+    "source": "sucai/Group 929@2x.png",
+    "size": [
+      590,
+      100
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-email",
+    "source": "sucai/Group 941@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-login",
+    "source": "sucai/Group 946@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-register",
+    "source": "sucai/Group 947@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-next",
+    "source": "sucai/Group 948@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-done",
+    "source": "sucai/Group 950@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-entry",
+    "source": "sucai/Group 951@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-save",
+    "source": "sucai/Group 1023@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-edit",
+    "source": "sucai/Group 1017@2x.png",
+    "size": [
+      716,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-checkin",
+    "source": "sucai/Group 1025@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-add-photo",
+    "source": "sucai/Group 1028@2x.png",
+    "size": [
+      392,
+      106
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-generate",
+    "source": "sucai/Group 998@2x.png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-send",
+    "source": "sucai/Group 984@2x.png",
+    "size": [
+      692,
+      120
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-create-live",
+    "source": "sucai/Group 995@2x.png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-create-voice",
+    "source": "sucai/Group 998@2x(2).png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-start-live",
+    "source": "sucai/Group 996@2x.png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-create-room",
+    "source": "sucai/Group 999@2x.png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-search",
+    "source": "sucai/Group 1000@2x.png",
+    "size": [
+      712,
+      124
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "button-join",
+    "source": "sucai/Group 1001@2x.png",
+    "size": [
+      292,
+      60
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-recharge",
+    "source": "sucai/Group 976@2x.png",
+    "size": [
+      500,
+      92
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-trophy",
+    "source": "sucai/Group 952@2x.png",
+    "size": [
+      74,
+      89
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-photo",
+    "source": "sucai/Group 1009@2x.png",
+    "size": [
+      94,
+      94
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-mic",
+    "source": "sucai/Group 1010@2x.png",
+    "size": [
+      94,
+      94
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-camera",
+    "source": "sucai/Frame@2x(6).png",
+    "size": [
+      96,
+      96
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-calendar",
+    "source": "sucai/Frame@2x(5).png",
+    "size": [
+      44,
+      44
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-send",
+    "source": "sucai/Group 1011@2x.png",
+    "size": [
+      86,
+      86
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-voice-record",
+    "source": "sucai/Group 983@2x.png",
+    "size": [
+      190,
+      190
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-gift",
+    "source": "sucai/Group 970@2x.png",
+    "size": [
+      94,
+      94
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-room-chat",
+    "source": "sucai/Group 962@2x.png",
+    "size": [
+      76,
+      76
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-notification",
+    "source": "sucai/Group 1006@2x.png",
+    "size": [
+      112,
+      112
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-support",
+    "source": "sucai/Group 1005@2x.png",
+    "size": [
+      112,
+      112
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-female",
+    "source": "sucai/Group 905@2x.png",
+    "size": [
+      38,
+      38
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-male",
+    "source": "sucai/Group 907@2x.png",
+    "size": [
+      38,
+      38
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-like",
+    "source": "sucai/Group 1029@2x.png",
+    "size": [
+      102,
+      102
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-liked",
+    "source": "sucai/Group 1032@2x.png",
+    "size": [
+      102,
+      102
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-comment",
+    "source": "sucai/Group 1030@2x.png",
+    "size": [
+      102,
+      102
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-content-more",
+    "source": "sucai/Group 1031@2x.png",
+    "size": [
+      102,
+      102
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-online",
+    "source": "sucai/Group 923@2x.png",
+    "size": [
+      128,
+      48
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-live",
+    "source": "sucai/Group 1002@2x.png",
+    "size": [
+      116,
+      48
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-lucky-star",
+    "source": "sucai/Rectangle 792@2x.png",
+    "size": [
+      62,
+      62
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "icon-coin",
+    "source": "sucai/Rectangle 815@2x(2).png",
+    "size": [
+      180,
+      180
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "icon-flame",
+    "source": "sucai/🔥@2x.png",
+    "size": [
+      40,
+      40
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "empty-state",
+    "source": "sucai/Group 938@2x.png",
+    "size": [
+      270,
+      294
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "notification-art",
+    "source": "sucai/image 82@2x.png",
+    "size": [
+      576,
+      588
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "profile-shortcuts",
+    "source": "sucai/Group 918@2x.png",
+    "size": [
+      718,
+      184
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "popup-background",
+    "source": "sucai/Group 1020@2x.png",
+    "size": [
+      778,
+      668
+    ],
+    "bundled": false
+  },
+  {
+    "asset": "lucky-star-banner",
+    "source": "sucai/Group 959@2x.png",
+    "size": [
+      276,
+      82
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "live-banner",
+    "source": "sucai/Group 1003@2x.png",
+    "size": [
+      716,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "voice-banner",
+    "source": "sucai/Group 1004@2x.png",
+    "size": [
+      716,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-microphone",
+    "source": "sucai/image 100@2x(2).png",
+    "size": [
+      90,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-heart",
+    "source": "sucai/image 101@2x(2).png",
+    "size": [
+      90,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-bear",
+    "source": "sucai/image 102@2x.png",
+    "size": [
+      82,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-castle",
+    "source": "sucai/image 103@2x.png",
+    "size": [
+      98,
+      104
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-car",
+    "source": "sucai/image 104@2x.png",
+    "size": [
+      102,
+      96
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-flowers",
+    "source": "sucai/image 105@2x.png",
+    "size": [
+      74,
+      96
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-star",
+    "source": "sucai/image 106@2x(1).png",
+    "size": [
+      90,
+      92
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "gift-music",
+    "source": "sucai/image 107@2x.png",
+    "size": [
+      88,
+      90
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "style-minimalist",
+    "source": "sucai/Rectangle 965@2x.png",
+    "size": [
+      204,
+      288
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "style-streetwear",
+    "source": "sucai/Rectangle 966@2x.png",
+    "size": [
+      204,
+      288
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "style-vintage",
+    "source": "sucai/Rectangle 967@2x.png",
+    "size": [
+      204,
+      288
+    ],
+    "bundled": true
+  }
+]
