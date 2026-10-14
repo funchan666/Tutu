@@ -7,55 +7,271 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0042C69213717CB8FE46F5D0 /* editorial-video-09.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */; };
+		0063EAEAE5183B1160B87C45 /* editorial-photo-055.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */; };
+		034A1960C348B814E548D3CD /* editorial-photo-063.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 305978C4883B394BEE7E8D1E /* editorial-photo-063.jpg */; };
 		06699A782DF3DDD62CF259BF /* RoomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEC435F652A788A0F08EB8D /* RoomViews.swift */; };
+		07C6974415D010AF8BCA4444 /* editorial-photo-015.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 24029D202C9E8A7FD6C59EC7 /* editorial-photo-015.jpg */; };
+		07FDB6F8129296D672B1BDE1 /* editorial-video-09.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */; };
+		0B091A94E223A5C9C8528BD2 /* editorial-photo-045.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C7E4D745F2FC714D749CF640 /* editorial-photo-045.jpg */; };
+		0FDF4C1E9A1259ED4FD971EF /* editorial-photo-008.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7660CC5E94354B1481E0311D /* editorial-photo-008.jpg */; };
 		117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBD63FE692C4012229EDFE /* BrowseViews.swift */; };
+		170B72CB44C9C49C9247E3C1 /* editorial-photo-073.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49E824C2E8649F3924A3DE8D /* editorial-photo-073.jpg */; };
+		194305EAF6919DB5F9E9EFE9 /* editorial-photo-071.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 374CCB0B6AFB6C089AA112A8 /* editorial-photo-071.jpg */; };
+		19F79C20C5F0599A3ED1A1F8 /* editorial-photo-014.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 848C1307F6284AAE4A86F651 /* editorial-photo-014.jpg */; };
 		1AB3B4D06E35FC4376E0B6C2 /* SettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0F83B3EA9972A04286AAC2 /* SettingsViews.swift */; };
+		1B06B25EFF948F7543062A41 /* CoinEconomy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BEA72680318092587EECA03 /* CoinEconomy.swift */; };
+		1DC553D180B34DB6F5F3AAC1 /* editorial-photo-011.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 823ED19D3E247090668917F2 /* editorial-photo-011.jpg */; };
+		1F7EEC55D742870AE08E58A7 /* editorial-photo-005.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 502D591D61247D2D60FCF17D /* editorial-photo-005.jpg */; };
+		209050F6A11BEDC338A057FF /* editorial-video-05.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5DB482D7C4AC4BB19BFC6B5 /* editorial-video-05.mp4 */; };
+		26552E014564F8E490C3F98B /* editorial-video-12.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3ED9EDEA2BA8B470F396AC28 /* editorial-video-12.jpg */; };
+		27FBE928BD52FBDC120E8A20 /* editorial-photo-020.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5617B93F7591A7B513DC3B1A /* editorial-photo-020.jpg */; };
+		29B94C03ED3A70D4D911E761 /* editorial-photo-042.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EA0A32B237AC61A6F3D55116 /* editorial-photo-042.jpg */; };
 		2A1A47BD6AB3E519F6207C10 /* TutuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1587ED47D831BA823E8FC734 /* TutuApp.swift */; };
+		2A32B6AC1524CC448E576569 /* TutuOutfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94D067FD835BEF09D57D9346 /* TutuOutfit-Medium.ttf */; };
+		2F2A8FA54FA13E1553B62622 /* editorial-video-07.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */; };
+		2FD4974CDB9600F34ED50C2A /* editorial-photo-047.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 82E0888D11F4BDE4B7F59679 /* editorial-photo-047.jpg */; };
+		300D2A1236EE3D61B2CB86A4 /* editorial-photo-016.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 328A88E80A9B3EA532D16058 /* editorial-photo-016.jpg */; };
+		31E6601EDEB9FD7404DA148D /* CoinExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFADFE51DFDE50A2761BF3 /* CoinExperienceViews.swift */; };
+		3766D4C8DE2460C49F8B4ED2 /* editorial-video-01.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */; };
+		3EF2736961AFE377943ADBFA /* editorial-photo-040.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */; };
 		40E2D1E8EEAE48FC45DF31DD /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637FBB04D9A570B5B6288EF8 /* MailComposer.swift */; };
+		44D666F57F13459F087BA8A2 /* editorial-photo-007.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 337F8B035CFDBF5CD53A7966 /* editorial-photo-007.jpg */; };
+		459DE423339BBC1657D37034 /* editorial-photo-068.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B095E893A85B104B951880A5 /* editorial-photo-068.jpg */; };
+		48E9F7DA52F11A62B99F3049 /* editorial-video-10.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C174CDE198243D32AF8EFAF9 /* editorial-video-10.mp4 */; };
+		4AEA0158E90C71CABD4C6E2B /* editorial-video-02.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 917DD650B28755B5483CDE3A /* editorial-video-02.mp4 */; };
 		4BF860FDD9C0DAE760BE571C /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05F9F7BD9E5F502670AE096 /* Components.swift */; };
+		4E6A5BDE151441B11A241DC0 /* editorial-photo-013.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F8B91F2AC97986664B8C1B70 /* editorial-photo-013.jpg */; };
+		4E6D732919586EE3B6BB486B /* editorial-photo-039.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 28A702410035C14573062F3D /* editorial-photo-039.jpg */; };
+		5256797BF2B2C796391F55BB /* editorial-photo-064.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 422F066AE5427401FF86CDEC /* editorial-photo-064.jpg */; };
+		53DD7C5C22EBAA524EB90771 /* editorial-photo-067.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 20D8A928880D6D70F55C0582 /* editorial-photo-067.jpg */; };
+		5C78917F5BA50692B666F2A8 /* editorial-photo-024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF311ED2832B6ACA294E558B /* editorial-photo-024.jpg */; };
+		5E475C757A38A8A389E8F881 /* editorial-photo-001.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ACC8FE7B1E64FBB72C46D966 /* editorial-photo-001.jpg */; };
+		5E51206ABFC47735C52965E4 /* editorial-photo-028.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66E8F3CF373048730E7F66BE /* editorial-photo-028.jpg */; };
 		63311C560A944062AB2BB508 /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B132E31CE5BAEA85D1C459 /* WalletService.swift */; };
+		6350CCD43AD74A9CD45CBA6D /* editorial-photo-036.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5FB39181DE748041A50741EE /* editorial-photo-036.jpg */; };
+		635B523E34DE2D4B8F590D06 /* editorial-photo-072.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5268FDD5918B6CA0EC1F4FEC /* editorial-photo-072.jpg */; };
 		63FE6F9E07722AD5774DAF50 /* ProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F316A58D53DE847DBA818ECC /* ProfileViews.swift */; };
+		64C345ED5E8D7E3EE30474A0 /* editorial-photo-054.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D9BB76061CE1F1E389CF5E08 /* editorial-photo-054.jpg */; };
+		67B88DA435041FB69313450C /* editorial-photo-049.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EE51A9D9B244168D83873CD /* editorial-photo-049.jpg */; };
 		6AA62EEA317A6FBFDB011C49 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EE02D4E79019B9510E679A /* AppStore.swift */; };
+		6F1CCAE30837FCE4E3C7339B /* editorial-photo-004.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F83A7EE14B38B9AC4FFF8FE6 /* editorial-photo-004.jpg */; };
+		6F3211842E4192A0A804D26B /* editorial-photo-021.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 409E146AB055F3F551339930 /* editorial-photo-021.jpg */; };
+		70B69DBFDF776A784BB36746 /* editorial-photo-048.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F0167E764691BFB5B1502112 /* editorial-photo-048.jpg */; };
+		76D30A445AFCB5625B23DBE9 /* editorial-photo-029.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 165BCF6419D6D0B8213FD811 /* editorial-photo-029.jpg */; };
+		777AC80DB2126FCE1445733A /* editorial-photo-002.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 130F39E29B584A241EF91BC9 /* editorial-photo-002.jpg */; };
+		79CF83F9574CB93AAD4CEA31 /* editorial-photo-012.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5604141EEAF4FC5938E8ADDF /* editorial-photo-012.jpg */; };
+		7C5414D2A30AC28FBBB671FD /* editorial-photo-058.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0C1211DA37D102C8DBBA9A77 /* editorial-photo-058.jpg */; };
+		7CB487D8907BF2768DBA457B /* editorial-photo-041.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0AAF7DF8E6A9903664B6DD40 /* editorial-photo-041.jpg */; };
+		7D9C324B46B813438A58013F /* editorial-photo-059.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6B8AA75F1813C2AB8AE0977D /* editorial-photo-059.jpg */; };
 		7F6464DCECC01C1B0890B631 /* MediaServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */; };
+		7F9210B0859563878C591CCF /* editorial-photo-034.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 308A9D565D52CB28A3047AB5 /* editorial-photo-034.jpg */; };
 		80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D8DA50E15561B9B5E88865B /* Assets.xcassets */; };
+		85888CBDB88801966831A097 /* editorial-photo-065.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 381484A4C4B0EEEBD208C3CC /* editorial-photo-065.jpg */; };
+		85FA821544196C3431207EDE /* TutuOutfit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E15CF12320984CC67900B4FE /* TutuOutfit-SemiBold.ttf */; };
 		863776EA9813F71721B14EB4 /* AccountVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EB1C4D7935142077A8C7BB /* AccountVault.swift */; };
+		874408B161E070432CD579F3 /* editorial-photo-051.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 07544FC632D4C476D1166F32 /* editorial-photo-051.jpg */; };
 		879D056FB9EDC1B2601481C5 /* LookViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F023FFD81FBC513DAF71C9 /* LookViews.swift */; };
+		8BE3BEE11767F298F5D99814 /* editorial-photo-006.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 94E2ED874B46143CB21FDA6A /* editorial-photo-006.jpg */; };
 		925E24DC0B585E8919D2EFE3 /* WalletViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */; };
+		92F30C17711E493F13028FC3 /* editorial-video-06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C47BFD09DC1C97A2B7B2B274 /* editorial-video-06.jpg */; };
+		9859D72F767F54CE2A85D9AC /* editorial-video-08.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = A585039E0BE2BA60B8CD3A1E /* editorial-video-08.mp4 */; };
+		9A9F0CA3BE417FA0525DE037 /* Outfit.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75876D1D029D9936D67E510E /* Outfit.ttf */; };
+		9E539433C82831004F6A1967 /* editorial-photo-033.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7CBD288237619E4569728662 /* editorial-photo-033.jpg */; };
+		A19C1718DB8BF97B7CD9E9C7 /* editorial-photo-009.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5526DE1F2366B1BC9101E7CE /* editorial-photo-009.jpg */; };
+		A254552B4D24D9DCDF2DD1C3 /* editorial-video-04.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4C5149CB012F96D33B622BA0 /* editorial-video-04.mp4 */; };
 		A25E6AA547B9878BC28092C4 /* ChatViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */; };
 		A718236EEDC9F0C4C2B50BEC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */; };
 		A7EB491ACF5415BC7BD3AF40 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378C292FE1097359FDB0948C /* WelcomeView.swift */; };
+		AA460735B4023CC6455CD54E /* editorial-photo-044.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 983597FDB78176706528CE44 /* editorial-photo-044.jpg */; };
+		AA8B415665513B6355F695E9 /* editorial-video-03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AB002EE708FF41AEC715E9B9 /* editorial-video-03.jpg */; };
 		AAFEC27F17A1148510831157 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4DE6E12FF0DFA83EA65D9B /* CameraService.swift */; };
+		AB3A659195F185EA08285D1F /* editorial-photo-031.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A18A9AF222CAD9CA9F3C2C73 /* editorial-photo-031.jpg */; };
+		ABAFAF49A389541657AF9B33 /* editorial-photo-025.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DC62699C1FD685761D676F66 /* editorial-photo-025.jpg */; };
+		B07662B80D8FC28A59292DEC /* editorial-photo-043.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D1AE3C0FFC589CDC02D11076 /* editorial-photo-043.jpg */; };
+		B0A2E1B5599F7306BFF28307 /* editorial-photo-046.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 57B5017A09B7A9236AAFE604 /* editorial-photo-046.jpg */; };
 		B1557116800FB82589BCED22 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F9ECD309AD0F4899EF0801 /* Models.swift */; };
+		B23185726B889F79EB8D16EF /* editorial-photo-074.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9EA8F9AFEB29F62F52012AF1 /* editorial-photo-074.jpg */; };
+		B455DC1C9359A567E8CAB6C4 /* editorial-photo-037.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CCB44AB57F666BB84734F1F9 /* editorial-photo-037.jpg */; };
+		B471C704E8827EE5CD49E4D4 /* editorial-photo-026.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C9AF209F9EB0585B8ECDCF0C /* editorial-photo-026.jpg */; };
+		B4C04FE05C26FC2E7B2C5E3A /* editorial-photo-070.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 814EB99DE329AEB3ABE50A49 /* editorial-photo-070.jpg */; };
+		B7182EBA69691628F41C10A4 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2398377F8457F72E2B3888 /* Typography.swift */; };
+		B791DC843F2CC7063562AF3A /* editorial-video-02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7CE4368DE332BEAFD4CA7D74 /* editorial-video-02.jpg */; };
+		B7AA4D2331D21ADA434AC302 /* editorial-photo-056.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CB1AC12F3F7A0B19EF609D56 /* editorial-photo-056.jpg */; };
+		BF7A76411A511BFB1C9C2BE1 /* editorial-photo-050.jpg in Resources */ = {isa = PBXBuildFile; fileRef = DCD8F720E5DBF36EA7E56F5C /* editorial-photo-050.jpg */; };
+		C0892F920B5106806EAB38AE /* editorial-photo-019.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 67D7F29B2307EB1FB587548E /* editorial-photo-019.jpg */; };
+		C0EC3A1D854CA7A7A5CE9593 /* editorial-video-12.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F65388BD24083F56A3BF513 /* editorial-video-12.mp4 */; };
+		C179879440062BEFBE7C1DF2 /* TutuOutfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B55C58196D1EE15222466BE /* TutuOutfit-Bold.ttf */; };
+		C2FFDFEBA333D80518D5DF3F /* editorial-photo-057.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 32907EE0B009DBB4E15FFA9F /* editorial-photo-057.jpg */; };
+		C3A7E53E3BF7DFE0AB92620F /* Outfit-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2EEBABB4A005EE50BF7AE94D /* Outfit-OFL.txt */; };
+		C4FD2345E4718C6A61C50D67 /* editorial-video-07.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BF9403F4E794E98AE62C1E3E /* editorial-video-07.jpg */; };
+		C5B3A8FFB3E962C4A2EAE9DC /* editorial-photo-010.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 35016430BF0D9EAB8F3D49B0 /* editorial-photo-010.jpg */; };
+		C676B07824F00BFF714C6998 /* editorial-photo-027.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2C33B300A7870B6B990D68F1 /* editorial-photo-027.jpg */; };
+		C6A55875F5110C48C75623A2 /* editorial-video-08.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 39DFF58096DF477BAD682CB3 /* editorial-video-08.jpg */; };
+		C8F030B5D1B6D767B9D1AE7F /* editorial-photo-032.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CD7E2DBACC004659701A27CD /* editorial-photo-032.jpg */; };
+		CA1374E472675993985D4CDE /* editorial-photo-052.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF84563DF9EA1001CDE73 /* editorial-photo-052.jpg */; };
+		CA15B0E30408C60639C5A26A /* editorial-photo-062.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 503318918B50FAB93AEBBE69 /* editorial-photo-062.jpg */; };
+		CBBC0DE464340988C367B542 /* editorial-photo-022.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F11DD8755BF9F2A0DE304EF5 /* editorial-photo-022.jpg */; };
+		D1D843E7197DF7915F2CE55E /* editorial-photo-023.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B1ED68229761504116F209F8 /* editorial-photo-023.jpg */; };
+		D5347809A9CFF4C863A8C2F8 /* editorial-photo-030.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 278A5F13BA80F8636E926552 /* editorial-photo-030.jpg */; };
+		D65D9C5EF53222AC9B6370D3 /* editorial-photo-018.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6A7CEFF666F1144A1B77EFA6 /* editorial-photo-018.jpg */; };
+		D747D72BE500E334AEA112B8 /* EditorialCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 3F874230DA0208C93EF66EAA /* EditorialCatalog.json */; };
+		D8520E59FEC400BD3C2B01DD /* editorial-photo-053.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 70FE7FC7DE0E3F1AAB31EF9C /* editorial-photo-053.jpg */; };
+		D86872E8C77E203F486B495D /* editorial-video-10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E1C1F398876A41400DB84EF /* editorial-video-10.jpg */; };
+		D96E3AEF29821FF508625679 /* editorial-video-06.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 546B8D7442DAF43D26C8BD18 /* editorial-video-06.mp4 */; };
+		DA7417E2E3C4EAFA38CDCD40 /* editorial-video-11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 17905B9FDBE90C3D9018827E /* editorial-video-11.jpg */; };
+		DFDC0F73E2CEF2AAEEBE910B /* editorial-photo-066.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0553B5AF7FF8BF34E6030CFD /* editorial-photo-066.jpg */; };
+		E374FAA369E10648B1368689 /* editorial-video-05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 11B88696F23B13652284B85A /* editorial-video-05.jpg */; };
+		E636302B05B1944677F7783C /* editorial-video-04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 45E317C0889843EF1196AD85 /* editorial-video-04.jpg */; };
+		E6BEA596750900418AD42E3C /* editorial-video-01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1016B9175A4F348EBF7C9324 /* editorial-video-01.jpg */; };
 		E8406FC1B1F3DD190130AB54 /* StylistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A36CEC4F9E84BE9137764B /* StylistViews.swift */; };
+		E8C8D6152D67C60D5173881D /* editorial-photo-038.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AA60654C10D49BD6CEE7973B /* editorial-photo-038.jpg */; };
+		E9DA22619BEC9FD5FFAD40EB /* TutuOutfit-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A109CA3DBCF096843CA2C6DF /* TutuOutfit-Regular.ttf */; };
+		EAC6E1AB1BAB7CE8F9A97FB7 /* editorial-photo-061.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EF7A7CA28C6A999B7618C8A2 /* editorial-photo-061.jpg */; };
+		F107B86B9271B99A6A50227C /* editorial-video-03.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 1A5489AB6076E30F00120E8A /* editorial-video-03.mp4 */; };
+		F16FB11B072999F58911043F /* editorial-photo-003.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B088C245947AA343BE3DEE20 /* editorial-photo-003.jpg */; };
+		F69F9415EA16D1F7BCE43A64 /* editorial-photo-017.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2DCFA8E82E1414246283833C /* editorial-photo-017.jpg */; };
+		F6A058AF635D866B15412499 /* editorial-video-11.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */; };
+		F73FB17282222A9C3CBA4B67 /* editorial-photo-060.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B30FE09AB11D3BF5E2986654 /* editorial-photo-060.jpg */; };
 		F955C0D474182123C6668E44 /* StylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */; };
+		FC5D95CE6743D7F8A6B8C681 /* editorial-photo-069.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */; };
+		FCA025953334CB898E6D6182 /* editorial-photo-035.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6941F07523BEA6F8ECB471DF /* editorial-photo-035.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0553B5AF7FF8BF34E6030CFD /* editorial-photo-066.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-066.jpg"; sourceTree = "<group>"; };
 		05EE02D4E79019B9510E679A /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		07544FC632D4C476D1166F32 /* editorial-photo-051.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-051.jpg"; sourceTree = "<group>"; };
+		0A2398377F8457F72E2B3888 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		0AAF7DF8E6A9903664B6DD40 /* editorial-photo-041.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-041.jpg"; sourceTree = "<group>"; };
 		0ABBD63FE692C4012229EDFE /* BrowseViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViews.swift; sourceTree = "<group>"; };
+		0C1211DA37D102C8DBBA9A77 /* editorial-photo-058.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-058.jpg"; sourceTree = "<group>"; };
+		1016B9175A4F348EBF7C9324 /* editorial-video-01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-01.jpg"; sourceTree = "<group>"; };
+		11B88696F23B13652284B85A /* editorial-video-05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-05.jpg"; sourceTree = "<group>"; };
+		130F39E29B584A241EF91BC9 /* editorial-photo-002.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-002.jpg"; sourceTree = "<group>"; };
 		1587ED47D831BA823E8FC734 /* TutuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutuApp.swift; sourceTree = "<group>"; };
+		165BCF6419D6D0B8213FD811 /* editorial-photo-029.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-029.jpg"; sourceTree = "<group>"; };
+		17905B9FDBE90C3D9018827E /* editorial-video-11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-11.jpg"; sourceTree = "<group>"; };
+		1A5489AB6076E30F00120E8A /* editorial-video-03.mp4 */ = {isa = PBXFileReference; path = "editorial-video-03.mp4"; sourceTree = "<group>"; };
+		20D8A928880D6D70F55C0582 /* editorial-photo-067.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-067.jpg"; sourceTree = "<group>"; };
 		22EB1C4D7935142077A8C7BB /* AccountVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVault.swift; sourceTree = "<group>"; };
+		24029D202C9E8A7FD6C59EC7 /* editorial-photo-015.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-015.jpg"; sourceTree = "<group>"; };
+		278A5F13BA80F8636E926552 /* editorial-photo-030.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-030.jpg"; sourceTree = "<group>"; };
+		28A702410035C14573062F3D /* editorial-photo-039.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-039.jpg"; sourceTree = "<group>"; };
+		2C33B300A7870B6B990D68F1 /* editorial-photo-027.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-027.jpg"; sourceTree = "<group>"; };
 		2D8DA50E15561B9B5E88865B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2DCFA8E82E1414246283833C /* editorial-photo-017.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-017.jpg"; sourceTree = "<group>"; };
+		2EEBABB4A005EE50BF7AE94D /* Outfit-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Outfit-OFL.txt"; sourceTree = "<group>"; };
+		305978C4883B394BEE7E8D1E /* editorial-photo-063.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-063.jpg"; sourceTree = "<group>"; };
+		308A9D565D52CB28A3047AB5 /* editorial-photo-034.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-034.jpg"; sourceTree = "<group>"; };
+		328A88E80A9B3EA532D16058 /* editorial-photo-016.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-016.jpg"; sourceTree = "<group>"; };
+		32907EE0B009DBB4E15FFA9F /* editorial-photo-057.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-057.jpg"; sourceTree = "<group>"; };
 		32B132E31CE5BAEA85D1C459 /* WalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
+		337F8B035CFDBF5CD53A7966 /* editorial-photo-007.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-007.jpg"; sourceTree = "<group>"; };
 		34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViews.swift; sourceTree = "<group>"; };
+		35016430BF0D9EAB8F3D49B0 /* editorial-photo-010.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-010.jpg"; sourceTree = "<group>"; };
+		374CCB0B6AFB6C089AA112A8 /* editorial-photo-071.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-071.jpg"; sourceTree = "<group>"; };
 		378C292FE1097359FDB0948C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		381484A4C4B0EEEBD208C3CC /* editorial-photo-065.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-065.jpg"; sourceTree = "<group>"; };
+		39DFF58096DF477BAD682CB3 /* editorial-video-08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-08.jpg"; sourceTree = "<group>"; };
 		3AA57621CCA688DA5568FC2C /* Tutu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tutu.entitlements; sourceTree = "<group>"; };
 		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3ED9EDEA2BA8B470F396AC28 /* editorial-video-12.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-12.jpg"; sourceTree = "<group>"; };
+		3F65388BD24083F56A3BF513 /* editorial-video-12.mp4 */ = {isa = PBXFileReference; path = "editorial-video-12.mp4"; sourceTree = "<group>"; };
+		3F874230DA0208C93EF66EAA /* EditorialCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EditorialCatalog.json; sourceTree = "<group>"; };
+		409E146AB055F3F551339930 /* editorial-photo-021.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-021.jpg"; sourceTree = "<group>"; };
+		422F066AE5427401FF86CDEC /* editorial-photo-064.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-064.jpg"; sourceTree = "<group>"; };
 		44225B7DD0FDDA64BBE5B954 /* Tutu-Simulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tutu-Simulator.entitlements"; sourceTree = "<group>"; };
+		45E317C0889843EF1196AD85 /* editorial-video-04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-04.jpg"; sourceTree = "<group>"; };
 		47F1960AD6832795FB7602F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		49E824C2E8649F3924A3DE8D /* editorial-photo-073.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-073.jpg"; sourceTree = "<group>"; };
+		4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */ = {isa = PBXFileReference; path = "editorial-video-11.mp4"; sourceTree = "<group>"; };
+		4C5149CB012F96D33B622BA0 /* editorial-video-04.mp4 */ = {isa = PBXFileReference; path = "editorial-video-04.mp4"; sourceTree = "<group>"; };
+		502D591D61247D2D60FCF17D /* editorial-photo-005.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-005.jpg"; sourceTree = "<group>"; };
+		503318918B50FAB93AEBBE69 /* editorial-photo-062.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-062.jpg"; sourceTree = "<group>"; };
+		5268FDD5918B6CA0EC1F4FEC /* editorial-photo-072.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-072.jpg"; sourceTree = "<group>"; };
+		53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */ = {isa = PBXFileReference; path = "editorial-video-01.mp4"; sourceTree = "<group>"; };
+		546B8D7442DAF43D26C8BD18 /* editorial-video-06.mp4 */ = {isa = PBXFileReference; path = "editorial-video-06.mp4"; sourceTree = "<group>"; };
+		5526DE1F2366B1BC9101E7CE /* editorial-photo-009.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-009.jpg"; sourceTree = "<group>"; };
+		5604141EEAF4FC5938E8ADDF /* editorial-photo-012.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-012.jpg"; sourceTree = "<group>"; };
+		5617B93F7591A7B513DC3B1A /* editorial-photo-020.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-020.jpg"; sourceTree = "<group>"; };
+		57B5017A09B7A9236AAFE604 /* editorial-photo-046.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-046.jpg"; sourceTree = "<group>"; };
+		58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-09.jpg"; sourceTree = "<group>"; };
+		5B55C58196D1EE15222466BE /* TutuOutfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Bold.ttf"; sourceTree = "<group>"; };
+		5FB39181DE748041A50741EE /* editorial-photo-036.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-036.jpg"; sourceTree = "<group>"; };
 		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
+		66E8F3CF373048730E7F66BE /* editorial-photo-028.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-028.jpg"; sourceTree = "<group>"; };
+		67D7F29B2307EB1FB587548E /* editorial-photo-019.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-019.jpg"; sourceTree = "<group>"; };
+		6941F07523BEA6F8ECB471DF /* editorial-photo-035.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-035.jpg"; sourceTree = "<group>"; };
+		6A7CEFF666F1144A1B77EFA6 /* editorial-photo-018.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-018.jpg"; sourceTree = "<group>"; };
+		6B8AA75F1813C2AB8AE0977D /* editorial-photo-059.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-059.jpg"; sourceTree = "<group>"; };
+		6E1C1F398876A41400DB84EF /* editorial-video-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-10.jpg"; sourceTree = "<group>"; };
+		70FE7FC7DE0E3F1AAB31EF9C /* editorial-photo-053.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-053.jpg"; sourceTree = "<group>"; };
+		75876D1D029D9936D67E510E /* Outfit.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit.ttf; sourceTree = "<group>"; };
+		7660CC5E94354B1481E0311D /* editorial-photo-008.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-008.jpg"; sourceTree = "<group>"; };
+		7BEA72680318092587EECA03 /* CoinEconomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinEconomy.swift; sourceTree = "<group>"; };
+		7CBD288237619E4569728662 /* editorial-photo-033.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-033.jpg"; sourceTree = "<group>"; };
+		7CE4368DE332BEAFD4CA7D74 /* editorial-video-02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-02.jpg"; sourceTree = "<group>"; };
+		7EDFADFE51DFDE50A2761BF3 /* CoinExperienceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinExperienceViews.swift; sourceTree = "<group>"; };
+		814EB99DE329AEB3ABE50A49 /* editorial-photo-070.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-070.jpg"; sourceTree = "<group>"; };
+		823ED19D3E247090668917F2 /* editorial-photo-011.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-011.jpg"; sourceTree = "<group>"; };
+		82E0888D11F4BDE4B7F59679 /* editorial-photo-047.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-047.jpg"; sourceTree = "<group>"; };
+		848C1307F6284AAE4A86F651 /* editorial-photo-014.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-014.jpg"; sourceTree = "<group>"; };
 		8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaServices.swift; sourceTree = "<group>"; };
+		8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-069.jpg"; sourceTree = "<group>"; };
+		8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-040.jpg"; sourceTree = "<group>"; };
 		90A36CEC4F9E84BE9137764B /* StylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistViews.swift; sourceTree = "<group>"; };
+		917DD650B28755B5483CDE3A /* editorial-video-02.mp4 */ = {isa = PBXFileReference; path = "editorial-video-02.mp4"; sourceTree = "<group>"; };
+		94D067FD835BEF09D57D9346 /* TutuOutfit-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Medium.ttf"; sourceTree = "<group>"; };
+		94E2ED874B46143CB21FDA6A /* editorial-photo-006.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-006.jpg"; sourceTree = "<group>"; };
+		954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-055.jpg"; sourceTree = "<group>"; };
+		983597FDB78176706528CE44 /* editorial-photo-044.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-044.jpg"; sourceTree = "<group>"; };
+		9EA8F9AFEB29F62F52012AF1 /* editorial-photo-074.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-074.jpg"; sourceTree = "<group>"; };
+		9EE51A9D9B244168D83873CD /* editorial-photo-049.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-049.jpg"; sourceTree = "<group>"; };
 		A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViews.swift; sourceTree = "<group>"; };
+		A109CA3DBCF096843CA2C6DF /* TutuOutfit-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Regular.ttf"; sourceTree = "<group>"; };
+		A18A9AF222CAD9CA9F3C2C73 /* editorial-photo-031.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-031.jpg"; sourceTree = "<group>"; };
 		A4F023FFD81FBC513DAF71C9 /* LookViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookViews.swift; sourceTree = "<group>"; };
+		A585039E0BE2BA60B8CD3A1E /* editorial-video-08.mp4 */ = {isa = PBXFileReference; path = "editorial-video-08.mp4"; sourceTree = "<group>"; };
 		A9F9ECD309AD0F4899EF0801 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		AA60654C10D49BD6CEE7973B /* editorial-photo-038.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-038.jpg"; sourceTree = "<group>"; };
+		AB002EE708FF41AEC715E9B9 /* editorial-video-03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-03.jpg"; sourceTree = "<group>"; };
+		ACC8FE7B1E64FBB72C46D966 /* editorial-photo-001.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-001.jpg"; sourceTree = "<group>"; };
 		AF0F83B3EA9972A04286AAC2 /* SettingsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViews.swift; sourceTree = "<group>"; };
+		B088C245947AA343BE3DEE20 /* editorial-photo-003.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-003.jpg"; sourceTree = "<group>"; };
+		B095E893A85B104B951880A5 /* editorial-photo-068.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-068.jpg"; sourceTree = "<group>"; };
+		B1ED68229761504116F209F8 /* editorial-photo-023.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-023.jpg"; sourceTree = "<group>"; };
+		B30FE09AB11D3BF5E2986654 /* editorial-photo-060.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-060.jpg"; sourceTree = "<group>"; };
 		BB4DE6E12FF0DFA83EA65D9B /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		BC3DF84563DF9EA1001CDE73 /* editorial-photo-052.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-052.jpg"; sourceTree = "<group>"; };
+		BF311ED2832B6ACA294E558B /* editorial-photo-024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-024.jpg"; sourceTree = "<group>"; };
+		BF9403F4E794E98AE62C1E3E /* editorial-video-07.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-07.jpg"; sourceTree = "<group>"; };
 		C05F9F7BD9E5F502670AE096 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		C174CDE198243D32AF8EFAF9 /* editorial-video-10.mp4 */ = {isa = PBXFileReference; path = "editorial-video-10.mp4"; sourceTree = "<group>"; };
+		C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */ = {isa = PBXFileReference; path = "editorial-video-07.mp4"; sourceTree = "<group>"; };
+		C47BFD09DC1C97A2B7B2B274 /* editorial-video-06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-06.jpg"; sourceTree = "<group>"; };
+		C5DB482D7C4AC4BB19BFC6B5 /* editorial-video-05.mp4 */ = {isa = PBXFileReference; path = "editorial-video-05.mp4"; sourceTree = "<group>"; };
+		C7E4D745F2FC714D749CF640 /* editorial-photo-045.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-045.jpg"; sourceTree = "<group>"; };
+		C9AF209F9EB0585B8ECDCF0C /* editorial-photo-026.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-026.jpg"; sourceTree = "<group>"; };
+		CB1AC12F3F7A0B19EF609D56 /* editorial-photo-056.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-056.jpg"; sourceTree = "<group>"; };
+		CCB44AB57F666BB84734F1F9 /* editorial-photo-037.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-037.jpg"; sourceTree = "<group>"; };
+		CD7E2DBACC004659701A27CD /* editorial-photo-032.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-032.jpg"; sourceTree = "<group>"; };
+		D1AE3C0FFC589CDC02D11076 /* editorial-photo-043.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-043.jpg"; sourceTree = "<group>"; };
+		D9BB76061CE1F1E389CF5E08 /* editorial-photo-054.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-054.jpg"; sourceTree = "<group>"; };
+		DC62699C1FD685761D676F66 /* editorial-photo-025.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-025.jpg"; sourceTree = "<group>"; };
+		DCD8F720E5DBF36EA7E56F5C /* editorial-photo-050.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-050.jpg"; sourceTree = "<group>"; };
+		E15CF12320984CC67900B4FE /* TutuOutfit-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-SemiBold.ttf"; sourceTree = "<group>"; };
+		E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */ = {isa = PBXFileReference; path = "editorial-video-09.mp4"; sourceTree = "<group>"; };
+		EA0A32B237AC61A6F3D55116 /* editorial-photo-042.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-042.jpg"; sourceTree = "<group>"; };
 		EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistService.swift; sourceTree = "<group>"; };
 		ECEC435F652A788A0F08EB8D /* RoomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViews.swift; sourceTree = "<group>"; };
+		EF7A7CA28C6A999B7618C8A2 /* editorial-photo-061.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-061.jpg"; sourceTree = "<group>"; };
+		F0167E764691BFB5B1502112 /* editorial-photo-048.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-048.jpg"; sourceTree = "<group>"; };
+		F11DD8755BF9F2A0DE304EF5 /* editorial-photo-022.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-022.jpg"; sourceTree = "<group>"; };
 		F316A58D53DE847DBA818ECC /* ProfileViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViews.swift; sourceTree = "<group>"; };
+		F83A7EE14B38B9AC4FFF8FE6 /* editorial-photo-004.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-004.jpg"; sourceTree = "<group>"; };
+		F8B91F2AC97986664B8C1B70 /* editorial-photo-013.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-013.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -63,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				C05F9F7BD9E5F502670AE096 /* Components.swift */,
+				0A2398377F8457F72E2B3888 /* Typography.swift */,
 			);
 			path = Design;
 			sourceTree = "<group>";
@@ -84,6 +301,7 @@
 			children = (
 				0ABBD63FE692C4012229EDFE /* BrowseViews.swift */,
 				34E0D8D16AEBFA86BD02E85C /* ChatViews.swift */,
+				7EDFADFE51DFDE50A2761BF3 /* CoinExperienceViews.swift */,
 				A4F023FFD81FBC513DAF71C9 /* LookViews.swift */,
 				F316A58D53DE847DBA818ECC /* ProfileViews.swift */,
 				ECEC435F652A788A0F08EB8D /* RoomViews.swift */,
@@ -93,6 +311,112 @@
 				378C292FE1097359FDB0948C /* WelcomeView.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		38F60965054D1F2DB14B34AB /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				ACC8FE7B1E64FBB72C46D966 /* editorial-photo-001.jpg */,
+				130F39E29B584A241EF91BC9 /* editorial-photo-002.jpg */,
+				B088C245947AA343BE3DEE20 /* editorial-photo-003.jpg */,
+				F83A7EE14B38B9AC4FFF8FE6 /* editorial-photo-004.jpg */,
+				502D591D61247D2D60FCF17D /* editorial-photo-005.jpg */,
+				94E2ED874B46143CB21FDA6A /* editorial-photo-006.jpg */,
+				337F8B035CFDBF5CD53A7966 /* editorial-photo-007.jpg */,
+				7660CC5E94354B1481E0311D /* editorial-photo-008.jpg */,
+				5526DE1F2366B1BC9101E7CE /* editorial-photo-009.jpg */,
+				35016430BF0D9EAB8F3D49B0 /* editorial-photo-010.jpg */,
+				823ED19D3E247090668917F2 /* editorial-photo-011.jpg */,
+				5604141EEAF4FC5938E8ADDF /* editorial-photo-012.jpg */,
+				F8B91F2AC97986664B8C1B70 /* editorial-photo-013.jpg */,
+				848C1307F6284AAE4A86F651 /* editorial-photo-014.jpg */,
+				24029D202C9E8A7FD6C59EC7 /* editorial-photo-015.jpg */,
+				328A88E80A9B3EA532D16058 /* editorial-photo-016.jpg */,
+				2DCFA8E82E1414246283833C /* editorial-photo-017.jpg */,
+				6A7CEFF666F1144A1B77EFA6 /* editorial-photo-018.jpg */,
+				67D7F29B2307EB1FB587548E /* editorial-photo-019.jpg */,
+				5617B93F7591A7B513DC3B1A /* editorial-photo-020.jpg */,
+				409E146AB055F3F551339930 /* editorial-photo-021.jpg */,
+				F11DD8755BF9F2A0DE304EF5 /* editorial-photo-022.jpg */,
+				B1ED68229761504116F209F8 /* editorial-photo-023.jpg */,
+				BF311ED2832B6ACA294E558B /* editorial-photo-024.jpg */,
+				DC62699C1FD685761D676F66 /* editorial-photo-025.jpg */,
+				C9AF209F9EB0585B8ECDCF0C /* editorial-photo-026.jpg */,
+				2C33B300A7870B6B990D68F1 /* editorial-photo-027.jpg */,
+				66E8F3CF373048730E7F66BE /* editorial-photo-028.jpg */,
+				165BCF6419D6D0B8213FD811 /* editorial-photo-029.jpg */,
+				278A5F13BA80F8636E926552 /* editorial-photo-030.jpg */,
+				A18A9AF222CAD9CA9F3C2C73 /* editorial-photo-031.jpg */,
+				CD7E2DBACC004659701A27CD /* editorial-photo-032.jpg */,
+				7CBD288237619E4569728662 /* editorial-photo-033.jpg */,
+				308A9D565D52CB28A3047AB5 /* editorial-photo-034.jpg */,
+				6941F07523BEA6F8ECB471DF /* editorial-photo-035.jpg */,
+				5FB39181DE748041A50741EE /* editorial-photo-036.jpg */,
+				CCB44AB57F666BB84734F1F9 /* editorial-photo-037.jpg */,
+				AA60654C10D49BD6CEE7973B /* editorial-photo-038.jpg */,
+				28A702410035C14573062F3D /* editorial-photo-039.jpg */,
+				8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */,
+				0AAF7DF8E6A9903664B6DD40 /* editorial-photo-041.jpg */,
+				EA0A32B237AC61A6F3D55116 /* editorial-photo-042.jpg */,
+				D1AE3C0FFC589CDC02D11076 /* editorial-photo-043.jpg */,
+				983597FDB78176706528CE44 /* editorial-photo-044.jpg */,
+				C7E4D745F2FC714D749CF640 /* editorial-photo-045.jpg */,
+				57B5017A09B7A9236AAFE604 /* editorial-photo-046.jpg */,
+				82E0888D11F4BDE4B7F59679 /* editorial-photo-047.jpg */,
+				F0167E764691BFB5B1502112 /* editorial-photo-048.jpg */,
+				9EE51A9D9B244168D83873CD /* editorial-photo-049.jpg */,
+				DCD8F720E5DBF36EA7E56F5C /* editorial-photo-050.jpg */,
+				07544FC632D4C476D1166F32 /* editorial-photo-051.jpg */,
+				BC3DF84563DF9EA1001CDE73 /* editorial-photo-052.jpg */,
+				70FE7FC7DE0E3F1AAB31EF9C /* editorial-photo-053.jpg */,
+				D9BB76061CE1F1E389CF5E08 /* editorial-photo-054.jpg */,
+				954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */,
+				CB1AC12F3F7A0B19EF609D56 /* editorial-photo-056.jpg */,
+				32907EE0B009DBB4E15FFA9F /* editorial-photo-057.jpg */,
+				0C1211DA37D102C8DBBA9A77 /* editorial-photo-058.jpg */,
+				6B8AA75F1813C2AB8AE0977D /* editorial-photo-059.jpg */,
+				B30FE09AB11D3BF5E2986654 /* editorial-photo-060.jpg */,
+				EF7A7CA28C6A999B7618C8A2 /* editorial-photo-061.jpg */,
+				503318918B50FAB93AEBBE69 /* editorial-photo-062.jpg */,
+				305978C4883B394BEE7E8D1E /* editorial-photo-063.jpg */,
+				422F066AE5427401FF86CDEC /* editorial-photo-064.jpg */,
+				381484A4C4B0EEEBD208C3CC /* editorial-photo-065.jpg */,
+				0553B5AF7FF8BF34E6030CFD /* editorial-photo-066.jpg */,
+				20D8A928880D6D70F55C0582 /* editorial-photo-067.jpg */,
+				B095E893A85B104B951880A5 /* editorial-photo-068.jpg */,
+				8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */,
+				814EB99DE329AEB3ABE50A49 /* editorial-photo-070.jpg */,
+				374CCB0B6AFB6C089AA112A8 /* editorial-photo-071.jpg */,
+				5268FDD5918B6CA0EC1F4FEC /* editorial-photo-072.jpg */,
+				49E824C2E8649F3924A3DE8D /* editorial-photo-073.jpg */,
+				9EA8F9AFEB29F62F52012AF1 /* editorial-photo-074.jpg */,
+				1016B9175A4F348EBF7C9324 /* editorial-video-01.jpg */,
+				53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */,
+				7CE4368DE332BEAFD4CA7D74 /* editorial-video-02.jpg */,
+				917DD650B28755B5483CDE3A /* editorial-video-02.mp4 */,
+				AB002EE708FF41AEC715E9B9 /* editorial-video-03.jpg */,
+				1A5489AB6076E30F00120E8A /* editorial-video-03.mp4 */,
+				45E317C0889843EF1196AD85 /* editorial-video-04.jpg */,
+				4C5149CB012F96D33B622BA0 /* editorial-video-04.mp4 */,
+				11B88696F23B13652284B85A /* editorial-video-05.jpg */,
+				C5DB482D7C4AC4BB19BFC6B5 /* editorial-video-05.mp4 */,
+				C47BFD09DC1C97A2B7B2B274 /* editorial-video-06.jpg */,
+				546B8D7442DAF43D26C8BD18 /* editorial-video-06.mp4 */,
+				BF9403F4E794E98AE62C1E3E /* editorial-video-07.jpg */,
+				C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */,
+				39DFF58096DF477BAD682CB3 /* editorial-video-08.jpg */,
+				A585039E0BE2BA60B8CD3A1E /* editorial-video-08.mp4 */,
+				58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */,
+				E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */,
+				6E1C1F398876A41400DB84EF /* editorial-video-10.jpg */,
+				C174CDE198243D32AF8EFAF9 /* editorial-video-10.mp4 */,
+				17905B9FDBE90C3D9018827E /* editorial-video-11.jpg */,
+				4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */,
+				3ED9EDEA2BA8B470F396AC28 /* editorial-video-12.jpg */,
+				3F65388BD24083F56A3BF513 /* editorial-video-12.mp4 */,
+				3F874230DA0208C93EF66EAA /* EditorialCatalog.json */,
+			);
+			path = Content;
 			sourceTree = "<group>";
 		};
 		492463D7631279A02F68F133 /* App */ = {
@@ -116,6 +440,8 @@
 			children = (
 				2D8DA50E15561B9B5E88865B /* Assets.xcassets */,
 				3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */,
+				38F60965054D1F2DB14B34AB /* Content */,
+				D014DB70416DEAE2D1D58B1E /* Fonts */,
 			);
 			name = Resources;
 			path = Tutu/Resources;
@@ -145,11 +471,25 @@
 			);
 			sourceTree = "<group>";
 		};
+		D014DB70416DEAE2D1D58B1E /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				2EEBABB4A005EE50BF7AE94D /* Outfit-OFL.txt */,
+				75876D1D029D9936D67E510E /* Outfit.ttf */,
+				5B55C58196D1EE15222466BE /* TutuOutfit-Bold.ttf */,
+				94D067FD835BEF09D57D9346 /* TutuOutfit-Medium.ttf */,
+				A109CA3DBCF096843CA2C6DF /* TutuOutfit-Regular.ttf */,
+				E15CF12320984CC67900B4FE /* TutuOutfit-SemiBold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		F9BFEFAB506F9E944B1DBAE0 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				22EB1C4D7935142077A8C7BB /* AccountVault.swift */,
 				05EE02D4E79019B9510E679A /* AppStore.swift */,
+				7BEA72680318092587EECA03 /* CoinEconomy.swift */,
 				A9F9ECD309AD0F4899EF0801 /* Models.swift */,
 			);
 			path = Core;
@@ -215,7 +555,112 @@
 			buildActionMask = 2147483647;
 			files = (
 				80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */,
+				D747D72BE500E334AEA112B8 /* EditorialCatalog.json in Resources */,
+				C3A7E53E3BF7DFE0AB92620F /* Outfit-OFL.txt in Resources */,
+				9A9F0CA3BE417FA0525DE037 /* Outfit.ttf in Resources */,
 				A718236EEDC9F0C4C2B50BEC /* PrivacyInfo.xcprivacy in Resources */,
+				C179879440062BEFBE7C1DF2 /* TutuOutfit-Bold.ttf in Resources */,
+				2A32B6AC1524CC448E576569 /* TutuOutfit-Medium.ttf in Resources */,
+				E9DA22619BEC9FD5FFAD40EB /* TutuOutfit-Regular.ttf in Resources */,
+				85FA821544196C3431207EDE /* TutuOutfit-SemiBold.ttf in Resources */,
+				5E475C757A38A8A389E8F881 /* editorial-photo-001.jpg in Resources */,
+				777AC80DB2126FCE1445733A /* editorial-photo-002.jpg in Resources */,
+				F16FB11B072999F58911043F /* editorial-photo-003.jpg in Resources */,
+				6F1CCAE30837FCE4E3C7339B /* editorial-photo-004.jpg in Resources */,
+				1F7EEC55D742870AE08E58A7 /* editorial-photo-005.jpg in Resources */,
+				8BE3BEE11767F298F5D99814 /* editorial-photo-006.jpg in Resources */,
+				44D666F57F13459F087BA8A2 /* editorial-photo-007.jpg in Resources */,
+				0FDF4C1E9A1259ED4FD971EF /* editorial-photo-008.jpg in Resources */,
+				A19C1718DB8BF97B7CD9E9C7 /* editorial-photo-009.jpg in Resources */,
+				C5B3A8FFB3E962C4A2EAE9DC /* editorial-photo-010.jpg in Resources */,
+				1DC553D180B34DB6F5F3AAC1 /* editorial-photo-011.jpg in Resources */,
+				79CF83F9574CB93AAD4CEA31 /* editorial-photo-012.jpg in Resources */,
+				4E6A5BDE151441B11A241DC0 /* editorial-photo-013.jpg in Resources */,
+				19F79C20C5F0599A3ED1A1F8 /* editorial-photo-014.jpg in Resources */,
+				07C6974415D010AF8BCA4444 /* editorial-photo-015.jpg in Resources */,
+				300D2A1236EE3D61B2CB86A4 /* editorial-photo-016.jpg in Resources */,
+				F69F9415EA16D1F7BCE43A64 /* editorial-photo-017.jpg in Resources */,
+				D65D9C5EF53222AC9B6370D3 /* editorial-photo-018.jpg in Resources */,
+				C0892F920B5106806EAB38AE /* editorial-photo-019.jpg in Resources */,
+				27FBE928BD52FBDC120E8A20 /* editorial-photo-020.jpg in Resources */,
+				6F3211842E4192A0A804D26B /* editorial-photo-021.jpg in Resources */,
+				CBBC0DE464340988C367B542 /* editorial-photo-022.jpg in Resources */,
+				D1D843E7197DF7915F2CE55E /* editorial-photo-023.jpg in Resources */,
+				5C78917F5BA50692B666F2A8 /* editorial-photo-024.jpg in Resources */,
+				ABAFAF49A389541657AF9B33 /* editorial-photo-025.jpg in Resources */,
+				B471C704E8827EE5CD49E4D4 /* editorial-photo-026.jpg in Resources */,
+				C676B07824F00BFF714C6998 /* editorial-photo-027.jpg in Resources */,
+				5E51206ABFC47735C52965E4 /* editorial-photo-028.jpg in Resources */,
+				76D30A445AFCB5625B23DBE9 /* editorial-photo-029.jpg in Resources */,
+				D5347809A9CFF4C863A8C2F8 /* editorial-photo-030.jpg in Resources */,
+				AB3A659195F185EA08285D1F /* editorial-photo-031.jpg in Resources */,
+				C8F030B5D1B6D767B9D1AE7F /* editorial-photo-032.jpg in Resources */,
+				9E539433C82831004F6A1967 /* editorial-photo-033.jpg in Resources */,
+				7F9210B0859563878C591CCF /* editorial-photo-034.jpg in Resources */,
+				FCA025953334CB898E6D6182 /* editorial-photo-035.jpg in Resources */,
+				6350CCD43AD74A9CD45CBA6D /* editorial-photo-036.jpg in Resources */,
+				B455DC1C9359A567E8CAB6C4 /* editorial-photo-037.jpg in Resources */,
+				E8C8D6152D67C60D5173881D /* editorial-photo-038.jpg in Resources */,
+				4E6D732919586EE3B6BB486B /* editorial-photo-039.jpg in Resources */,
+				3EF2736961AFE377943ADBFA /* editorial-photo-040.jpg in Resources */,
+				7CB487D8907BF2768DBA457B /* editorial-photo-041.jpg in Resources */,
+				29B94C03ED3A70D4D911E761 /* editorial-photo-042.jpg in Resources */,
+				B07662B80D8FC28A59292DEC /* editorial-photo-043.jpg in Resources */,
+				AA460735B4023CC6455CD54E /* editorial-photo-044.jpg in Resources */,
+				0B091A94E223A5C9C8528BD2 /* editorial-photo-045.jpg in Resources */,
+				B0A2E1B5599F7306BFF28307 /* editorial-photo-046.jpg in Resources */,
+				2FD4974CDB9600F34ED50C2A /* editorial-photo-047.jpg in Resources */,
+				70B69DBFDF776A784BB36746 /* editorial-photo-048.jpg in Resources */,
+				67B88DA435041FB69313450C /* editorial-photo-049.jpg in Resources */,
+				BF7A76411A511BFB1C9C2BE1 /* editorial-photo-050.jpg in Resources */,
+				874408B161E070432CD579F3 /* editorial-photo-051.jpg in Resources */,
+				CA1374E472675993985D4CDE /* editorial-photo-052.jpg in Resources */,
+				D8520E59FEC400BD3C2B01DD /* editorial-photo-053.jpg in Resources */,
+				64C345ED5E8D7E3EE30474A0 /* editorial-photo-054.jpg in Resources */,
+				0063EAEAE5183B1160B87C45 /* editorial-photo-055.jpg in Resources */,
+				B7AA4D2331D21ADA434AC302 /* editorial-photo-056.jpg in Resources */,
+				C2FFDFEBA333D80518D5DF3F /* editorial-photo-057.jpg in Resources */,
+				7C5414D2A30AC28FBBB671FD /* editorial-photo-058.jpg in Resources */,
+				7D9C324B46B813438A58013F /* editorial-photo-059.jpg in Resources */,
+				F73FB17282222A9C3CBA4B67 /* editorial-photo-060.jpg in Resources */,
+				EAC6E1AB1BAB7CE8F9A97FB7 /* editorial-photo-061.jpg in Resources */,
+				CA15B0E30408C60639C5A26A /* editorial-photo-062.jpg in Resources */,
+				034A1960C348B814E548D3CD /* editorial-photo-063.jpg in Resources */,
+				5256797BF2B2C796391F55BB /* editorial-photo-064.jpg in Resources */,
+				85888CBDB88801966831A097 /* editorial-photo-065.jpg in Resources */,
+				DFDC0F73E2CEF2AAEEBE910B /* editorial-photo-066.jpg in Resources */,
+				53DD7C5C22EBAA524EB90771 /* editorial-photo-067.jpg in Resources */,
+				459DE423339BBC1657D37034 /* editorial-photo-068.jpg in Resources */,
+				FC5D95CE6743D7F8A6B8C681 /* editorial-photo-069.jpg in Resources */,
+				B4C04FE05C26FC2E7B2C5E3A /* editorial-photo-070.jpg in Resources */,
+				194305EAF6919DB5F9E9EFE9 /* editorial-photo-071.jpg in Resources */,
+				635B523E34DE2D4B8F590D06 /* editorial-photo-072.jpg in Resources */,
+				170B72CB44C9C49C9247E3C1 /* editorial-photo-073.jpg in Resources */,
+				B23185726B889F79EB8D16EF /* editorial-photo-074.jpg in Resources */,
+				E6BEA596750900418AD42E3C /* editorial-video-01.jpg in Resources */,
+				3766D4C8DE2460C49F8B4ED2 /* editorial-video-01.mp4 in Resources */,
+				B791DC843F2CC7063562AF3A /* editorial-video-02.jpg in Resources */,
+				4AEA0158E90C71CABD4C6E2B /* editorial-video-02.mp4 in Resources */,
+				AA8B415665513B6355F695E9 /* editorial-video-03.jpg in Resources */,
+				F107B86B9271B99A6A50227C /* editorial-video-03.mp4 in Resources */,
+				E636302B05B1944677F7783C /* editorial-video-04.jpg in Resources */,
+				A254552B4D24D9DCDF2DD1C3 /* editorial-video-04.mp4 in Resources */,
+				E374FAA369E10648B1368689 /* editorial-video-05.jpg in Resources */,
+				209050F6A11BEDC338A057FF /* editorial-video-05.mp4 in Resources */,
+				92F30C17711E493F13028FC3 /* editorial-video-06.jpg in Resources */,
+				D96E3AEF29821FF508625679 /* editorial-video-06.mp4 in Resources */,
+				C4FD2345E4718C6A61C50D67 /* editorial-video-07.jpg in Resources */,
+				2F2A8FA54FA13E1553B62622 /* editorial-video-07.mp4 in Resources */,
+				C6A55875F5110C48C75623A2 /* editorial-video-08.jpg in Resources */,
+				9859D72F767F54CE2A85D9AC /* editorial-video-08.mp4 in Resources */,
+				07FDB6F8129296D672B1BDE1 /* editorial-video-09.jpg in Resources */,
+				0042C69213717CB8FE46F5D0 /* editorial-video-09.mp4 in Resources */,
+				D86872E8C77E203F486B495D /* editorial-video-10.jpg in Resources */,
+				48E9F7DA52F11A62B99F3049 /* editorial-video-10.mp4 in Resources */,
+				DA7417E2E3C4EAFA38CDCD40 /* editorial-video-11.jpg in Resources */,
+				F6A058AF635D866B15412499 /* editorial-video-11.mp4 in Resources */,
+				26552E014564F8E490C3F98B /* editorial-video-12.jpg in Resources */,
+				C0EC3A1D854CA7A7A5CE9593 /* editorial-video-12.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +676,8 @@
 				117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */,
 				AAFEC27F17A1148510831157 /* CameraService.swift in Sources */,
 				A25E6AA547B9878BC28092C4 /* ChatViews.swift in Sources */,
+				1B06B25EFF948F7543062A41 /* CoinEconomy.swift in Sources */,
+				31E6601EDEB9FD7404DA148D /* CoinExperienceViews.swift in Sources */,
 				4BF860FDD9C0DAE760BE571C /* Components.swift in Sources */,
 				879D056FB9EDC1B2601481C5 /* LookViews.swift in Sources */,
 				40E2D1E8EEAE48FC45DF31DD /* MailComposer.swift in Sources */,
@@ -242,6 +689,7 @@
 				F955C0D474182123C6668E44 /* StylistService.swift in Sources */,
 				E8406FC1B1F3DD190130AB54 /* StylistViews.swift in Sources */,
 				2A1A47BD6AB3E519F6207C10 /* TutuApp.swift in Sources */,
+				B7182EBA69691628F41C10A4 /* Typography.swift in Sources */,
 				63311C560A944062AB2BB508 /* WalletService.swift in Sources */,
 				925E24DC0B585E8919D2EFE3 /* WalletViews.swift in Sources */,
 				A7EB491ACF5415BC7BD3AF40 /* WelcomeView.swift in Sources */,

@@ -22,17 +22,17 @@ struct SettingsView: View {
                     MenuRow(title: "Clear cache") { clearCache() }
                     MenuRow(title: "Log out", destructive: true) { confirm = "Log out" }
                     MenuRow(title: "Delete account", destructive: true) { confirm = "Delete account" }
-                    Text("Tutu · 1.0.0").font(.caption).foregroundStyle(Palette.secondary).padding(16)
+                    Text("Tutu · 1.0.0").font(.tutuCaption).foregroundStyle(Palette.secondary).padding(16)
                 }.padding(16)
             }
         }.sheet(item: $legal) { LegalWebView(page: $0) }
             .sheet(isPresented: Binding(get: { confirm != nil }, set: { if !$0 { confirm = nil } })) { confirmation }
     }
-    func row(_ title: String, value: String = "") -> some View { HStack { Text(title).font(.subheadline.bold()); Spacer(); Text(value).font(.caption).foregroundStyle(Palette.secondary); Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 14, height: 14) }.padding(20).background(.white.opacity(0.7), in: RoundedRectangle(cornerRadius: 16)) }
+    func row(_ title: String, value: String = "") -> some View { HStack { Text(title).font(.tutuSubheadline.bold()); Spacer(); Text(value).font(.tutuCaption).foregroundStyle(Palette.secondary); Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 14, height: 14) }.padding(20).background(.white.opacity(0.7), in: RoundedRectangle(cornerRadius: 16)) }
     var confirmation: some View {
         VStack(spacing: 20) {
-            Text(confirm == "Log out" ? "See you soon?" : "Delete your account?").font(.title2.bold())
-            Text(confirm == "Log out" ? "Your profile and saved looks will be here when you log back in." : "This deletes this device's account, profile, photos, looks, conversations, and wallet records. This cannot be undone. No remote account is connected.").font(.subheadline).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
+            Text(confirm == "Log out" ? "See you soon?" : "Delete your account?").font(.tutuTitle2.bold())
+            Text(confirm == "Log out" ? "Your profile and saved looks will be here when you log back in." : "This deletes this device's account, profile, photos, looks, conversations, and wallet records. This cannot be undone. No remote account is connected.").font(.tutuSubheadline).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
             PinkButton(title: confirm ?? "Continue", busy: busy) {
                 busy = true
                 Task { @MainActor in
@@ -45,7 +45,7 @@ struct SettingsView: View {
                     busy = false
                 }
             }
-            Button("Keep my account") { confirm = nil }.font(.headline).foregroundStyle(Palette.pink).disabled(busy).frame(minHeight: 44)
+            Button("Keep my account") { confirm = nil }.font(.tutuHeadline).foregroundStyle(Palette.pink).disabled(busy).frame(minHeight: 44)
         }.padding(24).background(Palette.blush).presentationDetents([.medium]).interactiveDismissDisabled(busy).overlay { NoticeOverlay() }
     }
     func toggleNotifications(_ enabled: Bool) {
@@ -83,15 +83,15 @@ struct PrivacyView: View {
         Page(title: "Privacy") {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Your space, your choice").font(.title2.bold())
+                    Text("Your space, your choice").font(.tutuTitle2.bold())
                     ArtToggle(title: "Private profile", value: preference(\.privateProfile))
                     ArtToggle(title: "Show activity", value: preference(\.showActivity))
                     ArtToggle(title: "Allow room invitations", value: preference(\.allowInvites))
-                    Text("These preferences are saved with your profile. Sharing is unavailable until a service is connected.").font(.caption).foregroundStyle(Palette.secondary)
-                    Text("Blocked members").font(.title3.bold()).padding(.top, 16)
+                    Text("These preferences are saved with your profile. Sharing is unavailable until a service is connected.").font(.tutuCaption).foregroundStyle(Palette.secondary)
+                    Text("Blocked members").font(.tutuTitle3.bold()).padding(.top, 16)
                     let blocked = store.state?.blocked ?? []
                     if blocked.isEmpty { EmptyState(title: "Your block list is empty") }
-                    ForEach(blocked.sorted(), id: \.self) { id in HStack { Avatar(person: store.person(id)); Text(store.person(id).name).font(.headline); Spacer(); Button("Unblock") { store.commit { $0.blocked.remove(id) } }.font(.subheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.panel() }
+                    ForEach(blocked.sorted(), id: \.self) { id in HStack { Avatar(person: store.person(id)); Text(store.person(id).name).font(.tutuHeadline); Spacer(); Button("Unblock") { store.commit { $0.blocked.remove(id) } }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.panel() }
                 }.padding(20)
             }
         }
@@ -109,17 +109,17 @@ struct SecurityView: View {
     var body: some View {
         Page(title: "Account & Security") {
             ScrollView { VStack(alignment: .leading, spacing: 18) {
-                Text("Your account").font(.title2.bold())
-                Text(account?.appleUserID == nil ? account?.email ?? "" : "Signed in with Apple").font(.headline)
-                Text("Your profile is saved on this device. No cloud account is connected.").font(.subheadline).foregroundStyle(Palette.secondary)
+                Text("Your account").font(.tutuTitle2.bold())
+                Text(account?.appleUserID == nil ? account?.email ?? "" : "Signed in with Apple").font(.tutuHeadline)
+                Text("Your profile is saved on this device. No cloud account is connected.").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
                 if account?.appleUserID == nil {
                     Field(title: "Current password", text: $current, secure: true)
                     Field(title: "New password", text: $new, secure: true)
                     Field(title: "Confirm new password", text: $repeated, secure: true)
-                    if !error.isEmpty { Text(error).font(.subheadline).foregroundStyle(.red) }
+                    if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(.red) }
                     PinkButton(title: "Update password", busy: busy) { changePassword() }
                 }
-                NavigationLink(value: Route.info("Account data")) { Text("About your saved data").font(.subheadline.bold()).foregroundStyle(Palette.pink).padding(.vertical, 16) }
+                NavigationLink(value: Route.info("Account data")) { Text("About your saved data").font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).padding(.vertical, 16) }
             }.padding(20) }.scrollDismissesKeyboard(.interactively)
         }.onAppear { do { account = try AccountVault.load().first { $0.id == store.sessionID } } catch { self.error = error.localizedDescription } }
     }
@@ -143,7 +143,7 @@ struct SecurityView: View {
     }
 }
 struct LanguageView: View {
-    var body: some View { Page(title: "Language") { VStack(spacing: 18) { HStack { Text("English").font(.headline); Spacer(); Artwork(name: "control-check").frame(width: 24, height: 24) }.panel(); Text("English is currently available.").font(.subheadline).foregroundStyle(Palette.secondary); Spacer() }.padding(20) } }
+    var body: some View { Page(title: "Language") { VStack(spacing: 18) { HStack { Text("English").font(.tutuHeadline); Spacer(); Artwork(name: "control-check").frame(width: 24, height: 24) }.panel(); Text("English is currently available.").font(.tutuSubheadline).foregroundStyle(Palette.secondary); Spacer() }.padding(20) } }
 }
 struct InformationView: View {
     @EnvironmentObject private var store: AppStore
@@ -151,7 +151,7 @@ struct InformationView: View {
     @State private var legal: LegalPage?
     var sections: [(String, String)] {
         switch kind {
-        case "Coins": return [("A little appreciation", "Coins let you add gifts to your backpack. Choose the recipient from a profile, chat, or room."), ("Clear pricing", "Each item shows its coin cost. A quantity of three costs three times the displayed price. Bonus coins are included in the total shown on each pack."), ("Safe delivery", "Items are deducted only when gift delivery succeeds. If delivery is unavailable, your gift stays in your backpack."), ("Apple purchases", "The amount displayed by Apple is the final local price. Pending or unverified transactions never add coins. Consumable coin purchases are not restored like subscriptions.")]
+        case "Coins": return [("Your style fund", "Unlock the Runway Ribbon avatar frame for 240 coins, or collect gifts for 40–1,800 coins each. Wear an owned gift as your profile charm at no additional cost."), ("Always free", "Messages, voice and video chats, AI style conversations, browsing, likes, comments and posting never cost coins."), ("Before you spend", "Every coin purchase shows a confirmation and your remaining balance. If you need more coins, Get Coins opens without deducting anything. Gift delivery is currently unavailable; collectibles remain yours to wear."), ("Apple purchases", "Tap a pack to get that product from Apple. The Apple purchase sheet shows the final local price. Only verified transactions add coins. Your wallet is saved on this device, and consumable coins are not restored like subscriptions."), ("Your welcome drop", "New accounts receive 360 coins once, after completing their profile and entering the home screen. Coins never expire.")]
         case "Daily Check": return [("One visit, one reward", "Check in once each calendar day using your device's current time zone. Reopening the app doesn't reset the daily limit."), ("Seven days together", "Rewards are 10, 20, 10, 20, 10, 20, then 100 coins. A missed day starts a new streak. After day seven, a new seven-day cycle begins."), ("A little progress", "Each check-in adds 10 activity points. Every 100 points adds one level. Your balance and level update across the app.")]
         case "My Level": return [("Level \(store.state?.level ?? 1)", "You have \(store.state?.points ?? 0) activity points. Your next level starts at \((store.state?.level ?? 1) * 100) points."), ("Keep showing up", "Daily Check adds 10 activity points. Levels recognise participation and do not unlock private communication.")]
         case "Community Guidelines": return [("A community for adults", "Tutu is for people aged 18 and older. Share style, music, and conversation with kindness."), ("Respect every person", "No harassment, hate, threats, impersonation, scams, or sharing another person's private information. Respect boundaries and consent."), ("Share responsibly", "Only share media you have permission to use. Sexual exploitation, nudity, graphic violence, dangerous activity, and illegal material are not permitted."), ("Keep rooms welcoming", "Hosts should remove disruptive participants. Never record or share another person's voice or image without permission."), ("Report and block", "Open the more menu on a profile, post, photo, or comment to report the exact item or block its author. A report that fails to send remains a draft; it has not reached moderators."), ("Gifts are optional", "Do not pressure anyone to buy or send gifts. Gifts do not grant a right to attention, a reply, or a private call.")]
@@ -159,7 +159,7 @@ struct InformationView: View {
         default: return [("Make yourself at home", "Explore Style Live and Party, collect inspiration in Discover, and shape your profile in your own way."), ("Keep your circle comfortable", "Follow from profiles and search. To send a private message or call, both people must follow each other and the connection must be verified."), ("Something went wrong?", "Retry a failed action after checking your connection. Unsent messages remain in the conversation. Gift delivery failures leave your inventory intact."), ("Policies and support", "For app support, email \(LegalLinks.supportEmail). For content safety, email \(LegalLinks.moderationEmail). Both contacts are listed in the linked policies.")]
         }
     }
-    var body: some View { Page(title: kind) { ScrollView { VStack(alignment: .leading, spacing: 18) { ForEach(Array(sections.enumerated()), id: \.offset) { index, section in VStack(alignment: .leading, spacing: 12) { Text(String(format: "%02d", index + 1)).font(.caption.bold()).foregroundStyle(Palette.pink); Text(section.0).font(.title3.bold()); Text(section.1).font(.subheadline).lineSpacing(5).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true) }.frame(maxWidth: .infinity, alignment: .leading).panel() }; if kind == "Help & Support" { MenuRow(title: "User Agreement") { legal = .terms }; MenuRow(title: "Privacy Policy") { legal = .privacy } } }.padding(20) } }.sheet(item: $legal) { LegalWebView(page: $0) } }
+    var body: some View { Page(title: kind) { ScrollView { VStack(alignment: .leading, spacing: 18) { ForEach(Array(sections.enumerated()), id: \.offset) { index, section in VStack(alignment: .leading, spacing: 12) { Text(String(format: "%02d", index + 1)).font(.tutuCaption.bold()).foregroundStyle(Palette.pink); Text(section.0).font(.tutuTitle3.bold()); Text(section.1).font(.tutuSubheadline).lineSpacing(5).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true) }.frame(maxWidth: .infinity, alignment: .leading).panel() }; if kind == "Help & Support" { MenuRow(title: "User Agreement") { legal = .terms }; MenuRow(title: "Privacy Policy") { legal = .privacy } } }.padding(20) } }.sheet(item: $legal) { LegalWebView(page: $0) } }
 }
 struct MemberActions: View {
     @EnvironmentObject private var store: AppStore
@@ -174,10 +174,10 @@ struct MemberActions: View {
     @State private var mail: MailDraft?
     var body: some View {
         VStack(spacing: 18) {
-            HStack { Text(reporting ? "Report \(kind)" : "More options").font(.headline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
+            HStack { Text(reporting ? "Report \(kind)" : "More options").font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
             if reporting {
-                ScrollView { VStack(spacing: 10) { ForEach(["Harassment or bullying", "Sexual or unsafe content", "Spam or scam", "Privacy violation", "Underage user", "Other"], id: \.self) { option in Button { reason = option } label: { HStack { Text(option).font(.subheadline); Spacer(); if reason == option { Artwork(name: "control-check").frame(width: 22, height: 22) } }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 12)) }.buttonStyle(.plain) }; Field(title: "Additional details", text: $detail) } }
-                if !result.isEmpty { Text(result).font(.subheadline).foregroundStyle(Palette.secondary) }
+                ScrollView { VStack(spacing: 10) { ForEach(["Harassment or bullying", "Sexual or unsafe content", "Spam or scam", "Privacy violation", "Underage user", "Other"], id: \.self) { option in Button { reason = option } label: { HStack { Text(option).font(.tutuSubheadline); Spacer(); if reason == option { Artwork(name: "control-check").frame(width: 22, height: 22) } }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 12)) }.buttonStyle(.plain) }; Field(title: "Additional details", text: $detail) } }
+                if !result.isEmpty { Text(result).font(.tutuSubheadline).foregroundStyle(Palette.secondary) }
                 PinkButton(title: "Submit report") {
                     let draft = ReportDraft(targetID: targetID, authorID: authorID, kind: kind, reason: reason, detail: String(detail.prefix(1000)))
                     if store.commit({ $0.reports.removeAll { $0.targetID == targetID && !$0.delivered }; $0.reports.append(draft) }) {
@@ -198,7 +198,7 @@ struct MemberActions: View {
                             value.likedLooks.remove(targetID); value.savedLooks.remove(targetID)
                         }) { dismiss() }
                     }
-                } else { Text("This is your content.").font(.subheadline) }
+                } else { Text("This is your content.").font(.tutuSubheadline) }
             } else {
                 MenuRow(title: "Report") { reporting = true }
                 MenuRow(title: store.state?.blocked.contains(authorID) == true ? "Unblock" : "Block", destructive: true) { if store.state?.blocked.contains(authorID) == true { store.commit { $0.blocked.remove(authorID) } } else { store.block(authorID) }; dismiss() }

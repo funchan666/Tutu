@@ -4,11 +4,11 @@ import SwiftUI
     @StateObject private var store = AppStore()
     @StateObject private var wallet = WalletService()
     var body: some Scene {
-        WindowGroup { RootView().environmentObject(store).environmentObject(wallet).preferredColorScheme(.light).tint(Palette.pink).task { wallet.start(store: store) }.onChange(of: store.sessionID) { _, _ in Task { await wallet.recover(store: store) } } }
+        WindowGroup { RootView().font(.tutuBody).environmentObject(store).environmentObject(wallet).preferredColorScheme(.light).tint(Palette.pink).task { wallet.start(store: store) }.onChange(of: store.sessionID) { _, _ in Task { await wallet.recover(store: store) } } }
     }
 }
 enum Route: Hashable {
-    case profile(String), chat(String), room(String), post(String), album(String, Int), wallet, shop(Bool), checkin, settings, editProfile, inbox, systemMessages, search, leaderboard, createRoom, compose, relationships(String), info(String), stylist(String, String), call(String, Bool), security, privacy, language
+    case atelier, profile(String), chat(String), room(String), post(String), album(String, Int), wallet, shop(Bool), checkin, settings, editProfile, inbox, systemMessages, search, leaderboard, createRoom, compose, relationships(String), info(String), stylist(String, String), call(String, Bool), security, privacy, language
 }
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
@@ -20,8 +20,11 @@ struct RootView: View {
                     .navigationDestination(for: Route.self) { route in destination(route) }
                     .toolbar(.hidden, for: .navigationBar)
             }.id(store.sessionID ?? "welcome")
+            if store.welcomeVisible { WelcomeCoinDrop() }
+            CoinSpendOverlay()
             NoticeOverlay()
         }.onChange(of: store.sessionID) { _, _ in path = [] }
+            .onChange(of: store.walletRequest) { _, _ in if path.last != .wallet { path.append(.wallet) } }
     }
     @ViewBuilder func destination(_ route: Route) -> some View {
         switch route {
@@ -31,6 +34,7 @@ struct RootView: View {
         case .post(let id): PostDetailView(postID: id)
         case .album(let id, let index): AlbumView(personID: id, initialIndex: index)
         case .wallet: WalletView()
+        case .atelier: StyleAtelierView()
         case .shop(let backpack): GiftShopView(initialBackpack: backpack)
         case .checkin: CheckinView()
         case .settings: SettingsView()
@@ -67,11 +71,11 @@ struct MainTabs: View {
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
             if let room = store.minimizedRoom {
-                NavigationLink(value: Route.room(room.id)) { HStack { Artwork(name: "icon-room-chat").frame(width: 30, height: 30); Text(room.title).font(.caption.bold()); Spacer(); Text("Open").font(.caption) }.padding(10).background(Palette.blush) }.buttonStyle(.plain)
+                NavigationLink(value: Route.room(room.id)) { HStack { Artwork(name: "icon-room-chat").frame(width: 30, height: 30); Text(room.title).font(.tutuCaption.bold()); Spacer(); Text("Open").font(.tutuCaption) }.padding(10).background(Palette.blush) }.buttonStyle(.plain)
             }
             HStack(spacing: 0) { ForEach(0..<5) { index in
                 Button { store.tab = index } label: { Artwork(name: assets[index] + (store.tab == index ? "-active" : "")).frame(width: 28, height: 28).frame(maxWidth: .infinity).frame(height: 54).contentShape(Rectangle()) }.buttonStyle(.plain).accessibilityLabel(names[index]).accessibilityAddTraits(store.tab == index ? [.isSelected] : [])
             } }.background(.white)
-        }.background(SceneBackground()).foregroundStyle(Palette.ink)
+        }.background(SceneBackground()).foregroundStyle(Palette.ink).onAppear { store.arriveHome() }
     }
 }

@@ -21,9 +21,14 @@
 
 ## 内容占位清单
 
-六位目录用户 Mia、Lily、Ella、Noah、Ava、Leo 使用 `brand-mascot` 头像与 `wardrobe-placeholder` 大图，身份关联固定。目录动态和房间封面复用相同原创内容占位；没有伪造可播放的视频文件。样式选择中的三张风格图片来自用户的设计素材。
+2026-10-14接入用户提供的 `picss/` 74张JPEG与 `videoss/` 12个MP4，原文件字节不变。运行副本在 `Resources/Content/`；每个视频通过ffmpeg提取0.5秒处的JPEG封面。`Docs/ContentMapping.json`记录源文件、资源名、人物ID和SHA-256；`Scripts/import_content.py`可重复导入。全部媒体均在Discover、个人主页/相册或视频详情中有入口，未仅复制入包而不使用。
 
-正式内容替换入口集中在 `Core/Models.swift` 的 `Catalog` 和 `Person` 默认媒体字段。使用稳定用户 ID 关联头像、主页、相册、动态、房间封面；真实视频必须单独提供视频文件和封面，不能把图片作为视频地址。用户导入的媒体使用 `media/<UUID>.<extension>`，位于当前账号私有目录。
+未根据面孔猜测跨照片身份。无明确对应关系的媒体分成86个独立条目，显示名是本地编辑别名，非素材人物的真实身份声明；头像、大图、相册与动态使用该条目自己的照片/视频封面。原Mia/Lily等6个稳定ID继续保留。人物资料不添加推测的国家或性别。无图片的用户草稿仍可用衣橱占位图。
+
+开源字体：Google Fonts官方仓库 `ofl/outfit`，SIL OFL 1.1。原始可变字体及许可证保留于 `Resources/Fonts`；从原字体实例化400/500/600/700四个字重，内部名称为Tutu Outfit，未改变字形，UIAppFonts注册各实例。见 `Typography.swift`。
+
+新增原创图片通过Garden/Image 2 Host-Native生成：`welcome-wardrobe`（粉紫衣橱礼箱、丝带与星币），`runway-frame`（铬银粉色丝带头像框，透明中心）。PNG在对应Asset Catalog imageset；提示词保存在 `garden-gpt-image-2/prompt`。动效仅对图片做原生位移/旋转/缩放，未用代码绘制替代插画。
+
 
 照片取消选择不会覆盖当前图像。照片最多20MB，视频最多40MB/拍摄时长60秒；媒体体积上限是本地导入限制，不是上传服务协议。
 

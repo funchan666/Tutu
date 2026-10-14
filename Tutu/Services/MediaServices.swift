@@ -18,7 +18,7 @@ struct LegalWebView: View {
     @State private var reload = UUID()
     var body: some View {
         VStack(spacing: 0) {
-            HStack { Text(page.title).font(.headline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }.padding(16)
+            HStack { Text(page.title).font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }.padding(16)
             if !error.isEmpty { VStack(spacing: 18) { Text(error); PinkButton(title: "Try again") { error = ""; reload = UUID() }; Link("Open in browser", destination: page.url) }.padding(24) }
             PolicyWebSurface(url: page.url, error: $error).id(reload)
         }.background(Palette.blush)
@@ -52,11 +52,11 @@ struct MediaSourceView: View {
     @State private var source: CaptureSource?
     var body: some View {
         VStack(spacing: 16) {
-            HStack { Text("Add your media").font(.title3.bold()); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
+            HStack { Text("Add your media").font(.tutuTitle3.bold()); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
             MenuRow(title: "Take a photo") { open(camera: true, video: false) }
             if allowVideo { MenuRow(title: "Record a video") { open(camera: true, video: true) } }
             MenuRow(title: "Choose from library") { source = CaptureSource(camera: false, video: allowVideo) }
-            Text("Your selection stays on this device until a sharing service is available.").font(.caption).foregroundStyle(Palette.secondary)
+            Text("Your selection stays on this device until a sharing service is available.").font(.tutuCaption).foregroundStyle(Palette.secondary)
         }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }
             .sheet(item: $source) { s in NativeMediaPicker(source: s) { result in
                 source = nil

@@ -35,7 +35,7 @@ struct WelcomeView: View {
                                 }
                             }.signInWithAppleButtonStyle(.white).frame(height: 54).clipShape(Capsule())
                             PinkButton(title: "Continue With Email", asset: "button-email") { emailMode = true }
-                            if !error.isEmpty { Text(error).font(.caption).foregroundStyle(.white).multilineTextAlignment(.center) }
+                            if !error.isEmpty { Text(error).font(.tutuCaption).foregroundStyle(.white).multilineTextAlignment(.center) }
                             legalFooter.foregroundStyle(.white)
                         }.padding(.horizontal, 22).padding(.bottom, 16)
                     }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -47,13 +47,13 @@ struct WelcomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 ArtButton(label: "Back", asset: "nav-back") { emailMode = false; store.returnToLogin = false; error = "" }.disabled(busy)
-                Text(creating ? "Create your account" : "Welcome Back").font(.system(size: 30, weight: .bold, design: .rounded)).padding(.top, 28)
-                Text(creating ? "Your next connection starts with your style." : "Log in to continue your story.").font(.subheadline).foregroundStyle(Palette.secondary)
+                Text(creating ? "Create your account" : "Welcome Back").font(.outfit(size: 30, weight: .bold, design: .rounded)).padding(.top, 28)
+                Text(creating ? "Your next connection starts with your style." : "Log in to continue your story.").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
                 if creating { Field(title: "Your name", text: $name) }
                 Field(title: "Email Address", text: $email).keyboardType(.emailAddress).textContentType(.emailAddress)
                 Field(title: "Password", text: $password, secure: true).textContentType(creating ? .newPassword : .password)
                 if creating { ArtToggle(title: "I am 18 or older and accept the terms", value: $accepted) }
-                if !error.isEmpty { Text(error).font(.subheadline).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
+                if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                 PinkButton(title: creating ? "Create Account" : "Log In", asset: creating ? "button-register" : "button-login", busy: busy) {
                     guard !creating || accepted else { error = "Confirm your age and accept the terms to continue."; return }
                     busy = true; error = ""
@@ -63,15 +63,15 @@ struct WelcomeView: View {
                         catch { self.error = error.localizedDescription }
                     }
                 }.padding(.top, 24)
-                Button(creating ? "Already have an account? Log In" : "Don't have an account? Create Account") { creating.toggle(); error = "" }.disabled(busy).font(.subheadline.bold()).foregroundStyle(Palette.pink).frame(maxWidth: .infinity).padding(.vertical, 12)
+                Button(creating ? "Already have an account? Log In" : "Don't have an account? Create Account") { creating.toggle(); error = "" }.disabled(busy).font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(maxWidth: .infinity).padding(.vertical, 12)
                 legalFooter
             }.padding(20)
         }.scrollDismissesKeyboard(.interactively).background(SceneBackground())
     }
     var legalFooter: some View {
         VStack(spacing: 6) {
-            Text("By continuing, you agree to our").font(.caption)
-            HStack(spacing: 6) { Button("User Agreement") { legal = .terms }; Text("and"); Button("Privacy Policy") { legal = .privacy } }.font(.caption).buttonStyle(.plain)
+            Text("By continuing, you agree to our").font(.tutuCaption)
+            HStack(spacing: 6) { Button("User Agreement") { legal = .terms }; Text("and"); Button("Privacy Policy") { legal = .privacy } }.font(.tutuCaption).buttonStyle(.plain)
         }.frame(maxWidth: .infinity).multilineTextAlignment(.center).padding(.vertical, 8)
     }
 }

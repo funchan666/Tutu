@@ -57,10 +57,10 @@ struct Gift: Identifiable, Hashable {
     let price: Int
     var image: String { "gift-" + id }
     static let all: [Gift] = [
-        .init(id: "microphone", name: "Pop Star", price: 10), .init(id: "heart", name: "Heart Beat", price: 20),
-        .init(id: "bear", name: "Sweet Bear", price: 30), .init(id: "castle", name: "Dream Castle", price: 100),
-        .init(id: "car", name: "Night Ride", price: 150), .init(id: "flowers", name: "Pink Blooms", price: 40),
-        .init(id: "star", name: "Lucky Star", price: 50), .init(id: "music", name: "Mix Tape", price: 60)
+        .init(id: "microphone", name: "Pop Star", price: 40), .init(id: "heart", name: "Heart Beat", price: 60),
+        .init(id: "bear", name: "Sweet Bear", price: 100), .init(id: "castle", name: "Dream Castle", price: 1200),
+        .init(id: "car", name: "Night Ride", price: 1800), .init(id: "flowers", name: "Pink Blooms", price: 160),
+        .init(id: "star", name: "Lucky Star", price: 240), .init(id: "music", name: "Mix Tape", price: 320)
     ]
 }
 struct WalletEntry: Codable, Identifiable {
@@ -102,6 +102,15 @@ struct ProfileState: Codable {
     var mediaDrafts: [String: String] = [:]
     var conversations: [String: [ConversationMessage]] = [:]
     var stylist: [ConversationMessage] = []
+    // Optional additions keep existing profiles decodable.
+    var welcomeEligible: Bool? = nil
+    var welcomeGranted: Bool? = nil
+    var welcomeSeen: Bool? = nil
+    var ownedCosmetics: Set<String>? = nil
+    var equippedFrame: String? = nil
+    var featuredGift: String? = nil
+    var transactionGrants: [String: Int]? = nil
+    var refundDebt: Int? = nil
     var coins = 0
     var points = 0
     var inventory: [String: Int] = [:]
@@ -133,19 +142,28 @@ enum LegalLinks {
     static let terms = URL(string: "https://sites.google.com/view/tutu-termsofservice/heavy")!
     static let privacy = URL(string: "https://sites.google.com/view/tutu-privacy-policy/heavy")!
 }
+struct EditorialItem: Decodable {
+    let id: String
+    let name: String
+    let handle: String
+    let image: String
+    let video: String?
+    let style: String
+}
 enum Catalog {
-    static let people: [Person] = [
-        .init(id: "mia", name: "Mia", handle: "miastyle", country: "United States", interests: ["Streetwear", "Pop"]),
-        .init(id: "lily", name: "Lily", handle: "lilylooks", country: "United Kingdom", interests: ["Vintage", "Acoustic"]),
-        .init(id: "ella", name: "Ella", handle: "ellaeveryday", country: "Canada", interests: ["Minimalist", "Singing"]),
-        .init(id: "noah", name: "Noah", handle: "noahnotes", country: "Australia", gender: "Man", interests: ["Streetwear", "K-Pop"]),
-        .init(id: "ava", name: "Ava", handle: "avacloset", country: "France", language: "French", interests: ["Vintage", "Pop"]),
-        .init(id: "leo", name: "Leo", handle: "leodaily", country: "Germany", language: "German", gender: "Man", interests: ["Minimalist", "Acoustic"])
-    ]
-    static let rooms: [StyleRoom] = people.enumerated().map { index, p in
-        StyleRoom(id: "room-\(p.id)", hostID: p.id, title: ["NYC Street Look", "Vintage afternoons", "The everyday edit", "Tonight's playlist", "A little pink", "Less is more"][index], category: ["Pop", "Acoustic", "Singing", "K-Pop", "Pop", "Acoustic"][index], voice: index % 2 != 0)
+    static let items: [EditorialItem] = {
+        guard let url = Bundle.main.url(forResource: "EditorialCatalog", withExtension: "json"),
+              let data = try? Data(contentsOf: url), let items = try? JSONDecoder().decode([EditorialItem].self, from: data) else { return [] }
+        return items
+    }()
+    static let people: [Person] = items.map { item in
+        Person(id: item.id, name: item.name, handle: item.handle, birthday: nil, country: "", gender: "",
+               bio: "A personal edit of everyday style.", interests: [item.style], avatar: item.image, photos: [item.image])
     }
-    static let looks: [Look] = people.enumerated().map { i, p in
-        Look(id: "look-\(p.id)", authorID: p.id, text: ["A new way to wear your everyday favourites.", "Soft layers, a little colour, and room to be yourself.", "Small moments, interesting conversations.", "Finding a rhythm for the week.", "One favourite piece. Three new possibilities.", "A calmer kind of daily style."][i], media: ["wardrobe-placeholder"], category: ["Daily", "Vintage", "Minimalist", "Streetwear", "Daily", "Minimalist"][i])
+    static let rooms: [StyleRoom] = people.prefix(18).enumerated().map { index, p in
+        StyleRoom(id: "room-\(p.id)", hostID: p.id, title: p.interests[0] + " style edit", category: ["Pop", "Acoustic", "Singing", "K-Pop"][index % 4], voice: index % 2 != 0, cover: p.photos[0])
+    }
+    static let looks: [Look] = items.map { item in
+        Look(id: "look-\(item.id)", authorID: item.id, text: item.style + " inspiration. Find the details that feel like you.", media: [item.image], video: item.video, category: item.style)
     }
 }

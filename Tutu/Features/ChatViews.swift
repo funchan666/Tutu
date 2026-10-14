@@ -6,9 +6,9 @@ struct InboxView: View {
     var body: some View {
         Page(title: "Messages") {
             ScrollView { VStack(spacing: 14) {
-                NavigationLink(value: Route.systemMessages) { HStack(spacing: 14) { Artwork(name: "icon-notification").frame(width: 52, height: 52); VStack(alignment: .leading, spacing: 5) { Text("System Messages").font(.headline); Text("Updates for your account").font(.subheadline).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain)
+                NavigationLink(value: Route.systemMessages) { HStack(spacing: 14) { Artwork(name: "icon-notification").frame(width: 52, height: 52); VStack(alignment: .leading, spacing: 5) { Text("System Messages").font(.tutuHeadline); Text("Updates for your account").font(.tutuSubheadline).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain)
                 let ids = Set((store.state?.conversations.keys.map { $0 } ?? []) + (store.state?.mediaDrafts.keys.filter { Catalog.people.map(\.id).contains($0) } ?? []) + (store.state?.drafts.keys.filter { Catalog.people.map(\.id).contains($0) } ?? []))
-                ForEach(store.people.filter { ids.contains($0.id) }) { person in NavigationLink(value: Route.chat(person.id)) { HStack(spacing: 12) { Avatar(person: person); VStack(alignment: .leading, spacing: 6) { Text(person.name).font(.headline); Text(store.state?.drafts[person.id].flatMap { $0.isEmpty ? nil : "Draft: " + $0 } ?? store.state?.conversations[person.id]?.last?.text ?? "Say hello").font(.subheadline).foregroundStyle(Palette.secondary).lineLimit(1) }; Spacer() }.panel() }.buttonStyle(.plain) }
+                ForEach(store.people.filter { ids.contains($0.id) }) { person in NavigationLink(value: Route.chat(person.id)) { HStack(spacing: 12) { Avatar(person: person); VStack(alignment: .leading, spacing: 6) { Text(person.name).font(.tutuHeadline); Text(store.state?.drafts[person.id].flatMap { $0.isEmpty ? nil : "Draft: " + $0 } ?? store.state?.conversations[person.id]?.last?.text ?? "Say hello").font(.tutuSubheadline).foregroundStyle(Palette.secondary).lineLimit(1) }; Spacer() }.panel() }.buttonStyle(.plain) }
                 if ids.isEmpty { EmptyState(title: "A hello can start something", message: "Open a member's profile and choose Start a Chat.") }
             }.padding(16) }
         }
@@ -17,8 +17,8 @@ struct InboxView: View {
 struct SystemMessagesView: View {
     @EnvironmentObject private var store: AppStore
     var body: some View { Page(title: "System Messages") { ScrollView { VStack(alignment: .leading, spacing: 16) {
-        VStack(alignment: .leading, spacing: 12) { Text("Welcome to your style world").font(.headline); Text("Find inspiration, collect your favourite looks, and make your profile your own.").font(.subheadline).foregroundStyle(Palette.secondary) }.panel()
-        ForEach(Array((store.state?.ledger ?? []).prefix(20))) { item in VStack(alignment: .leading, spacing: 8) { Text(item.title).font(.headline); Text("\(item.amount > 0 ? "+" : "")\(item.amount) coins").font(.subheadline); Text(item.date, style: .date).font(.caption).foregroundStyle(Palette.secondary) }.frame(maxWidth: .infinity, alignment: .leading).panel() }
+        VStack(alignment: .leading, spacing: 12) { Text("Welcome to your style world").font(.tutuHeadline); Text("Find inspiration, collect your favourite looks, and make your profile your own.").font(.tutuSubheadline).foregroundStyle(Palette.secondary) }.panel()
+        ForEach(Array((store.state?.ledger ?? []).prefix(20))) { item in VStack(alignment: .leading, spacing: 8) { Text(item.title).font(.tutuHeadline); Text("\(item.amount > 0 ? "+" : "")\(item.amount) coins").font(.tutuSubheadline); Text(item.date, style: .date).font(.tutuCaption).foregroundStyle(Palette.secondary) }.frame(maxWidth: .infinity, alignment: .leading).panel() }
     }.padding(20) } } }
 }
 struct ChatView: View {
@@ -37,17 +37,17 @@ struct ChatView: View {
     var body: some View {
         Page(title: person.name) {
             VStack(spacing: 0) {
-                HStack { NavigationLink(value: Route.profile(personID)) { HStack { Avatar(person: person, size: 38); Text("Profile").font(.subheadline.bold()) } }.buttonStyle(.plain); Spacer(); Button("Video call") { beginCall(true) }.font(.subheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44); ArtButton(label: "More", asset: "nav-more") { more = true } }.padding(.horizontal, 16)
+                HStack { NavigationLink(value: Route.profile(personID)) { HStack { Avatar(person: person, size: 38); Text("Profile").font(.tutuSubheadline.bold()) } }.buttonStyle(.plain); Spacer(); Button("Video call") { beginCall(true) }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44); ArtButton(label: "More", asset: "nav-more") { more = true } }.padding(.horizontal, 16)
                 ScrollViewReader { reader in
                     ScrollView {
                         VStack(spacing: 18) {
-                            VStack(spacing: 12) { Avatar(person: person, size: 78); Text(person.name).font(.title3.bold()); Text(person.bio).font(.subheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); InterestTags(values: person.interests); ProfileStats(person: person) }.panel().padding(.top, 8)
+                            VStack(spacing: 12) { Avatar(person: person, size: 78); Text(person.name).font(.tutuTitle3.bold()); Text(person.bio).font(.tutuSubheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); InterestTags(values: person.interests); ProfileStats(person: person) }.panel().padding(.top, 8)
                             ForEach(store.state?.conversations[personID] ?? []) { message in MessageBubble(message: message) { retry(message) } }
                             if let attachment {
                                 HStack {
                                     if attachment.hasSuffix(".jpg") { MediaArtwork(reference: attachment).frame(width: 76, height: 76).clipShape(RoundedRectangle(cornerRadius: 12)) }
                                     else { Artwork(name: "icon-camera").frame(width: 44, height: 44) }
-                                    Text(attachment.hasSuffix(".jpg") ? "Photo attached" : "Video attached").font(.caption)
+                                    Text(attachment.hasSuffix(".jpg") ? "Photo attached" : "Video attached").font(.tutuCaption)
                                     Spacer()
                                     Button("Remove") { if store.commit({ $0.mediaDrafts[personID] = nil }) { self.attachment = nil } }.foregroundStyle(Palette.pink)
                                 }.panel()
@@ -58,7 +58,7 @@ struct ChatView: View {
                 }
                 VStack(spacing: 12) {
                     HStack { ArtButton(label: "More tools", asset: "nav-create", size: 34) { tools.toggle() }; TextField("Say hi…", text: $text, axis: .vertical).lineLimit(1...5).padding(14).background(.white, in: RoundedRectangle(cornerRadius: 23)); ArtButton(label: "Send message", asset: "icon-send") { send() } }
-                    if tools { HStack(spacing: 22) { ArtButton(label: "Photo or video", asset: "icon-photo") { media = true }; ArtButton(label: "Voice message", asset: "icon-mic") { voice = true }; ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }; Button("Voice call") { beginCall(false) }.font(.caption.bold()).foregroundStyle(Palette.pink); Spacer() }.padding(.horizontal, 10) }
+                    if tools { HStack(spacing: 22) { ArtButton(label: "Photo or video", asset: "icon-photo") { media = true }; ArtButton(label: "Voice message", asset: "icon-mic") { voice = true }; ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }; Button("Voice call") { beginCall(false) }.font(.tutuCaption.bold()).foregroundStyle(Palette.pink); Spacer() }.padding(.horizontal, 10) }
                 }.padding(12).background(Palette.blush)
             }
         }.onAppear { text = store.state?.drafts[personID] ?? ""; attachment = store.state?.mediaDrafts[personID]; session = store.sessionID }
@@ -89,9 +89,9 @@ struct MessageBubble: View {
     var retry: (() -> Void)? = nil
     var body: some View {
         VStack(alignment: message.outgoing ? .trailing : .leading, spacing: 6) {
-            Text(message.created, style: .time).font(.caption2).foregroundStyle(Palette.secondary)
-            HStack { if message.outgoing { Spacer(minLength: 40) }; Text(message.text).font(.subheadline).lineSpacing(4).padding(16).foregroundStyle(.white).background(message.outgoing ? Palette.pink : Color(red: 0.22, green: 0.65, blue: 0.95), in: RoundedRectangle(cornerRadius: 18)); if !message.outgoing { Spacer(minLength: 40) } }
-            if message.status == "Not sent", let retry { Button("Not sent · Retry", action: retry).font(.caption).foregroundStyle(Palette.pink) }
+            Text(message.created, style: .time).font(.tutuCaption2).foregroundStyle(Palette.secondary)
+            HStack { if message.outgoing { Spacer(minLength: 40) }; Text(message.text).font(.tutuSubheadline).lineSpacing(4).padding(16).foregroundStyle(.white).background(message.outgoing ? Palette.pink : Color(red: 0.22, green: 0.65, blue: 0.95), in: RoundedRectangle(cornerRadius: 18)); if !message.outgoing { Spacer(minLength: 40) } }
+            if message.status == "Not sent", let retry { Button("Not sent · Retry", action: retry).font(.tutuCaption).foregroundStyle(Palette.pink) }
         }.frame(maxWidth: .infinity, alignment: message.outgoing ? .trailing : .leading)
     }
 }
@@ -128,5 +128,5 @@ struct VoiceRecorderView: View {
     @Environment(\.scenePhase) private var phase
     @StateObject private var recorder = VoiceRecorder()
     let personID: String
-    var body: some View { VStack(spacing: 22) { HStack { Text("Voice message").font(.headline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }; Text(recorder.recording ? "Recording · up to 60 seconds" : recorder.hasRecording ? "Ready to listen" : "Tap to record your message").font(.subheadline); ArtButton(label: recorder.recording ? "Stop recording" : "Record", asset: "icon-voice-record", size: 96) { if recorder.recording { recorder.stop() } else { Task { await recorder.start() } } }; if !recorder.error.isEmpty { Text(recorder.error).font(.caption).foregroundStyle(.red) }; if recorder.hasRecording { Button("Listen") { recorder.listen() }.foregroundStyle(Palette.pink).frame(minHeight: 44); PinkButton(title: "Send voice message") { if store.canContact(personID) { store.show("Message not sent", "Voice messaging is unavailable. You can listen to your recording and try again.") } } } }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }.onDisappear { recorder.clean() }.onChange(of: phase) { _, state in if state != .active { recorder.stop() } } }
+    var body: some View { VStack(spacing: 22) { HStack { Text("Voice message").font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }; Text(recorder.recording ? "Recording · up to 60 seconds" : recorder.hasRecording ? "Ready to listen" : "Tap to record your message").font(.tutuSubheadline); ArtButton(label: recorder.recording ? "Stop recording" : "Record", asset: "icon-voice-record", size: 96) { if recorder.recording { recorder.stop() } else { Task { await recorder.start() } } }; if !recorder.error.isEmpty { Text(recorder.error).font(.tutuCaption).foregroundStyle(.red) }; if recorder.hasRecording { Button("Listen") { recorder.listen() }.foregroundStyle(Palette.pink).frame(minHeight: 44); PinkButton(title: "Send voice message") { if store.canContact(personID) { store.show("Message not sent", "Voice messaging is unavailable. You can listen to your recording and try again.") } } } }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }.onDisappear { recorder.clean() }.onChange(of: phase) { _, state in if state != .active { recorder.stop() } } }
 }

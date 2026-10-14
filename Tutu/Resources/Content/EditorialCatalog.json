@@ -1,0 +1,690 @@
+[
+  {
+    "id": "mia",
+    "name": "Mia",
+    "handle": "mia.edit02",
+    "image": "bundle/editorial-photo-002.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "lily",
+    "name": "Lily",
+    "handle": "lily.edit03",
+    "image": "bundle/editorial-photo-003.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "ella",
+    "name": "Ella",
+    "handle": "ella.edit04",
+    "image": "bundle/editorial-photo-004.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-01",
+    "name": "Harper",
+    "handle": "harper.motion01",
+    "image": "bundle/editorial-video-01.jpg",
+    "video": "bundle/editorial-video-01.mp4",
+    "style": "Daily"
+  },
+  {
+    "id": "noah",
+    "name": "Noah",
+    "handle": "noah.edit28",
+    "image": "bundle/editorial-photo-028.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "ava",
+    "name": "Ava",
+    "handle": "ava.edit06",
+    "image": "bundle/editorial-photo-006.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "leo",
+    "name": "Leo",
+    "handle": "leo.edit22",
+    "image": "bundle/editorial-photo-022.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-001",
+    "name": "Harper",
+    "handle": "harper.edit01",
+    "image": "bundle/editorial-photo-001.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-02",
+    "name": "Riley",
+    "handle": "riley.motion02",
+    "image": "bundle/editorial-video-02.jpg",
+    "video": "bundle/editorial-video-02.mp4",
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-005",
+    "name": "Riley",
+    "handle": "riley.edit05",
+    "image": "bundle/editorial-photo-005.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-007",
+    "name": "Alex",
+    "handle": "alex.edit07",
+    "image": "bundle/editorial-photo-007.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-008",
+    "name": "Jordan",
+    "handle": "jordan.edit08",
+    "image": "bundle/editorial-photo-008.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-009",
+    "name": "Quinn",
+    "handle": "quinn.edit09",
+    "image": "bundle/editorial-photo-009.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-03",
+    "name": "Alex",
+    "handle": "alex.motion03",
+    "image": "bundle/editorial-video-03.jpg",
+    "video": "bundle/editorial-video-03.mp4",
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-010",
+    "name": "Sky",
+    "handle": "sky.edit10",
+    "image": "bundle/editorial-photo-010.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-011",
+    "name": "Avery",
+    "handle": "avery.edit11",
+    "image": "bundle/editorial-photo-011.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-012",
+    "name": "Taylor",
+    "handle": "taylor.edit12",
+    "image": "bundle/editorial-photo-012.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-013",
+    "name": "Blair",
+    "handle": "blair.edit13",
+    "image": "bundle/editorial-photo-013.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-04",
+    "name": "Jordan",
+    "handle": "jordan.motion04",
+    "image": "bundle/editorial-video-04.jpg",
+    "video": "bundle/editorial-video-04.mp4",
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-014",
+    "name": "Sage",
+    "handle": "sage.edit14",
+    "image": "bundle/editorial-photo-014.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-015",
+    "name": "Cameron",
+    "handle": "cameron.edit15",
+    "image": "bundle/editorial-photo-015.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-016",
+    "name": "Morgan",
+    "handle": "morgan.edit16",
+    "image": "bundle/editorial-photo-016.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-017",
+    "name": "Casey",
+    "handle": "casey.edit17",
+    "image": "bundle/editorial-photo-017.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-05",
+    "name": "Quinn",
+    "handle": "quinn.motion05",
+    "image": "bundle/editorial-video-05.jpg",
+    "video": "bundle/editorial-video-05.mp4",
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-018",
+    "name": "Reese",
+    "handle": "reese.edit18",
+    "image": "bundle/editorial-photo-018.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-019",
+    "name": "Rowan",
+    "handle": "rowan.edit19",
+    "image": "bundle/editorial-photo-019.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-020",
+    "name": "Robin",
+    "handle": "robin.edit20",
+    "image": "bundle/editorial-photo-020.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-021",
+    "name": "Jamie",
+    "handle": "jamie.edit21",
+    "image": "bundle/editorial-photo-021.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-06",
+    "name": "Sky",
+    "handle": "sky.motion06",
+    "image": "bundle/editorial-video-06.jpg",
+    "video": "bundle/editorial-video-06.mp4",
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-023",
+    "name": "Drew",
+    "handle": "drew.edit23",
+    "image": "bundle/editorial-photo-023.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-024",
+    "name": "Charlie",
+    "handle": "charlie.edit24",
+    "image": "bundle/editorial-photo-024.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-025",
+    "name": "Parker",
+    "handle": "parker.edit25",
+    "image": "bundle/editorial-photo-025.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-026",
+    "name": "Remy",
+    "handle": "remy.edit26",
+    "image": "bundle/editorial-photo-026.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-07",
+    "name": "Avery",
+    "handle": "avery.motion07",
+    "image": "bundle/editorial-video-07.jpg",
+    "video": "bundle/editorial-video-07.mp4",
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-027",
+    "name": "River",
+    "handle": "river.edit27",
+    "image": "bundle/editorial-photo-027.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-029",
+    "name": "Emery",
+    "handle": "emery.edit29",
+    "image": "bundle/editorial-photo-029.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-030",
+    "name": "Phoenix",
+    "handle": "phoenix.edit30",
+    "image": "bundle/editorial-photo-030.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-031",
+    "name": "Harper",
+    "handle": "harper.edit31",
+    "image": "bundle/editorial-photo-031.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-08",
+    "name": "Taylor",
+    "handle": "taylor.motion08",
+    "image": "bundle/editorial-video-08.jpg",
+    "video": "bundle/editorial-video-08.mp4",
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-032",
+    "name": "Riley",
+    "handle": "riley.edit32",
+    "image": "bundle/editorial-photo-032.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-033",
+    "name": "Alex",
+    "handle": "alex.edit33",
+    "image": "bundle/editorial-photo-033.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-034",
+    "name": "Jordan",
+    "handle": "jordan.edit34",
+    "image": "bundle/editorial-photo-034.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-035",
+    "name": "Quinn",
+    "handle": "quinn.edit35",
+    "image": "bundle/editorial-photo-035.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-09",
+    "name": "Blair",
+    "handle": "blair.motion09",
+    "image": "bundle/editorial-video-09.jpg",
+    "video": "bundle/editorial-video-09.mp4",
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-036",
+    "name": "Sky",
+    "handle": "sky.edit36",
+    "image": "bundle/editorial-photo-036.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-037",
+    "name": "Avery",
+    "handle": "avery.edit37",
+    "image": "bundle/editorial-photo-037.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-038",
+    "name": "Taylor",
+    "handle": "taylor.edit38",
+    "image": "bundle/editorial-photo-038.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-039",
+    "name": "Blair",
+    "handle": "blair.edit39",
+    "image": "bundle/editorial-photo-039.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-10",
+    "name": "Sage",
+    "handle": "sage.motion10",
+    "image": "bundle/editorial-video-10.jpg",
+    "video": "bundle/editorial-video-10.mp4",
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-040",
+    "name": "Sage",
+    "handle": "sage.edit40",
+    "image": "bundle/editorial-photo-040.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-041",
+    "name": "Cameron",
+    "handle": "cameron.edit41",
+    "image": "bundle/editorial-photo-041.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-042",
+    "name": "Morgan",
+    "handle": "morgan.edit42",
+    "image": "bundle/editorial-photo-042.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-043",
+    "name": "Casey",
+    "handle": "casey.edit43",
+    "image": "bundle/editorial-photo-043.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-11",
+    "name": "Cameron",
+    "handle": "cameron.motion11",
+    "image": "bundle/editorial-video-11.jpg",
+    "video": "bundle/editorial-video-11.mp4",
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-044",
+    "name": "Reese",
+    "handle": "reese.edit44",
+    "image": "bundle/editorial-photo-044.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-045",
+    "name": "Rowan",
+    "handle": "rowan.edit45",
+    "image": "bundle/editorial-photo-045.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-046",
+    "name": "Robin",
+    "handle": "robin.edit46",
+    "image": "bundle/editorial-photo-046.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-047",
+    "name": "Jamie",
+    "handle": "jamie.edit47",
+    "image": "bundle/editorial-photo-047.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "film-12",
+    "name": "Morgan",
+    "handle": "morgan.motion12",
+    "image": "bundle/editorial-video-12.jpg",
+    "video": "bundle/editorial-video-12.mp4",
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-048",
+    "name": "Drew",
+    "handle": "drew.edit48",
+    "image": "bundle/editorial-photo-048.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-049",
+    "name": "Charlie",
+    "handle": "charlie.edit49",
+    "image": "bundle/editorial-photo-049.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-050",
+    "name": "Parker",
+    "handle": "parker.edit50",
+    "image": "bundle/editorial-photo-050.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-051",
+    "name": "Remy",
+    "handle": "remy.edit51",
+    "image": "bundle/editorial-photo-051.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-052",
+    "name": "River",
+    "handle": "river.edit52",
+    "image": "bundle/editorial-photo-052.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-053",
+    "name": "Emery",
+    "handle": "emery.edit53",
+    "image": "bundle/editorial-photo-053.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-054",
+    "name": "Phoenix",
+    "handle": "phoenix.edit54",
+    "image": "bundle/editorial-photo-054.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-055",
+    "name": "Harper",
+    "handle": "harper.edit55",
+    "image": "bundle/editorial-photo-055.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-056",
+    "name": "Riley",
+    "handle": "riley.edit56",
+    "image": "bundle/editorial-photo-056.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-057",
+    "name": "Alex",
+    "handle": "alex.edit57",
+    "image": "bundle/editorial-photo-057.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-058",
+    "name": "Jordan",
+    "handle": "jordan.edit58",
+    "image": "bundle/editorial-photo-058.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-059",
+    "name": "Quinn",
+    "handle": "quinn.edit59",
+    "image": "bundle/editorial-photo-059.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-060",
+    "name": "Sky",
+    "handle": "sky.edit60",
+    "image": "bundle/editorial-photo-060.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-061",
+    "name": "Avery",
+    "handle": "avery.edit61",
+    "image": "bundle/editorial-photo-061.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-062",
+    "name": "Taylor",
+    "handle": "taylor.edit62",
+    "image": "bundle/editorial-photo-062.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-063",
+    "name": "Blair",
+    "handle": "blair.edit63",
+    "image": "bundle/editorial-photo-063.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-064",
+    "name": "Sage",
+    "handle": "sage.edit64",
+    "image": "bundle/editorial-photo-064.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-065",
+    "name": "Cameron",
+    "handle": "cameron.edit65",
+    "image": "bundle/editorial-photo-065.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-066",
+    "name": "Morgan",
+    "handle": "morgan.edit66",
+    "image": "bundle/editorial-photo-066.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-067",
+    "name": "Casey",
+    "handle": "casey.edit67",
+    "image": "bundle/editorial-photo-067.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-068",
+    "name": "Reese",
+    "handle": "reese.edit68",
+    "image": "bundle/editorial-photo-068.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-069",
+    "name": "Rowan",
+    "handle": "rowan.edit69",
+    "image": "bundle/editorial-photo-069.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-070",
+    "name": "Robin",
+    "handle": "robin.edit70",
+    "image": "bundle/editorial-photo-070.jpg",
+    "video": null,
+    "style": "Vintage"
+  },
+  {
+    "id": "editorial-071",
+    "name": "Jamie",
+    "handle": "jamie.edit71",
+    "image": "bundle/editorial-photo-071.jpg",
+    "video": null,
+    "style": "Minimalist"
+  },
+  {
+    "id": "editorial-072",
+    "name": "Drew",
+    "handle": "drew.edit72",
+    "image": "bundle/editorial-photo-072.jpg",
+    "video": null,
+    "style": "Daily"
+  },
+  {
+    "id": "editorial-073",
+    "name": "Charlie",
+    "handle": "charlie.edit73",
+    "image": "bundle/editorial-photo-073.jpg",
+    "video": null,
+    "style": "Streetwear"
+  },
+  {
+    "id": "editorial-074",
+    "name": "Parker",
+    "handle": "parker.edit74",
+    "image": "bundle/editorial-photo-074.jpg",
+    "video": null,
+    "style": "Vintage"
+  }
+]

@@ -7,6 +7,9 @@ import UserNotifications
     @Published var tab = 0
     @Published var returnToLogin = false
     @Published var minimizedRoom: StyleRoom?
+    @Published var welcomeVisible = false
+    @Published var coinPrompt: CoinSpend?
+    @Published var walletRequest = 0
     private var arrivals: Task<Void, Never>?
     private let files = FileManager.default
     let root: URL
@@ -61,7 +64,8 @@ import UserNotifications
             let verifier = try await Task.detached(priority: .userInitiated) { try AccountVault.hash(password, salt: salt) }.value
             let id = UUID().uuidString
             let account = LocalAccount(id: id, email: email, salt: salt, verifier: verifier)
-            let profile = ProfileState(person: Person(id: id, name: String(name.prefix(40)), handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            var profile = ProfileState(person: Person(id: id, name: String(name.prefix(40)), handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            profile.welcomeEligible = true
             try write(profile)
             accounts.append(account)
             do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
@@ -79,7 +83,8 @@ import UserNotifications
         if let account = accounts.first(where: { $0.appleUserID == userID }) { state = try read(account.id) }
         else {
             let id = UUID().uuidString
-            let profile = ProfileState(person: Person(id: id, name: name?.isEmpty == false ? name! : "Style Friend", handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            var profile = ProfileState(person: Person(id: id, name: name?.isEmpty == false ? name! : "Style Friend", handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            profile.welcomeEligible = true
             try write(profile)
             accounts.append(LocalAccount(id: id, email: email ?? "", salt: Data(), verifier: Data(), appleUserID: userID))
             do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
@@ -87,7 +92,7 @@ import UserNotifications
         }
         UserDefaults.standard.set(sessionID, forKey: "activeProfile"); tab = 0; scheduleArrivals()
     }
-    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); arrivals?.cancel(); state = nil; minimizedRoom = nil; tab = 0; returnToLogin = true; UserDefaults.standard.removeObject(forKey: "activeProfile") }
+    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); arrivals?.cancel(); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = true; UserDefaults.standard.removeObject(forKey: "activeProfile") }
     func deleteAccount() throws {
         guard let id = sessionID else { return }
         let accounts = try AccountVault.load()
@@ -136,21 +141,11 @@ import UserNotifications
             let consecutive = s.highestCheckinDate.map { calendar.isDate($0, inSameDayAs: yesterday) } ?? false
             s.checkinStreak = consecutive ? s.checkinStreak % 7 + 1 : 1
             let reward = [10,20,10,20,10,20,100][s.checkinStreak-1]
-            s.checkinDates.insert(key); s.highestCheckinDate = today; s.coins += reward; s.points += 10
-            s.ledger.insert(WalletEntry(title: "Daily check-in", amount: reward), at: 0)
+            s.checkinDates.insert(key); s.highestCheckinDate = today; s.creditCoins(reward, title: "Daily check-in"); s.points += 10
         }
     }
     static func dayKey(_ date: Date) -> String {
         let formatter = DateFormatter(); formatter.calendar = Calendar(identifier: .gregorian); formatter.locale = Locale(identifier: "en_US_POSIX"); formatter.dateFormat = "yyyy-MM-dd"; return formatter.string(from: date)
-    }
-    func buy(_ gift: Gift, quantity: Int) -> Bool {
-        commit { s in
-            guard (1...99).contains(quantity) else { throw TutuFailure.message("Choose a quantity from 1 to 99.") }
-            let total = gift.price * quantity
-            guard s.coins >= total else { throw TutuFailure.message("You need \(total - s.coins) more coins. Visit Get Coins or Daily Check.") }
-            s.coins -= total; s.inventory[gift.id, default: 0] += quantity
-            s.ledger.insert(WalletEntry(title: "\(gift.name) × \(quantity)", amount: -total), at: 0)
-        }
     }
     func saveMedia(_ data: Data, extension ext: String) throws -> String {
         guard let id = sessionID else { throw TutuFailure.message("Please sign in again.") }
@@ -159,6 +154,10 @@ import UserNotifications
         return "media/" + file
     }
     func mediaURL(_ ref: String) -> URL? {
+        if ref.hasPrefix("bundle/"), !ref.contains("..") {
+            let name = String(ref.dropFirst(7)) as NSString
+            return Bundle.main.url(forResource: name.deletingPathExtension, withExtension: name.pathExtension)
+        }
         guard ref.hasPrefix("media/"), let id = sessionID, !ref.contains("..") else { return nil }
         return root.appendingPathComponent(id).appendingPathComponent(String(ref.dropFirst(6)))
     }

@@ -26,9 +26,9 @@ struct LiveHomeView: View {
                                 MediaArtwork(reference: room.cover).frame(height: 208)
                                 Color.black.opacity(0.23)
                                 VStack(alignment: .leading, spacing: 5) {
-                                    Text(room.title).font(.system(size: 16, weight: .bold, design: .rounded))
-                                    Text("Which look feels like you?").font(.system(size: 12, design: .rounded))
-                                    Text("Open room").font(.system(size: 12, weight: .semibold, design: .rounded))
+                                    Text(room.title).font(.outfit(size: 16, weight: .bold, design: .rounded))
+                                    Text("Which look feels like you?").font(.outfit(size: 12, design: .rounded))
+                                    Text("Open room").font(.outfit(size: 12, weight: .semibold, design: .rounded))
                                         .padding(.horizontal, 18).frame(height: 32)
                                         .background { Image("button-base").resizable() }.padding(.top, 4)
                                 }.foregroundStyle(.white).shadow(color: .black.opacity(0.25), radius: 2, y: 1).padding(14)
@@ -58,10 +58,10 @@ struct RoomCard: View {
                 Color.black.opacity(0.26)
                 VStack(alignment: party ? .center : .leading, spacing: 5) {
                     HStack(spacing: 6) {
-                        Text(store.person(room.hostID).name).font(.system(size: 16, weight: .semibold, design: .rounded))
+                        Text(store.person(room.hostID).name).font(.outfit(size: 16, weight: .semibold, design: .rounded))
                         if !party { PersonGenderMark(person: store.person(room.hostID)) }
                     }.frame(maxWidth: .infinity, alignment: party ? .center : .leading)
-                    Text(room.title).font(.system(size: 11, design: .rounded)).lineLimit(1)
+                    Text(room.title).font(.outfit(size: 11, design: .rounded)).lineLimit(1)
                     if party { Artwork(name: "button-join").frame(height: 30).padding(.top, 3) }
                 }.foregroundStyle(.white).shadow(color: .black.opacity(0.3), radius: 2, y: 1)
                     .padding(12).frame(maxWidth: .infinity, alignment: .leading)
@@ -91,7 +91,7 @@ struct PartyHomeView: View {
                     HStack(spacing: 12) {
                         ForEach(["All", "Online", "Live Now"], id: \.self) { choice in
                             Button { filter = choice } label: {
-                                Text(choice).font(.system(size: 13, design: .rounded))
+                                Text(choice).font(.outfit(size: 13, design: .rounded))
                                     .padding(.horizontal, 16).padding(.vertical, 7)
                                     .foregroundStyle(filter == choice ? .white : Palette.secondary)
                                     .background {
@@ -134,7 +134,7 @@ struct SearchView: View {
     var body: some View {
         Page(title: "Search") {
             VStack(spacing: 14) {
-                HStack { TextField("People, rooms and looks", text: $query).submitLabel(.search).padding(14).background(.white, in: Capsule()); Button("Filters") { filters = true }.font(.subheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.padding(.horizontal, 16)
+                HStack { TextField("People, rooms and looks", text: $query).submitLabel(.search).padding(14).background(.white, in: Capsule()); Button("Filters") { filters = true }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.padding(.horizontal, 16)
                 SectionTabs(titles: ["Users", "Rooms", "Posts"], selection: $section)
                 ScrollView {
                     LazyVStack(spacing: 12) {
@@ -143,7 +143,7 @@ struct SearchView: View {
                             if users.isEmpty { EmptyState(title: "No people found", message: "Try another name or clear your filters.") }
                         } else if section == "Rooms" {
                             let rooms = store.rooms.filter { room in matchesProfile(room.hostID) && (query.isEmpty || room.title.localizedCaseInsensitiveContains(query) || store.person(room.hostID).name.localizedCaseInsensitiveContains(query)) }
-                            ForEach(rooms) { room in NavigationLink(value: Route.room(room.id)) { HStack { Avatar(person: store.person(room.hostID)); VStack(alignment: .leading, spacing: 5) { Text(room.title).font(.headline); Text(room.voice ? "Voice room" : "Style live").font(.caption).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain) }
+                            ForEach(rooms) { room in NavigationLink(value: Route.room(room.id)) { HStack { Avatar(person: store.person(room.hostID)); VStack(alignment: .leading, spacing: 5) { Text(room.title).font(.tutuHeadline); Text(room.voice ? "Voice room" : "Style live").font(.tutuCaption).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain) }
                             if rooms.isEmpty { EmptyState(title: "No rooms found") }
                         } else {
                             let posts = store.looks.filter { matchesProfile($0.authorID) && (query.isEmpty || $0.text.localizedCaseInsensitiveContains(query)) }
@@ -155,7 +155,7 @@ struct SearchView: View {
             }
         }.sheet(isPresented: $filters) {
             VStack(alignment: .leading, spacing: 18) {
-                HStack { Text("Find your people").font(.title2.bold()); Spacer(); ArtButton(label: "Close filters", asset: "nav-close") { filters = false } }
+                HStack { Text("Find your people").font(.tutuTitle2.bold()); Spacer(); ArtButton(label: "Close filters", asset: "nav-close") { filters = false } }
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
                         filterGroup("Age", choices: ["All", "18–24", "25–34", "35+"], value: $age)
@@ -174,14 +174,14 @@ struct SearchView: View {
         let ageMatch = age == "All" || (age == "18–24" ? (18...24).contains(p.age) : age == "25–34" ? (25...34).contains(p.age) : p.age >= 35)
         return ageMatch && (country == "All" || p.country == country) && (gender == "All" || p.gender == gender) && (language == "All" || p.language == language)
     }
-    func filterGroup(_ title: String, choices: [String], value: Binding<String>) -> some View { VStack(alignment: .leading) { Text(title).font(.headline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(choices, id: \.self) { item in Pill(title: item, selected: item == value.wrappedValue) { value.wrappedValue = item } } } } } }
+    func filterGroup(_ title: String, choices: [String], value: Binding<String>) -> some View { VStack(alignment: .leading) { Text(title).font(.tutuHeadline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(choices, id: \.self) { item in Pill(title: item, selected: item == value.wrappedValue) { value.wrappedValue = item } } } } } }
 }
 struct PersonRow: View {
     @EnvironmentObject private var store: AppStore
     let person: Person
     var body: some View {
         HStack(spacing: 12) {
-            NavigationLink(value: Route.profile(person.id)) { HStack { Avatar(person: person); VStack(alignment: .leading, spacing: 4) { Text(person.name).font(.headline); Text(person.country).font(.caption).foregroundStyle(Palette.secondary).lineLimit(1) } }.frame(maxWidth: .infinity, alignment: .leading) }.buttonStyle(.plain)
+            NavigationLink(value: Route.profile(person.id)) { HStack { Avatar(person: person); VStack(alignment: .leading, spacing: 4) { Text(person.name).font(.tutuHeadline); Text(person.country).font(.tutuCaption).foregroundStyle(Palette.secondary).lineLimit(1) } }.frame(maxWidth: .infinity, alignment: .leading) }.buttonStyle(.plain)
             ArtButton(label: store.state?.following.contains(person.id) == true ? "Unfollow" : "Follow", asset: store.state?.following.contains(person.id) == true ? "control-selected" : "control-follow") { store.toggleFollow(person.id) }
         }.panel()
     }
@@ -196,6 +196,6 @@ struct LookRow: View {
     @EnvironmentObject private var store: AppStore
     let look: Look
     var body: some View {
-        NavigationLink(value: Route.post(look.id)) { HStack(spacing: 14) { MediaArtwork(reference: look.media.first ?? "wardrobe-placeholder").frame(width: 76, height: 88).clipShape(RoundedRectangle(cornerRadius: 14)); VStack(alignment: .leading, spacing: 6) { Text(store.person(look.authorID).name).font(.headline); Text(look.text).font(.subheadline).lineLimit(3).foregroundStyle(Palette.secondary) }; Spacer(minLength: 0) }.panel() }.buttonStyle(.plain)
+        NavigationLink(value: Route.post(look.id)) { HStack(spacing: 14) { MediaArtwork(reference: look.media.first ?? "wardrobe-placeholder").frame(width: 76, height: 88).clipShape(RoundedRectangle(cornerRadius: 14)); VStack(alignment: .leading, spacing: 6) { Text(store.person(look.authorID).name).font(.tutuHeadline); Text(look.text).font(.tutuSubheadline).lineLimit(3).foregroundStyle(Palette.secondary) }; Spacer(minLength: 0) }.panel() }.buttonStyle(.plain)
     }
 }

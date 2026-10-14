@@ -30,7 +30,7 @@ struct PinkButton: View {
         Button(action: action) {
             ZStack {
                 if let asset, !busy { Image(asset).resizable().scaledToFit() }
-                else { Image("button-base").resizable().scaledToFill(); Text(busy ? "Please wait…" : title).font(.system(size: 16, weight: .semibold, design: .rounded)).foregroundStyle(.white).lineLimit(1).minimumScaleFactor(0.8) }
+                else { Image("button-base").resizable().scaledToFill(); Text(busy ? "Please wait…" : title).font(.outfit(size: 16, weight: .semibold, design: .rounded)).foregroundStyle(.white).lineLimit(1).minimumScaleFactor(0.8) }
             }.frame(maxWidth: .infinity).frame(height: 54).clipped().contentShape(Rectangle())
         }.buttonStyle(.plain).disabled(busy).accessibilityLabel(busy ? "Please wait" : title)
     }
@@ -40,7 +40,7 @@ struct Pill: View {
     var selected = false
     var action: () -> Void
     var body: some View {
-        Button(action: action) { Text(title).font(.system(size: 14, weight: selected ? .bold : .medium, design: .rounded)).lineLimit(1).fixedSize(horizontal: true, vertical: false).padding(.horizontal, 18).padding(.vertical, 12).foregroundStyle(selected ? .white : Palette.ink).background(selected ? Palette.pink : Color.white.opacity(0.8), in: Capsule()) }.buttonStyle(.plain)
+        Button(action: action) { Text(title).font(.outfit(size: 14, weight: selected ? .bold : .medium, design: .rounded)).lineLimit(1).fixedSize(horizontal: true, vertical: false).padding(.horizontal, 18).padding(.vertical, 12).foregroundStyle(selected ? .white : Palette.ink).background(selected ? Palette.pink : Color.white.opacity(0.8), in: Capsule()) }.buttonStyle(.plain)
     }
 }
 struct SectionTabs: View {
@@ -53,7 +53,7 @@ struct SectionTabs: View {
                 ForEach(titles, id: \.self) { title in
                     Button { selection = title } label: {
                         Text(title)
-                            .font(.system(size: 14, weight: selection == title ? .bold : .regular, design: .rounded))
+                            .font(.outfit(size: 14, weight: selection == title ? .bold : .regular, design: .rounded))
                             .foregroundStyle(selection == title ? Palette.ink : Palette.secondary)
                             .underline(selection == title, color: Palette.ink)
                             .fixedSize().frame(minWidth: 44, minHeight: 44)
@@ -71,7 +71,7 @@ struct SoftChoices: View {
         HStack(spacing: 10) {
             ForEach(titles, id: \.self) { title in
                 Button { selection = title } label: {
-                    Text(title).font(.system(size: 13, design: .rounded))
+                    Text(title).font(.outfit(size: 13, design: .rounded))
                         .frame(maxWidth: .infinity).frame(minHeight: 46)
                         .background(selection == title ? Palette.blush : Color(white: 0.98), in: RoundedRectangle(cornerRadius: 12))
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(selection == title ? Palette.pink.opacity(0.45) : .clear, lineWidth: 1))
@@ -88,7 +88,7 @@ struct Page<Content: View>: View {
 struct PageHeader: View {
     let title: String
     @Environment(\.dismiss) private var dismiss
-    var body: some View { HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); Text(title).font(.system(size: 18, weight: .semibold, design: .rounded)); Spacer(); Color.clear.frame(width: 44, height: 44) }.padding(.horizontal, 12).padding(.bottom, 6) }
+    var body: some View { HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); Text(title).font(.outfit(size: 18, weight: .semibold, design: .rounded)); Spacer(); Color.clear.frame(width: 44, height: 44) }.padding(.horizontal, 12).padding(.bottom, 6) }
 }
 struct MainHeading<Trailing: View>: View {
     let asset: String
@@ -114,27 +114,41 @@ struct MediaArtwork: View {
     }
 }
 struct Avatar: View {
+    @EnvironmentObject private var store: AppStore
     let person: Person
     var size: CGFloat = 50
-    var body: some View { MediaArtwork(reference: person.avatar).frame(width: size, height: size).clipShape(Circle()).overlay(Circle().stroke(.white, lineWidth: 2)).accessibilityLabel(person.name) }
+    var body: some View {
+        MediaArtwork(reference: person.avatar).frame(width: size, height: size).clipShape(Circle())
+            .overlay(Circle().stroke(.white, lineWidth: 2))
+            .overlay {
+                if person.id == store.me.id, store.state?.equippedFrame == CoinEconomy.runwayFrame {
+                    Artwork(name: "runway-frame").frame(width: size * 1.25, height: size * 1.25).allowsHitTesting(false)
+                }
+            }
+            .overlay(alignment: .bottomTrailing) {
+                if person.id == store.me.id, let gift = store.state?.featuredGift, (store.state?.inventory[gift] ?? 0) > 0 {
+                    Artwork(name: "gift-" + gift).frame(width: size * 0.38, height: size * 0.38).offset(x: 4, y: 4).allowsHitTesting(false)
+                }
+            }.accessibilityLabel(person.name)
+    }
 }
 struct EmptyState: View {
     let title: String
     var message = ""
-    var body: some View { VStack(spacing: 12) { Artwork(name: "empty-state").frame(width: 130, height: 140); Text(title).font(.headline); if !message.isEmpty { Text(message).font(.subheadline).foregroundStyle(Palette.secondary).multilineTextAlignment(.center) } }.padding(28).frame(maxWidth: .infinity) }
+    var body: some View { VStack(spacing: 12) { Artwork(name: "empty-state").frame(width: 130, height: 140); Text(title).font(.tutuHeadline); if !message.isEmpty { Text(message).font(.tutuSubheadline).foregroundStyle(Palette.secondary).multilineTextAlignment(.center) } }.padding(28).frame(maxWidth: .infinity) }
 }
 struct Field: View {
     let title: String
     @Binding var text: String
     var secure = false
-    var body: some View { VStack(alignment: .leading, spacing: 10) { Text(title).font(.system(size: 15, weight: .bold, design: .rounded)); Group { if secure { SecureField(title, text: $text) } else { TextField(title, text: $text) } }.padding(16).background(.white, in: RoundedRectangle(cornerRadius: 17)).tint(Palette.pink).textInputAutocapitalization(secure || title.contains("Email") ? .never : .sentences).autocorrectionDisabled(secure || title.contains("Email")) }.padding(.vertical, 5) }
+    var body: some View { VStack(alignment: .leading, spacing: 10) { Text(title).font(.outfit(size: 15, weight: .bold, design: .rounded)); Group { if secure { SecureField(title, text: $text) } else { TextField(title, text: $text) } }.padding(16).background(.white, in: RoundedRectangle(cornerRadius: 17)).tint(Palette.pink).textInputAutocapitalization(secure || title.contains("Email") ? .never : .sentences).autocorrectionDisabled(secure || title.contains("Email")) }.padding(.vertical, 5) }
 }
 struct MenuRow: View {
     let title: String
     var value = ""
     var destructive = false
     var action: () -> Void
-    var body: some View { Button(action: action) { HStack { Text(title).fontWeight(.semibold); Spacer(); if !value.isEmpty { Text(value).foregroundStyle(Palette.secondary).lineLimit(1) }; Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 15, height: 15) }.font(.system(size: 15, design: .rounded)).foregroundStyle(destructive ? .red : Palette.ink).padding(.vertical, 20).padding(.horizontal, 18).background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 16)) }.buttonStyle(.plain) }
+    var body: some View { Button(action: action) { HStack { Text(title).fontWeight(.semibold); Spacer(); if !value.isEmpty { Text(value).foregroundStyle(Palette.secondary).lineLimit(1) }; Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 15, height: 15) }.font(.outfit(size: 15, design: .rounded)).foregroundStyle(destructive ? .red : Palette.ink).padding(.vertical, 20).padding(.horizontal, 18).background(.white.opacity(0.6), in: RoundedRectangle(cornerRadius: 16)) }.buttonStyle(.plain) }
 }
 struct ArtToggle: View {
     let title: String
@@ -143,13 +157,13 @@ struct ArtToggle: View {
 }
 struct CoinLabel: View {
     let amount: Int
-    var body: some View { HStack(spacing: 5) { Artwork(name: "icon-coin").frame(width: 22, height: 22); Text(amount.formatted()).font(.system(size: 16, weight: .bold, design: .rounded)).monospacedDigit() } }
+    var body: some View { HStack(spacing: 5) { Artwork(name: "icon-coin").frame(width: 22, height: 22); Text(amount.formatted()).font(.outfit(size: 16, weight: .bold, design: .rounded)).monospacedDigit() } }
 }
 struct NoticeOverlay: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {
         if let notice = store.notice {
-            ZStack { Color.black.opacity(0.35).ignoresSafeArea(); VStack(spacing: 18) { Artwork(name: "brand-mascot").frame(width: 62, height: 62).clipShape(RoundedRectangle(cornerRadius: 18)); Text(notice.title).font(.title3.bold()); Text(notice.message).font(.subheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); PinkButton(title: "Got it") { store.notice = nil } }.padding(24).background(Palette.blush, in: RoundedRectangle(cornerRadius: 26)).padding(28).frame(maxWidth: 440) }.accessibilityAddTraits(.isModal).zIndex(100)
+            ZStack { Color.black.opacity(0.35).ignoresSafeArea(); VStack(spacing: 18) { Artwork(name: "brand-mascot").frame(width: 62, height: 62).clipShape(RoundedRectangle(cornerRadius: 18)); Text(notice.title).font(.tutuTitle3.bold()); Text(notice.message).font(.tutuSubheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); PinkButton(title: "Got it") { store.notice = nil } }.padding(24).background(Palette.blush, in: RoundedRectangle(cornerRadius: 26)).padding(28).frame(maxWidth: 440) }.accessibilityAddTraits(.isModal).zIndex(100)
         }
     }
 }

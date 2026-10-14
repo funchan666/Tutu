@@ -14,15 +14,15 @@ struct StyleStudioView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     VStack(spacing: 6) {
                         if let photo { MediaArtwork(reference: photo).frame(height: 148).clipShape(RoundedRectangle(cornerRadius: 12)) }
-                        Text("Upload Your Photo").font(.system(size: 14, design: .rounded))
-                        Text("Get personalized outfit ideas with AI").font(.system(size: 13, design: .rounded)).multilineTextAlignment(.center)
+                        Text("Upload Your Photo").font(.outfit(size: 14, design: .rounded))
+                        Text("Get personalized outfit ideas with AI").font(.outfit(size: 13, design: .rounded)).multilineTextAlignment(.center)
                         PinkButton(title: "Add Photo", asset: "button-add-photo") { media = true }
                             .frame(width: 200).padding(.top, 8)
                     }.foregroundStyle(Palette.secondary).padding(.vertical, 30).padding(.horizontal, 18)
                         .frame(maxWidth: .infinity).background(.white.opacity(0.95), in: RoundedRectangle(cornerRadius: 18))
                         .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color(red: 0.91, green: 0.78, blue: 0.87), style: StrokeStyle(lineWidth: 1, dash: [1, 3])))
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Choose Your Style").font(.system(size: 16, weight: .bold, design: .rounded))
+                        Text("Choose Your Style").font(.outfit(size: 16, weight: .bold, design: .rounded))
                         HStack(spacing: 14) {
                             ForEach(styles, id: \.self) { item in
                                 Button { style = item } label: {
@@ -30,14 +30,14 @@ struct StyleStudioView: View {
                                         Image("style-" + item.lowercased()).resizable().scaledToFit()
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
                                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(style == item ? Palette.pink.opacity(0.55) : .clear, lineWidth: 1.5))
-                                        Text(item).font(.system(size: 12, design: .rounded)).foregroundStyle(Palette.secondary).lineLimit(1).minimumScaleFactor(0.8)
+                                        Text(item).font(.outfit(size: 12, design: .rounded)).foregroundStyle(Palette.secondary).lineLimit(1).minimumScaleFactor(0.8)
                                     }.frame(maxWidth: .infinity)
                                 }.buttonStyle(.plain).accessibilityAddTraits(style == item ? [.isSelected] : [])
                             }
                         }
                     }
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Occasion").font(.system(size: 16, weight: .bold, design: .rounded))
+                        Text("Occasion").font(.outfit(size: 16, weight: .bold, design: .rounded))
                         SoftChoices(titles: ["Daily", "Work", "Travel"], selection: $occasion)
                     }
                     NavigationLink(value: Route.stylist(style, occasion)) {
@@ -66,14 +66,14 @@ struct StylistChatView: View {
     var body: some View {
         Page(title: "AI Stylist") {
             VStack(spacing: 0) {
-                HStack { Text(style + " · " + occasion).font(.caption.bold()).foregroundStyle(Palette.pink); Spacer(); Button("Clear chat") { store.commit { $0.stylist = [] } }.font(.caption).foregroundStyle(Palette.secondary).disabled(busy).frame(minHeight: 44) }.padding(.horizontal, 18)
+                HStack { Text(style + " · " + occasion).font(.tutuCaption.bold()).foregroundStyle(Palette.pink); Spacer(); Button("Clear chat") { store.commit { $0.stylist = [] } }.font(.tutuCaption).foregroundStyle(Palette.secondary).disabled(busy).frame(minHeight: 44) }.padding(.horizontal, 18)
                 ScrollViewReader { reader in
                     ScrollView {
                         VStack(spacing: 18) {
-                            HStack { Text("Hello! Tell me what you're wearing and what you'd like to try. I can help with outfit ideas from your description.").font(.subheadline).padding(16).foregroundStyle(.white).background(Color(red: 0.22, green: 0.65, blue: 0.95), in: RoundedRectangle(cornerRadius: 18)); Spacer(minLength: 20) }
+                            HStack { Text("Hello! Tell me what you're wearing and what you'd like to try. I can help with outfit ideas from your description.").font(.tutuSubheadline).padding(16).foregroundStyle(.white).background(Color(red: 0.22, green: 0.65, blue: 0.95), in: RoundedRectangle(cornerRadius: 18)); Spacer(minLength: 20) }
                             ForEach(store.state?.stylist ?? []) { message in MessageBubble(message: message) }
-                            if busy { Text("Finding your next look…").font(.subheadline).foregroundStyle(Palette.secondary).frame(maxWidth: .infinity, alignment: .leading) }
-                            if !error.isEmpty { VStack(alignment: .leading, spacing: 12) { Text(error).font(.subheadline); Button("Try again") { send() }.font(.headline).foregroundStyle(Palette.pink) }.panel() }
+                            if busy { Text("Finding your next look…").font(.tutuSubheadline).foregroundStyle(Palette.secondary).frame(maxWidth: .infinity, alignment: .leading) }
+                            if !error.isEmpty { VStack(alignment: .leading, spacing: 12) { Text(error).font(.tutuSubheadline); Button("Try again") { send() }.font(.tutuHeadline).foregroundStyle(Palette.pink) }.panel() }
                             Color.clear.frame(height: 1).id("bottom")
                         }.padding(18)
                     }.scrollDismissesKeyboard(.interactively).onChange(of: store.state?.stylist.count) { _, _ in withAnimation { reader.scrollTo("bottom", anchor: .bottom) } }

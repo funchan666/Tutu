@@ -30,6 +30,13 @@
 	<string>Save your captured looks to your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Choose photos and videos for your looks, album, and profile.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>TutuOutfit-Regular.ttf</string>
+		<string>TutuOutfit-Medium.ttf</string>
+		<string>TutuOutfit-SemiBold.ttf</string>
+		<string>TutuOutfit-Bold.ttf</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>

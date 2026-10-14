@@ -1,9 +1,10 @@
-product_id,type,display_name,description,base_coins,bonus_coins,total_coins,bonus_percent,proposed_usd_price,configuration_status
-com.tutu.style.coins.100,Consumable,100 Tutu Coins,"Add 100 coins to your Tutu balance, including 0 bonus coins.",100,0,100,0,0.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.500,Consumable,525 Tutu Coins,"Add 525 coins to your Tutu balance, including 25 bonus coins.",500,25,525,5,4.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.1000,Consumable,"1,100 Tutu Coins","Add 1,100 coins to your Tutu balance, including 100 bonus coins.",1000,100,1100,10,9.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.2000,Consumable,"2,300 Tutu Coins","Add 2,300 coins to your Tutu balance, including 300 bonus coins.",2000,300,2300,15,19.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.5000,Consumable,"6,000 Tutu Coins","Add 6,000 coins to your Tutu balance, including 1,000 bonus coins.",5000,1000,6000,20,49.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.10000,Consumable,"12,500 Tutu Coins","Add 12,500 coins to your Tutu balance, including 2,500 bonus coins.",10000,2500,12500,25,99.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.1500,Consumable,"1,650 Tutu Coins","Add 1,650 coins to your Tutu balance, including 150 bonus coins.",1500,150,1650,10,14.99,Proposed; not created or verified in App Store Connect
-com.tutu.style.coins.3000,Consumable,"3,450 Tutu Coins","Add 3,450 coins to your Tutu balance, including 450 bonus coins.",3000,450,3450,15,29.99,Proposed; not created or verified in App Store Connect
+product_id,type,display_name,description,total_coins,usd_price,origin,configuration_status
+izfxfjwpsvwjonwq,Consumable,450 Tutu Coins,Add 450 coins for avatar frames and gift collectibles.,450,0.99,User supplied,Requires App Store Connect configuration and sandbox verification
+qoohvxhjfzgwnzsv,Consumable,950 Tutu Coins,Add 950 coins for avatar frames and gift collectibles.,950,1.99,User supplied,Requires App Store Connect configuration and sandbox verification
+mvnosjxwqeapluwc,Consumable,"2,600 Tutu Coins","Add 2,600 coins for avatar frames and gift collectibles.",2600,4.99,User supplied,Requires App Store Connect configuration and sandbox verification
+gogeyhnqocosotoj,Consumable,"5,500 Tutu Coins","Add 5,500 coins for avatar frames and gift collectibles.",5500,9.99,User supplied,Requires App Store Connect configuration and sandbox verification
+gkduqkyagqmdczvp,Consumable,"12,000 Tutu Coins","Add 12,000 coins for avatar frames and gift collectibles.",12000,19.99,User supplied,Requires App Store Connect configuration and sandbox verification
+hnqvktmrcxpslwad,Consumable,"19,000 Tutu Coins","Add 19,000 coins for avatar frames and gift collectibles.",19000,29.99,Added,Requires App Store Connect configuration and sandbox verification
+wvioqagpchpyenva,Consumable,"33,000 Tutu Coins","Add 33,000 coins for avatar frames and gift collectibles.",33000,49.99,User supplied,Requires App Store Connect configuration and sandbox verification
+zbrynfqjvctmksae,Consumable,"48,000 Tutu Coins","Add 48,000 coins for avatar frames and gift collectibles.",48000,69.99,Added,Requires App Store Connect configuration and sandbox verification
+gmmdvhzpaszwhajc,Consumable,"72,000 Tutu Coins","Add 72,000 coins for avatar frames and gift collectibles.",72000,99.99,User supplied,Requires App Store Connect configuration and sandbox verification
