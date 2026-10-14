@@ -246,15 +246,31 @@ enum Catalog {
                              voice: false, video: video, viewerCount: viewerCount, cover: item.image)
         }
         // Voice-room covers use supplied host portraits; counts are local presentation data.
-        let voiceHosts = ["lily", "ava", "editorial-001", "editorial-005", "editorial-008", "noah", "editorial-011", "editorial-013"]
-        let voiceTitles = ["Vintage finds & coffee", "Everyday outfit chat", "Color stories", "The layering lounge", "Weekend wardrobe", "City style conversations", "Vintage closet favorites", "Minimal mood"]
-        let voiceCounts = [48, 52, 46, 55, 49, 51, 47, 54]
-        let voiceTopics = ["Vintage Finds", "Outfit Tips", "Outfit Tips", "Outfit Tips", "Style Talk", "Style Talk", "Vintage Finds", "Style Talk"]
-        let voiceRooms: [StyleRoom] = voiceHosts.enumerated().compactMap { index, id in
-            guard let person = people.first(where: { $0.id == id }) else { return nil }
-            return StyleRoom(id: "room-\(id)", hostID: id, title: voiceTitles[index],
+        let voiceSelections: [(hostID: String, title: String, topic: String, count: Int)] = [
+            ("lily", "Vintage finds & coffee", "Vintage Finds", 48),
+            ("ava", "Everyday outfit chat", "Outfit Tips", 52),
+            ("editorial-001", "Color stories", "Outfit Tips", 46),
+            ("editorial-005", "The layering lounge", "Outfit Tips", 55),
+            ("editorial-008", "Weekend wardrobe", "Style Talk", 49),
+            ("noah", "City style conversations", "Style Talk", 51),
+            ("editorial-011", "Vintage closet favorites", "Vintage Finds", 47),
+            ("editorial-013", "Minimal mood", "Style Talk", 54),
+            ("mia", "Streetwear styling session", "Outfit Tips", 53),
+            ("ella", "Your capsule wardrobe", "Outfit Tips", 49),
+            ("editorial-007", "Sneakers meet tailoring", "Outfit Tips", 51),
+            ("editorial-009", "What are you wearing today?", "Style Talk", 48),
+            ("editorial-010", "Coffee break style chat", "Style Talk", 54),
+            ("editorial-024", "After-hours outfit club", "Style Talk", 50),
+            ("leo", "Denim through the decades", "Vintage Finds", 52),
+            ("editorial-012", "Thrift finds worth keeping", "Vintage Finds", 46),
+            ("editorial-014", "Retro accessories club", "Vintage Finds", 53),
+            ("editorial-025", "The secondhand style edit", "Vintage Finds", 50)
+        ]
+        let voiceRooms: [StyleRoom] = voiceSelections.compactMap { selection in
+            guard let person = people.first(where: { $0.id == selection.hostID }) else { return nil }
+            return StyleRoom(id: "room-\(selection.hostID)", hostID: selection.hostID, title: selection.title,
                              category: RoomCategories.resolved(person.interests.first ?? "Daily"),
-                             voice: true, voiceTopic: voiceTopics[index], viewerCount: voiceCounts[index], cover: person.avatar)
+                             voice: true, voiceTopic: selection.topic, viewerCount: selection.count, cover: person.avatar)
         }
         return liveRooms + voiceRooms
     }()

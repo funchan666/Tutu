@@ -6,7 +6,7 @@ struct ProfileStats: View {
     var isMe: Bool { person.id == store.me.id }
     var body: some View {
         HStack(spacing: 0) {
-            stat(isMe ? store.state?.followers.count ?? 0 : 12 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
+            stat(isMe ? store.followerIDs.count : 12 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
             Divider().frame(height: 26)
             stat(isMe ? store.state?.following.count ?? 0 : 8 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 3, "Following", route: isMe ? .relationships("Following") : nil)
             Divider().frame(height: 26)

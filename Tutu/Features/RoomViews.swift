@@ -550,32 +550,147 @@ private struct RoomGiftPicker: View {
     }
 }
 
+private enum RoomCreationKind: String, CaseIterable {
+    case live = "Live Room", voice = "Voice Room"
+    var artwork: String { self == .voice ? "tab-party-active" : "tab-live-active" }
+    var caption: String { self == .voice ? "Talk style together" : "Share your look" }
+}
 struct CreateRoomView: View {
     @EnvironmentObject private var store: AppStore
     @State private var title = ""
     @State private var category = "Daily"
-    @State private var type = "Live Room"
-    @State private var cover = "wardrobe-placeholder"
+    @State private var topic = VoiceRoomTopics.options[0]
+    @State private var kind: RoomCreationKind = .live
+    @State private var liveCover: String?
+    @State private var voiceCover: String?
+    @State private var coverKind: RoomCreationKind?
     @State private var media = false
     @State private var error = ""
     @State private var created: StyleRoom?
+    @FocusState private var editingTitle: Bool
+    private var cover: String {
+        kind == .voice ? voiceCover ?? store.me.avatar : liveCover ?? "wardrobe-placeholder"
+    }
     var body: some View {
         Page(title: "Create a room") {
-            ScrollView { VStack(spacing: 22) {
-                SectionTabs(titles: ["Live Room", "Voice Room"], selection: $type)
-                Button { media = true } label: { ZStack(alignment: .bottom) { MediaArtwork(reference: cover).frame(height: 220); Text("Choose a cover").font(.tutuHeadline).padding(14).frame(maxWidth: .infinity).background(.white.opacity(0.85)) }.clipShape(RoundedRectangle(cornerRadius: 22)) }.buttonStyle(.plain)
-                Field(title: "Room name", text: $title)
-                SectionTabs(titles: RoomCategories.options, selection: $category)
-                if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(.red) }
-                PinkButton(title: "Create Room", asset: "button-create-room") {
-                    guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, title.count <= 60 else { error = "Give your room a name under 60 characters."; return }
-                    let room = StyleRoom(id: UUID().uuidString, hostID: store.me.id, title: title, category: category, voice: type == "Voice Room", cover: cover)
-                    if store.commit({ $0.rooms.append(room) }) { created = room }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Make room for your style").font(.outfit(size: 24, weight: .bold))
+                        Text("A look to share. A conversation to start.")
+                            .font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                    }
+                    HStack(spacing: 12) {
+                        ForEach(RoomCreationKind.allCases, id: \.self) { option in
+                            Button {
+                                editingTitle = false; kind = option; error = ""
+                            } label: {
+                                VStack(alignment: .leading, spacing: 9) {
+                                    HStack {
+                                        Artwork(name: option.artwork).frame(width: 32, height: 32)
+                                        Spacer()
+                                        if kind == option { Artwork(name: "control-selected").frame(width: 22, height: 22) }
+                                    }
+                                    Text(option.rawValue).font(.outfit(size: 16, weight: .semibold))
+                                    Text(option.caption).font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
+                                }.frame(maxWidth: .infinity, alignment: .leading).padding(16)
+                                    .background(kind == option ? Palette.blush : .white, in: RoundedRectangle(cornerRadius: 20))
+                                    .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(kind == option ? Palette.pink : .clear, lineWidth: 1.5) }
+                                    .contentShape(RoundedRectangle(cornerRadius: 20))
+                            }.buttonStyle(.plain).accessibilityAddTraits(kind == option ? [.isSelected] : [])
+                        }
+                    }
+                    coverSelector
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("Room name").font(.tutuHeadline)
+                            Spacer()
+                            Text("\(title.count)/60").font(.tutuCaption).foregroundStyle(Palette.secondary)
+                        }
+                        TextField(kind == .voice ? "What's everyone talking about?" : "Give your look a headline", text: $title)
+                            .font(.tutuBody).padding(16).background(.white, in: RoundedRectangle(cornerRadius: 16))
+                            .focused($editingTitle).submitLabel(.done).onSubmit { editingTitle = false }
+                            .onChange(of: title) { _, value in
+                                if value.count > 60 { title = String(value.prefix(60)) }
+                                error = ""
+                            }
+                    }
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(kind == .voice ? "Conversation topic" : "Style category").font(.tutuHeadline)
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                            ForEach(kind == .voice ? VoiceRoomTopics.options : RoomCategories.options, id: \.self) { value in
+                                topicButton(value)
+                            }
+                        }
+                    }
+                    if kind == .voice {
+                        HStack(spacing: 12) {
+                            Artwork(name: "icon-mic").frame(width: 36, height: 36)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("8 seats, one conversation").font(.tutuSubheadline.bold())
+                                Text("Guests request a seat. You choose who joins.").font(.tutuCaption).foregroundStyle(Palette.secondary)
+                            }
+                        }
+                    }
+                    if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(Palette.pink).accessibilityLabel("Room name error. " + error) }
+                }.padding(20)
+            }.scrollDismissesKeyboard(.interactively)
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    VStack(spacing: 9) {
+                        PinkButton(title: kind == .voice ? "Create voice room" : "Create live room", action: create)
+                        Text("Creating a room doesn't start a broadcast.")
+                            .font(.tutuCaption).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
+                    }.padding(.horizontal, 20).padding(.top, 12).padding(.bottom, 10).background(Palette.blush)
                 }
-                Text("Set up your room before going live. No broadcast starts when you create a room.").font(.tutuCaption).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
-            }.padding(20) }.scrollDismissesKeyboard(.interactively)
-        }.sheet(isPresented: $media) { MediaSourceView { item in do { cover = try store.importMedia(item).reference } catch { self.error = error.localizedDescription } } }
-            .navigationDestination(item: $created) { RoomView(room: $0) }
+        }.sheet(isPresented: $media, onDismiss: { coverKind = nil }) {
+            MediaSourceView(title: "Choose a room cover", subtitle: "Give your room a look of its own.") { item in
+                do {
+                    let reference = try store.importMedia(item).reference
+                    if coverKind == .voice { voiceCover = reference } else { liveCover = reference }
+                } catch { store.show("Cover not added", error.localizedDescription) }
+            }
+        }.navigationDestination(item: $created) { RoomView(room: $0) }
+    }
+    private var coverSelector: some View {
+        Button {
+            editingTitle = false; coverKind = kind; media = true
+        } label: {
+            HStack(spacing: 16) {
+                MediaArtwork(reference: cover).frame(width: 88, height: 104)
+                    .clipShape(RoundedRectangle(cornerRadius: 14)).allowsHitTesting(false)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Room cover").font(.tutuHeadline)
+                    Text(kind == .voice ? "Your avatar is the default cover." : "Pick a photo that sets the mood.")
+                        .font(.tutuCaption).foregroundStyle(Palette.secondary)
+                    Text("Change photo").font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink)
+                }
+                Spacer(minLength: 0)
+                Artwork(name: "icon-photo").frame(width: 32, height: 32).allowsHitTesting(false)
+            }.padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                .background(.white, in: RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .contentShape(RoundedRectangle(cornerRadius: 20))
+        }.buttonStyle(.plain).accessibilityLabel("Change room cover")
+    }
+    private func topicButton(_ value: String) -> some View {
+        let selected = (kind == .voice ? topic : category) == value
+        return Button {
+            if kind == .voice { topic = value } else { category = value }
+        } label: {
+            Text(value).font(.outfit(size: 14, weight: selected ? .semibold : .regular))
+                .foregroundStyle(selected ? .white : Palette.ink).frame(maxWidth: .infinity).frame(minHeight: 44)
+                .background {
+                    if selected { Image("button-base").resizable() } else { Color.white }
+                }.clipShape(Capsule()).contentShape(Capsule())
+        }.buttonStyle(.plain).accessibilityAddTraits(selected ? [.isSelected] : [])
+    }
+    private func create() {
+        editingTitle = false
+        let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, name.count <= 60 else { error = "Add a room name to get started."; return }
+        let room = StyleRoom(id: UUID().uuidString, hostID: store.me.id, title: name, category: category,
+                             voice: kind == .voice, voiceTopic: kind == .voice ? topic : nil, cover: cover)
+        if store.commit({ $0.rooms.append(room) }) { created = room }
     }
 }
 struct CallView: View {
@@ -602,7 +717,7 @@ struct CallView: View {
                 PinkButton(title: "End call") { camera.stop(); dismiss() }
             }.padding(24).foregroundStyle(.white)
         }.toolbar(.hidden, for: .navigationBar).task {
-            guard store.state?.following.contains(personID) == true, store.state?.followers.contains(personID) == true, !store.isPersonHidden(personID) else { store.show("A little connection first", "Follow each other before starting a call."); dismiss(); return }
+            guard store.state?.following.contains(personID) == true, store.followerIDs.contains(personID), !store.isPersonHidden(personID) else { store.show("A little connection first", "Follow each other before starting a call."); dismiss(); return }
             await camera.start(video: video); started = true
         }.onDisappear { camera.stop() }.onChange(of: scene) { _, phase in if phase != .active { camera.stop(); dismiss() } }
             .moderationVisibility(hidden: store.isPersonHidden(personID))

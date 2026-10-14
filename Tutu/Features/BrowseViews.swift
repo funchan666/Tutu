@@ -169,19 +169,23 @@ struct PartyHomeView: View {
     @State private var relation = "Explore"
     @State private var filter = "All"
     var filtered: [StyleRoom] {
-        store.rooms.filter { room in
+        let matches = store.rooms.filter { room in
             guard room.voice else { return false }
             let follows = store.state?.following.contains(room.hostID) ?? false
-            let follower = store.state?.followers.contains(room.hostID) ?? false
-            let relationMatches = relation == "Explore" || (relation == "Friends" ? follows && follower : relation == "Following" ? follows : follower)
+            let follower = store.followerIDs.contains(room.hostID)
+            let relationMatches = relation == "Explore" || relation == "Popular" || (relation == "Following" ? follows : follower)
             let topicMatches = filter == "All" || room.conversationTopic == filter
             return relationMatches && topicMatches
         }
+        return relation == "Popular" ? matches.sorted {
+            let left = $0.viewerCount ?? 0, right = $1.viewerCount ?? 0
+            return left == right ? $0.id < $1.id : left > right
+        } : matches
     }
     var body: some View {
         VStack(spacing: 0) {
             MainHeading(asset: "heading-party") { NavArt(route: .search, asset: "nav-search", label: "Search") }
-            SectionTabs(titles: ["Explore", "Friends", "Following", "Followers"], selection: $relation, compact: true)
+            SectionTabs(titles: ["Explore", "Popular", "Following", "Followers"], selection: $relation, compact: true)
             ScrollView {
                 VStack(spacing: 8) {
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -208,7 +212,7 @@ struct PartyHomeView: View {
                     }
                     if filtered.isEmpty {
                         VStack(spacing: 12) {
-                            EmptyState(title: "No voice rooms here", message: filter != "All" ? "Try All to browse voice rooms." : relation == "Explore" ? "Check back for more style conversations." : "Explore voice rooms and find people to follow.")
+                            EmptyState(title: "No voice rooms here", message: filter != "All" ? "Try All to see more rooms in this list." : relation == "Following" ? "Voice rooms hosted by people you follow will appear here." : relation == "Followers" ? "Voice rooms hosted by people who follow you will appear here." : "Check back for more style conversations.")
                             if filter != "All" || relation != "Explore" {
                                 Button("Explore all voice rooms") { relation = "Explore"; filter = "All" }
                                     .font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44)
@@ -217,7 +221,7 @@ struct PartyHomeView: View {
                     }
                 }.padding(.horizontal, 16).padding(.bottom, 16)
             }
-        }
+        }.onChange(of: relation) { _, _ in filter = "All" }
     }
 }
 struct SearchView: View {
@@ -296,7 +300,7 @@ struct RelationshipView: View {
     @EnvironmentObject private var store: AppStore
     let kind: String
     var ids: Set<String> {
-        let saved = kind == "Following" ? store.state?.following ?? [] : store.state?.followers ?? []
+        let saved = kind == "Following" ? store.state?.following ?? [] : store.followerIDs
         return Set(saved.filter { !store.isPersonHidden($0) })
     }
     var body: some View { Page(title: kind) { ScrollView { LazyVStack(spacing: 12) { ForEach(store.people.filter { ids.contains($0.id) }) { PersonRow(person: $0) }; if ids.isEmpty { EmptyState(title: kind == "Following" ? "Find your people" : "Your circle starts here", message: "Connections will appear here.") } }.padding(16) } } }

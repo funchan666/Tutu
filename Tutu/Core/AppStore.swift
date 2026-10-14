@@ -10,11 +10,15 @@ import UserNotifications
     @Published var welcomeVisible = false
     @Published var coinPrompt: CoinSpend?
     @Published var walletRequest = 0
-    private var arrivals: Task<Void, Never>?
     private let files = FileManager.default
     let root: URL
     var sessionID: String? { state?.person.id }
     var me: Person { state?.person ?? Person(id: "", name: "Your name", handle: "you", photos: [], catalog: false) }
+    /// Legacy scripted arrivals are not actual follower relationships.
+    var followerIDs: Set<String> {
+        guard let state else { return [] }
+        return Set(state.followers.subtracting(state.catalogArrivalIDs).filter { !isPersonHidden($0) })
+    }
     func isContentHidden(_ kind: String, _ id: String) -> Bool {
         state?.hiddenContent?.contains(ModerationContent(kind: kind, id: id)) == true
     }
@@ -59,7 +63,7 @@ import UserNotifications
             }.value
             guard !Task.isCancelled else { return }
             state = restored
-            if restored != nil { scheduleArrivals() }
+            if restored != nil { syncReminder() }
         } catch {
             notice = Notice(title: "Could not open your profile", message: "Your saved data was left unchanged. Please sign in again.")
         }
@@ -134,7 +138,7 @@ import UserNotifications
             do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
             state = profile
         }
-        UserDefaults.standard.set(sessionID, forKey: "activeProfile"); returnToLogin = false; tab = 0; scheduleArrivals()
+        UserDefaults.standard.set(sessionID, forKey: "activeProfile"); returnToLogin = false; tab = 0; syncReminder()
     }
     func acceptAppleIdentity(userID: String, name: String?, email: String?) throws {
         var accounts = try AccountVault.load()
@@ -148,9 +152,9 @@ import UserNotifications
             do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
             state = profile
         }
-        UserDefaults.standard.set(sessionID, forKey: "activeProfile"); tab = 0; scheduleArrivals()
+        UserDefaults.standard.set(sessionID, forKey: "activeProfile"); tab = 0; syncReminder()
     }
-    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); arrivals?.cancel(); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = true; UserDefaults.standard.removeObject(forKey: "activeProfile") }
+    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = true; UserDefaults.standard.removeObject(forKey: "activeProfile") }
     func deleteAccount() throws {
         guard let id = sessionID else { return }
         let accounts = try AccountVault.load()
@@ -222,7 +226,7 @@ import UserNotifications
     }
     func canContact(_ id: String) -> Bool {
         guard let s = state, !isPersonHidden(id) else { show("Member blocked", "Unblock this member in Privacy settings to continue."); return false }
-        guard s.following.contains(id), s.followers.contains(id) else { show("A little connection first", "Follow each other before sending a message or starting a call. Your message will stay here."); return false }
+        guard s.following.contains(id), followerIDs.contains(id) else { show("A little connection first", "Follow each other before sending a message or starting a call. Your message will stay here."); return false }
         guard s.confirmedMutual.contains(id) else { show("Connection unavailable", "We couldn't verify this connection. Please try again later. Your message has been kept."); return false }
         return true
     }
@@ -256,6 +260,7 @@ import UserNotifications
         guard ref.hasPrefix("media/"), let id = sessionID, !ref.contains("..") else { return nil }
         return root.appendingPathComponent(id).appendingPathComponent(String(ref.dropFirst(6)))
     }
+
     private func syncReminder() {
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: ["daily-checkin"])
@@ -270,24 +275,6 @@ import UserNotifications
                 try await center.add(UNNotificationRequest(identifier: "daily-checkin", content: content, trigger: UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: 18), repeats: true)))
                 if sessionID != accountID { center.removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]) }
             } catch { show("Reminder unavailable", "Your daily reminder couldn't be scheduled. Turn it on again in Settings to retry.") }
-        }
-    }
-    private func scheduleArrivals() {
-        syncReminder()
-        arrivals?.cancel()
-        guard let accountID = sessionID else { return }
-        arrivals = Task { [weak self] in
-            for (index, id) in ["mia", "lily"].enumerated() {
-                try? await Task.sleep(for: .seconds(index == 0 ? 25 : 50))
-                guard !Task.isCancelled, let self, self.sessionID == accountID else { return }
-                if self.state?.catalogArrivalIDs.contains(id) == false {
-                    self.commit { s in
-                        s.catalogArrivalIDs.insert(id)
-                        if !self.isPersonHidden(id) { s.followers.insert(id) }
-                        // Intentionally never adds to following or confirmedMutual.
-                    }
-                }
-            }
         }
     }
 }

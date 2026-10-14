@@ -81,7 +81,7 @@ struct ChatView: View {
     }
     func beginCall(_ video: Bool) {
         guard !store.isPersonHidden(personID) else { store.show("Member blocked", "Unblock this member first."); return }
-        guard store.state?.following.contains(personID) == true, store.state?.followers.contains(personID) == true else { store.show("A little connection first", "Follow each other before starting a call."); return }
+        guard store.state?.following.contains(personID) == true, store.followerIDs.contains(personID) else { store.show("A little connection first", "Follow each other before starting a call."); return }
         call = CallDestination(video: video)
     }
     func send() {
