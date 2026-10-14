@@ -1,0 +1,77 @@
+{
+  "note": "Local voice-room presentation catalog, authored seat assignments and local message/gift activity. Counts are configured, not remote presence. Mic requests remain in a cancelable local waiting state; no host approval or microphone activation is simulated. Real voice transport is not connected. Covers resolve from current host avatars.",
+  "rooms": [
+    {
+      "roomID": "room-lily",
+      "hostID": "lily",
+      "title": "Vintage finds & coffee",
+      "cover": "bundle/editorial-photo-003.jpg",
+      "viewerCount": 48,
+      "voiceTopic": "Vintage Finds",
+      "occupiedSeatCount": 4
+    },
+    {
+      "roomID": "room-ava",
+      "hostID": "ava",
+      "title": "Everyday outfit chat",
+      "cover": "bundle/editorial-photo-006.jpg",
+      "viewerCount": 52,
+      "voiceTopic": "Outfit Tips",
+      "occupiedSeatCount": 4
+    },
+    {
+      "roomID": "room-editorial-001",
+      "hostID": "editorial-001",
+      "title": "Color stories",
+      "cover": "bundle/editorial-photo-001.jpg",
+      "viewerCount": 46,
+      "voiceTopic": "Outfit Tips",
+      "occupiedSeatCount": 5
+    },
+    {
+      "roomID": "room-editorial-005",
+      "hostID": "editorial-005",
+      "title": "The layering lounge",
+      "cover": "bundle/editorial-photo-005.jpg",
+      "viewerCount": 55,
+      "voiceTopic": "Outfit Tips",
+      "occupiedSeatCount": 5
+    },
+    {
+      "roomID": "room-editorial-008",
+      "hostID": "editorial-008",
+      "title": "Weekend wardrobe",
+      "cover": "bundle/editorial-photo-008.jpg",
+      "viewerCount": 49,
+      "voiceTopic": "Style Talk",
+      "occupiedSeatCount": 4
+    },
+    {
+      "roomID": "room-noah",
+      "hostID": "noah",
+      "title": "City style conversations",
+      "cover": "bundle/editorial-photo-028.jpg",
+      "viewerCount": 51,
+      "voiceTopic": "Style Talk",
+      "occupiedSeatCount": 4
+    },
+    {
+      "roomID": "room-editorial-011",
+      "hostID": "editorial-011",
+      "title": "Vintage closet favorites",
+      "cover": "bundle/editorial-photo-011.jpg",
+      "viewerCount": 47,
+      "voiceTopic": "Vintage Finds",
+      "occupiedSeatCount": 4
+    },
+    {
+      "roomID": "room-editorial-013",
+      "hostID": "editorial-013",
+      "title": "Minimal mood",
+      "cover": "bundle/editorial-photo-013.jpg",
+      "viewerCount": 54,
+      "voiceTopic": "Style Talk",
+      "occupiedSeatCount": 4
+    }
+  ]
+}

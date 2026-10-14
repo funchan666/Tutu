@@ -1,0 +1,137 @@
+{
+  "note": "Portrait associations and fictional app-role demographics explicitly authorized by the user. These are not real biographical claims about people depicted in supplied media. Galleries contain the assigned portrait and existing video poster. Video covers and playback remain unchanged.",
+  "hosts": [
+    {
+      "personID": "film-01",
+      "name": "Harper",
+      "portraitSource": "picss/Dd6vaB5DmUu.jpg",
+      "avatar": "bundle/editorial-photo-031.jpg",
+      "photos": [
+        "bundle/editorial-photo-031.jpg",
+        "bundle/editorial-video-01.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "2001-04-18",
+        "gender": "Woman",
+        "country": "United Kingdom",
+        "city": "London",
+        "bio": "Soft tailoring, warm neutrals and little everyday luxuries.",
+        "interests": [
+          "Chic",
+          "Tailoring",
+          "City walks"
+        ]
+      }
+    },
+    {
+      "personID": "film-02",
+      "name": "Riley",
+      "portraitSource": "picss/DdzLHFTiT1o.jpg",
+      "avatar": "bundle/editorial-photo-045.jpg",
+      "photos": [
+        "bundle/editorial-photo-045.jpg",
+        "bundle/editorial-video-02.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "2002-08-09",
+        "gender": "Man",
+        "country": "United States",
+        "city": "New York",
+        "bio": "Streetwear with personality. A fresh mix for every city day.",
+        "interests": [
+          "Streetwear",
+          "Sneakers",
+          "Vintage"
+        ]
+      }
+    },
+    {
+      "personID": "film-04",
+      "name": "Jordan",
+      "portraitSource": "picss/DeUJGJqEooW.jpg",
+      "avatar": "bundle/editorial-photo-061.jpg",
+      "photos": [
+        "bundle/editorial-photo-061.jpg",
+        "bundle/editorial-video-04.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "2000-02-22",
+        "gender": "Woman",
+        "country": "United States",
+        "city": "Los Angeles",
+        "bio": "After-dark layers, bold accessories and a little edge.",
+        "interests": [
+          "Streetwear",
+          "Layering",
+          "Accessories"
+        ]
+      }
+    },
+    {
+      "personID": "film-07",
+      "name": "Avery",
+      "portraitSource": "picss/DbnonSGoA2s.jpg",
+      "avatar": "bundle/editorial-photo-024.jpg",
+      "photos": [
+        "bundle/editorial-photo-024.jpg",
+        "bundle/editorial-video-07.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "2003-06-12",
+        "gender": "Woman",
+        "country": "Canada",
+        "city": "Vancouver",
+        "bio": "Easy everyday outfits, fresh air and weekend discoveries.",
+        "interests": [
+          "Daily style",
+          "Nature",
+          "Travel"
+        ]
+      }
+    },
+    {
+      "personID": "film-09",
+      "name": "Blair",
+      "portraitSource": "picss/Dd15BYGEeNh.jpg",
+      "avatar": "bundle/editorial-photo-028.jpg",
+      "photos": [
+        "bundle/editorial-photo-028.jpg",
+        "bundle/editorial-video-09.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "1999-09-07",
+        "gender": "Man",
+        "country": "Australia",
+        "city": "Melbourne",
+        "bio": "Clean shapes, thoughtful details and pieces to wear on repeat.",
+        "interests": [
+          "Minimalist",
+          "Capsule wardrobe",
+          "Coffee"
+        ]
+      }
+    },
+    {
+      "personID": "film-11",
+      "name": "Cameron",
+      "portraitSource": "picss/CsA20mbIOMa.jpg",
+      "avatar": "bundle/editorial-photo-003.jpg",
+      "photos": [
+        "bundle/editorial-photo-003.jpg",
+        "bundle/editorial-video-11.jpg"
+      ],
+      "roleProfile": {
+        "birthday": "2002-03-26",
+        "gender": "Woman",
+        "country": "France",
+        "city": "Paris",
+        "bio": "Relaxed city looks with a playful twist and a love of denim.",
+        "interests": [
+          "Daily style",
+          "Denim",
+          "City walks"
+        ]
+      }
+    }
+  ]
+}

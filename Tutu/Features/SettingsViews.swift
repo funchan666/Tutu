@@ -1,6 +1,5 @@
 import SwiftUI
 import UserNotifications
-import MessageUI
 
 struct SettingsView: View {
     @EnvironmentObject private var store: AppStore
@@ -91,7 +90,7 @@ struct PrivacyView: View {
                     Text("Blocked members").font(.tutuTitle3.bold()).padding(.top, 16)
                     let blocked = store.state?.blocked ?? []
                     if blocked.isEmpty { EmptyState(title: "Your block list is empty") }
-                    ForEach(blocked.sorted(), id: \.self) { id in HStack { Avatar(person: store.person(id)); Text(store.person(id).name).font(.tutuHeadline); Spacer(); Button("Unblock") { store.commit { $0.blocked.remove(id) } }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.panel() }
+                    ForEach(blocked.sorted(), id: \.self) { id in HStack { Avatar(person: store.person(id)); Text(store.person(id).name).font(.tutuHeadline); Spacer(); Button("Unblock") { store.unblock(id) }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44) }.panel() }
                 }.padding(20)
             }
         }
@@ -154,7 +153,7 @@ struct InformationView: View {
         case "Coins": return [("Your style fund", "Unlock the Runway Ribbon avatar frame for 240 coins, or collect gifts for 40–1,800 coins each. Wear an owned gift as your profile charm at no additional cost."), ("Always free", "Messages, voice and video chats, AI style conversations, browsing, likes, comments and posting never cost coins."), ("Before you spend", "Every coin purchase shows a confirmation and your remaining balance. If you need more coins, Get Coins opens without deducting anything. Gift delivery is currently unavailable; collectibles remain yours to wear."), ("Apple purchases", "Tap a pack to get that product from Apple. The Apple purchase sheet shows the final local price. Only verified transactions add coins. Your wallet is saved on this device, and consumable coins are not restored like subscriptions."), ("Your welcome drop", "New accounts receive 360 coins once, after completing their profile and entering the home screen. Coins never expire.")]
         case "Daily Check": return [("One visit, one reward", "Check in once each calendar day using your device's current time zone. Reopening the app doesn't reset the daily limit."), ("Seven days together", "Rewards are 10, 20, 10, 20, 10, 20, then 100 coins. A missed day starts a new streak. After day seven, a new seven-day cycle begins."), ("A little progress", "Each check-in adds 10 activity points. Every 100 points adds one level. Your balance and level update across the app.")]
         case "My Level": return [("Level \(store.state?.level ?? 1)", "You have \(store.state?.points ?? 0) activity points. Your next level starts at \((store.state?.level ?? 1) * 100) points."), ("Keep showing up", "Daily Check adds 10 activity points. Levels recognise participation and do not unlock private communication.")]
-        case "Community Guidelines": return [("A community for adults", "Tutu is for people aged 18 and older. Share style, music, and conversation with kindness."), ("Respect every person", "No harassment, hate, threats, impersonation, scams, or sharing another person's private information. Respect boundaries and consent."), ("Share responsibly", "Only share media you have permission to use. Sexual exploitation, nudity, graphic violence, dangerous activity, and illegal material are not permitted."), ("Keep rooms welcoming", "Hosts should remove disruptive participants. Never record or share another person's voice or image without permission."), ("Report and block", "Open the more menu on a profile, post, photo, or comment to report the exact item or block its author. A report that fails to send remains a draft; it has not reached moderators."), ("Gifts are optional", "Do not pressure anyone to buy or send gifts. Gifts do not grant a right to attention, a reply, or a private call.")]
+        case "Community Guidelines": return [("A community for adults", "Tutu is for people aged 18 and older. Share style, music, and conversation with kindness."), ("Respect every person", "No harassment, hate, threats, impersonation, scams, or sharing another person's private information. Respect boundaries and consent."), ("Share responsibly", "Only share media you have permission to use. Sexual exploitation, nudity, graphic violence, dangerous activity, and illegal material are not permitted."), ("Keep rooms welcoming", "Hosts should remove disruptive participants. Never record or share another person's voice or image without permission."), ("Report and block", "Open the more menu on a profile, post, photo, or comment to report the exact item or block its author. Reports and block choices are saved on this device. Reported content is hidden immediately; blocking a member also hides their rooms, posts and chats."), ("Gifts are optional", "Do not pressure anyone to buy or send gifts. Gifts do not grant a right to attention, a reply, or a private call.")]
         case "Account data": return [("Stored on your device", "Your profile, preferences, relationships, looks, comments, and wallet records are stored in this app's private storage. Password verification data is protected by Keychain."), ("Leaving or deleting", "Logging out keeps your saved account. Deleting your account removes its credentials and associated saved content. It does not cancel an Apple transaction or delete your Apple ID."), ("Your original files", "Media selected from Photos is copied into the app. Deleting an in-app photo or account never deletes your original Photos library items.")]
         default: return [("Make yourself at home", "Explore Style Live and Party, collect inspiration in Discover, and shape your profile in your own way."), ("Keep your circle comfortable", "Follow from profiles and search. To send a private message or call, both people must follow each other and the connection must be verified."), ("Something went wrong?", "Retry a failed action after checking your connection. Unsent messages remain in the conversation. Gift delivery failures leave your inventory intact."), ("Policies and support", "For app support, email \(LegalLinks.supportEmail). For content safety, email \(LegalLinks.moderationEmail). Both contacts are listed in the linked policies.")]
         }
@@ -167,27 +166,44 @@ struct MemberActions: View {
     let targetID: String
     let authorID: String
     let kind: String
+    var contentPreview: String? = nil
+    var contentContext: String? = nil
     @State private var reporting = false
-    @State private var reason = "Harassment or bullying"
+    @State private var reason = ""
     @State private var detail = ""
-    @State private var result = ""
-    @State private var mail: MailDraft?
     var body: some View {
         VStack(spacing: 18) {
-            HStack { Text(reporting ? "Report \(kind)" : "More options").font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
+            HStack {
+                Text(reporting ? "Report \(kind)" : "Safety options").font(.tutuTitle3.bold())
+                Spacer()
+                ArtButton(label: "Close", asset: "nav-close") { dismiss() }
+            }
+            if let contentPreview, !reporting {
+                Text(contentPreview).font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                    .lineLimit(3).frame(maxWidth: .infinity, alignment: .leading).panel()
+            }
             if reporting {
-                ScrollView { VStack(spacing: 10) { ForEach(["Harassment or bullying", "Sexual or unsafe content", "Spam or scam", "Privacy violation", "Underage user", "Other"], id: \.self) { option in Button { reason = option } label: { HStack { Text(option).font(.tutuSubheadline); Spacer(); if reason == option { Artwork(name: "control-check").frame(width: 22, height: 22) } }.padding(14).background(.white, in: RoundedRectangle(cornerRadius: 12)) }.buttonStyle(.plain) }; Field(title: "Additional details", text: $detail) } }
-                if !result.isEmpty { Text(result).font(.tutuSubheadline).foregroundStyle(Palette.secondary) }
-                PinkButton(title: "Submit report") {
-                    let draft = ReportDraft(targetID: targetID, authorID: authorID, kind: kind, reason: reason, detail: String(detail.prefix(1000)))
-                    if store.commit({ $0.reports.removeAll { $0.targetID == targetID && !$0.delivered }; $0.reports.append(draft) }) {
-                        if MFMailComposeViewController.canSendMail() {
-                            mail = MailDraft(recipient: LegalLinks.moderationEmail, subject: "Tutu safety report · " + kind,
-                                             body: "Report ID: \(draft.id)\nType: \(kind)\nContent ID: \(targetID)\nAuthor ID: \(authorID)\nReason: \(reason)\n\n\(detail)")
-                        } else {
-                            result = "Your report is saved but hasn't been submitted. Set up Mail on this device, or email " + LegalLinks.moderationEmail + "."
+                Text("Choose a reason").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                ScrollView {
+                    VStack(spacing: 10) {
+                        ForEach(["Harassment or bullying", "Sexual or unsafe content", "Spam or scam", "Privacy violation", "Underage user", "Other"], id: \.self) { option in
+                            Button { reason = option } label: {
+                                HStack {
+                                    Text(option).font(.tutuSubheadline)
+                                    Spacer()
+                                    if reason == option { Artwork(name: "control-check").frame(width: 22, height: 22) }
+                                }.padding(14).frame(minHeight: 48)
+                                    .background(.white, in: RoundedRectangle(cornerRadius: 14))
+                                    .overlay { if reason == option { RoundedRectangle(cornerRadius: 14).strokeBorder(Palette.pink.opacity(0.5), lineWidth: 1) } }
+                            }.buttonStyle(.plain).accessibilityAddTraits(reason == option ? [.isSelected] : [])
                         }
+                        Field(title: "Additional details", text: $detail)
+                            .onChange(of: detail) { _, value in if value.count > 1000 { detail = String(value.prefix(1000)) } }
                     }
+                }.scrollDismissesKeyboard(.interactively)
+                PinkButton(title: "Report") {
+                    if store.submitReport(targetID: targetID, authorID: authorID, kind: kind, reason: reason, detail: detail, context: contentContext) { dismiss() }
                 }
             } else if authorID == store.me.id {
                 if kind == "post" {
@@ -201,13 +217,19 @@ struct MemberActions: View {
                 } else { Text("This is your content.").font(.tutuSubheadline) }
             } else {
                 MenuRow(title: "Report") { reporting = true }
-                MenuRow(title: store.state?.blocked.contains(authorID) == true ? "Unblock" : "Block", destructive: true) { if store.state?.blocked.contains(authorID) == true { store.commit { $0.blocked.remove(authorID) } } else { store.block(authorID) }; dismiss() }
+                if kind != "member" {
+                    MenuRow(title: "Block this content", destructive: true) {
+                        if store.hideContent(targetID: targetID, authorID: authorID, kind: kind) { dismiss() }
+                    }
+                }
+                MenuRow(title: store.state?.blocked.contains(authorID) == true ? "Unblock member" : "Block member", destructive: true) {
+                    let saved = store.state?.blocked.contains(authorID) == true ? store.unblock(authorID) : store.block(authorID)
+                    if saved { dismiss() }
+                }
             }
-        }.padding(24).background(Palette.blush).presentationDetents(reporting ? [.large] : [.height(270)]).overlay { NoticeOverlay() }
-            .onAppear { if let draft = store.state?.reports.last(where: { $0.targetID == targetID && !$0.delivered }) { reason = draft.reason; detail = draft.detail } }
-            .sheet(item: $mail) { draft in MailComposer(draft: draft) { response in
-                mail = nil
-                result = response == .sent ? "Your report was handed to Mail for delivery. Delivery confirmation isn't available here." : "Your report hasn't been sent. Your details are saved."
-            } }
+        }.padding(24).foregroundStyle(Palette.ink).background(Palette.blush)
+            .presentationDetents(reporting ? [.large] : [.height(contentPreview == nil ? 340 : 430)])
+            .presentationCornerRadius(28).presentationDragIndicator(.hidden)
+            .overlay { NoticeOverlay() }
     }
 }

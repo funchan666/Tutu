@@ -84,7 +84,7 @@ struct CoinPack: Identifiable {
                     let grant = s.transactionGrants?[key] ?? pack.total
                     let reversed = min(s.coins, grant)
                     s.coins -= reversed; s.refundDebt = (s.refundDebt ?? 0) + grant - reversed
-                    s.ledger.insert(WalletEntry(title: "Purchase refunded", amount: -reversed), at: 0)
+                    s.ledger.insert(WalletEntry(title: "Purchase refunded", amount: -reversed, kind: .refund), at: 0)
                 }
                 s.revokedTransactions.insert(key)
             }) { await transaction.finish() }

@@ -32,9 +32,7 @@ targets:
         UIApplicationSupportsIndirectInputEvents: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIUserInterfaceStyle: Light
-        UILaunchScreen:
-          UIColorName: LaunchBackground
-          UIImageName: brand-mascot
+        UILaunchStoryboardName: LaunchScreen
         NSCameraUsageDescription: Take a profile photo, capture a look, or use your camera in a call.
         NSMicrophoneUsageDescription: Record a voice message or use your microphone in a call.
         NSPhotoLibraryUsageDescription: Choose photos and videos for your looks, album, and profile.

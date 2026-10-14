@@ -29,7 +29,24 @@
     "handle": "harper.motion01",
     "image": "bundle/editorial-video-01.jpg",
     "video": "bundle/editorial-video-01.mp4",
-    "style": "Daily"
+    "style": "Daily",
+    "avatar": "bundle/editorial-photo-031.jpg",
+    "photos": [
+      "bundle/editorial-photo-031.jpg",
+      "bundle/editorial-video-01.jpg"
+    ],
+    "profile": {
+      "birthday": "2001-04-18",
+      "gender": "Woman",
+      "country": "United Kingdom",
+      "city": "London",
+      "bio": "Soft tailoring, warm neutrals and little everyday luxuries.",
+      "interests": [
+        "Chic",
+        "Tailoring",
+        "City walks"
+      ]
+    }
   },
   {
     "id": "noah",
@@ -69,7 +86,24 @@
     "handle": "riley.motion02",
     "image": "bundle/editorial-video-02.jpg",
     "video": "bundle/editorial-video-02.mp4",
-    "style": "Streetwear"
+    "style": "Streetwear",
+    "avatar": "bundle/editorial-photo-045.jpg",
+    "photos": [
+      "bundle/editorial-photo-045.jpg",
+      "bundle/editorial-video-02.jpg"
+    ],
+    "profile": {
+      "birthday": "2002-08-09",
+      "gender": "Man",
+      "country": "United States",
+      "city": "New York",
+      "bio": "Streetwear with personality. A fresh mix for every city day.",
+      "interests": [
+        "Streetwear",
+        "Sneakers",
+        "Vintage"
+      ]
+    }
   },
   {
     "id": "editorial-005",
@@ -149,7 +183,24 @@
     "handle": "jordan.motion04",
     "image": "bundle/editorial-video-04.jpg",
     "video": "bundle/editorial-video-04.mp4",
-    "style": "Vintage"
+    "style": "Vintage",
+    "avatar": "bundle/editorial-photo-061.jpg",
+    "photos": [
+      "bundle/editorial-photo-061.jpg",
+      "bundle/editorial-video-04.jpg"
+    ],
+    "profile": {
+      "birthday": "2000-02-22",
+      "gender": "Woman",
+      "country": "United States",
+      "city": "Los Angeles",
+      "bio": "After-dark layers, bold accessories and a little edge.",
+      "interests": [
+        "Streetwear",
+        "Layering",
+        "Accessories"
+      ]
+    }
   },
   {
     "id": "editorial-014",
@@ -269,7 +320,24 @@
     "handle": "avery.motion07",
     "image": "bundle/editorial-video-07.jpg",
     "video": "bundle/editorial-video-07.mp4",
-    "style": "Minimalist"
+    "style": "Minimalist",
+    "avatar": "bundle/editorial-photo-024.jpg",
+    "photos": [
+      "bundle/editorial-photo-024.jpg",
+      "bundle/editorial-video-07.jpg"
+    ],
+    "profile": {
+      "birthday": "2003-06-12",
+      "gender": "Woman",
+      "country": "Canada",
+      "city": "Vancouver",
+      "bio": "Easy everyday outfits, fresh air and weekend discoveries.",
+      "interests": [
+        "Daily style",
+        "Nature",
+        "Travel"
+      ]
+    }
   },
   {
     "id": "editorial-027",
@@ -349,7 +417,24 @@
     "handle": "blair.motion09",
     "image": "bundle/editorial-video-09.jpg",
     "video": "bundle/editorial-video-09.mp4",
-    "style": "Daily"
+    "style": "Daily",
+    "avatar": "bundle/editorial-photo-028.jpg",
+    "photos": [
+      "bundle/editorial-photo-028.jpg",
+      "bundle/editorial-video-09.jpg"
+    ],
+    "profile": {
+      "birthday": "1999-09-07",
+      "gender": "Man",
+      "country": "Australia",
+      "city": "Melbourne",
+      "bio": "Clean shapes, thoughtful details and pieces to wear on repeat.",
+      "interests": [
+        "Minimalist",
+        "Capsule wardrobe",
+        "Coffee"
+      ]
+    }
   },
   {
     "id": "editorial-036",
@@ -429,7 +514,24 @@
     "handle": "cameron.motion11",
     "image": "bundle/editorial-video-11.jpg",
     "video": "bundle/editorial-video-11.mp4",
-    "style": "Minimalist"
+    "style": "Minimalist",
+    "avatar": "bundle/editorial-photo-003.jpg",
+    "photos": [
+      "bundle/editorial-photo-003.jpg",
+      "bundle/editorial-video-11.jpg"
+    ],
+    "profile": {
+      "birthday": "2002-03-26",
+      "gender": "Woman",
+      "country": "France",
+      "city": "Paris",
+      "bio": "Relaxed city looks with a playful twist and a love of denim.",
+      "interests": [
+        "Daily style",
+        "Denim",
+        "City walks"
+      ]
+    }
   },
   {
     "id": "editorial-044",

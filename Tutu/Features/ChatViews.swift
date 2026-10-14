@@ -8,8 +8,8 @@ struct InboxView: View {
             ScrollView { VStack(spacing: 14) {
                 NavigationLink(value: Route.systemMessages) { HStack(spacing: 14) { Artwork(name: "icon-notification").frame(width: 52, height: 52); VStack(alignment: .leading, spacing: 5) { Text("System Messages").font(.tutuHeadline); Text("Updates for your account").font(.tutuSubheadline).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain)
                 let ids = Set((store.state?.conversations.keys.map { $0 } ?? []) + (store.state?.mediaDrafts.keys.filter { Catalog.people.map(\.id).contains($0) } ?? []) + (store.state?.drafts.keys.filter { Catalog.people.map(\.id).contains($0) } ?? []))
-                ForEach(store.people.filter { ids.contains($0.id) }) { person in NavigationLink(value: Route.chat(person.id)) { HStack(spacing: 12) { Avatar(person: person); VStack(alignment: .leading, spacing: 6) { Text(person.name).font(.tutuHeadline); Text(store.state?.drafts[person.id].flatMap { $0.isEmpty ? nil : "Draft: " + $0 } ?? store.state?.conversations[person.id]?.last?.text ?? "Say hello").font(.tutuSubheadline).foregroundStyle(Palette.secondary).lineLimit(1) }; Spacer() }.panel() }.buttonStyle(.plain) }
-                if ids.isEmpty { EmptyState(title: "A hello can start something", message: "Open a member's profile and choose Start a Chat.") }
+                ForEach(store.people.filter { ids.contains($0.id) }) { person in NavigationLink(value: Route.chat(person.id)) { HStack(spacing: 12) { Avatar(person: person); VStack(alignment: .leading, spacing: 6) { Text(person.name).font(.tutuHeadline); Text(store.state?.drafts[person.id].flatMap { $0.isEmpty ? nil : "Draft: " + $0 } ?? store.conversation(person.id).last?.text ?? "Say hello").font(.tutuSubheadline).foregroundStyle(Palette.secondary).lineLimit(1) }; Spacer() }.panel() }.buttonStyle(.plain) }
+                if store.people.filter({ ids.contains($0.id) }).isEmpty { EmptyState(title: "A hello can start something", message: "Open a member's profile and choose Start a Chat.") }
             }.padding(16) }
         }
     }
@@ -31,6 +31,7 @@ struct ChatView: View {
     @State private var media = false
     @State private var voice = false
     @State private var call: CallDestination?
+    @State private var report: ReportTarget?
     @State private var attachment: String?
     @State private var session: String?
     var person: Person { store.person(personID) }
@@ -42,7 +43,13 @@ struct ChatView: View {
                     ScrollView {
                         VStack(spacing: 18) {
                             VStack(spacing: 12) { Avatar(person: person, size: 78); Text(person.name).font(.tutuTitle3.bold()); Text(person.bio).font(.tutuSubheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); InterestTags(values: person.interests); ProfileStats(person: person) }.panel().padding(.top, 8)
-                            ForEach(store.state?.conversations[personID] ?? []) { message in MessageBubble(message: message) { retry(message) } }
+                            ForEach(store.conversation(personID)) { message in
+                                if message.outgoing { MessageBubble(message: message) { retry(message) } }
+                                else {
+                                    Button { report = ReportTarget(id: message.id, author: personID, kind: "chat message") } label: { MessageBubble(message: message) }
+                                        .buttonStyle(.plain).accessibilityHint("Report or block this message")
+                                }
+                            }
                             if let attachment {
                                 HStack {
                                     if attachment.hasSuffix(".jpg") { MediaArtwork(reference: attachment).frame(width: 76, height: 76).clipShape(RoundedRectangle(cornerRadius: 12)) }
@@ -54,7 +61,7 @@ struct ChatView: View {
                             }
                             Color.clear.frame(height: 1).id("bottom")
                         }.padding(16)
-                    }.scrollDismissesKeyboard(.interactively).onChange(of: store.state?.conversations[personID]?.count) { _, _ in withAnimation { reader.scrollTo("bottom", anchor: .bottom) } }
+                    }.scrollDismissesKeyboard(.interactively).onChange(of: store.conversation(personID).map(\.id)) { _, _ in withAnimation { reader.scrollTo("bottom", anchor: .bottom) } }
                 }
                 VStack(spacing: 12) {
                     HStack { ArtButton(label: "More tools", asset: "nav-create", size: 34) { tools.toggle() }; TextField("Say hi…", text: $text, axis: .vertical).lineLimit(1...5).padding(14).background(.white, in: RoundedRectangle(cornerRadius: 23)); ArtButton(label: "Send message", asset: "icon-send") { send() } }
@@ -62,16 +69,18 @@ struct ChatView: View {
                 }.padding(12).background(Palette.blush)
             }
         }.onAppear { text = store.state?.drafts[personID] ?? ""; attachment = store.state?.mediaDrafts[personID]; session = store.sessionID }
-            .task(id: text) { try? await Task.sleep(for: .milliseconds(450)); guard !Task.isCancelled, session == store.sessionID else { return }; store.commit { $0.drafts[personID] = text } }
-            .onDisappear { if session == store.sessionID { store.commit { $0.drafts[personID] = text } } }
+            .task(id: text) { try? await Task.sleep(for: .milliseconds(450)); guard !Task.isCancelled, session == store.sessionID, !store.isPersonHidden(personID) else { return }; store.commit { $0.drafts[personID] = text } }
+            .onDisappear { if session == store.sessionID, !store.isPersonHidden(personID) { store.commit { $0.drafts[personID] = text } } }
             .sheet(isPresented: $more) { MemberActions(targetID: personID, authorID: personID, kind: "member") }
+            .sheet(item: $report) { MemberActions(targetID: $0.id, authorID: $0.author, kind: $0.kind) }
             .sheet(isPresented: $gifts) { GiftDeliveryView(personID: personID) }
             .sheet(isPresented: $media) { MediaSourceView(allowVideo: true) { selection in do { let item = try store.importMedia(selection); if store.commit({ $0.mediaDrafts[personID] = item.reference }) { attachment = item.reference } } catch { store.show("Attachment not added", error.localizedDescription) } } }
             .sheet(isPresented: $voice) { VoiceRecorderView(personID: personID) }
             .fullScreenCover(item: $call) { CallView(personID: personID, video: $0.video).environmentObject(store).overlay { NoticeOverlay() } }
+            .moderationVisibility(hidden: store.isPersonHidden(personID))
     }
     func beginCall(_ video: Bool) {
-        guard store.state?.blocked.contains(personID) != true else { store.show("Member blocked", "Unblock this member first."); return }
+        guard !store.isPersonHidden(personID) else { store.show("Member blocked", "Unblock this member first."); return }
         guard store.state?.following.contains(personID) == true, store.state?.followers.contains(personID) == true else { store.show("A little connection first", "Follow each other before starting a call."); return }
         call = CallDestination(video: video)
     }

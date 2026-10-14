@@ -448,83 +448,95 @@
     "resource": "editorial-video-01.mp4",
     "poster": "editorial-video-01.jpg",
     "personID": "film-01",
-    "sha256": "ecb5cf4a8bbc209015d61cd576b3736805524f79f5d47267cbce799361330ed4"
+    "sha256": "ecb5cf4a8bbc209015d61cd576b3736805524f79f5d47267cbce799361330ed4",
+    "posterTime": 0
   },
   {
     "source": "videoss/btwsononicole_DcrMBIDRT7V.mp4",
     "resource": "editorial-video-02.mp4",
     "poster": "editorial-video-02.jpg",
     "personID": "film-02",
-    "sha256": "0e1899b1465ced86c701c20cb59c4041513013fa14081baa52f4dba781b6a148"
+    "sha256": "0e1899b1465ced86c701c20cb59c4041513013fa14081baa52f4dba781b6a148",
+    "posterTime": 0
   },
   {
     "source": "videoss/giulianmira_Db2Rxt2JcaL.mp4",
     "resource": "editorial-video-03.mp4",
     "poster": "editorial-video-03.jpg",
     "personID": "film-03",
-    "sha256": "5496c712a9e3063ab5b18c3c462fed08431783dc38fa34728ba89c72a7ba2fd1"
+    "sha256": "5496c712a9e3063ab5b18c3c462fed08431783dc38fa34728ba89c72a7ba2fd1",
+    "posterTime": 0.5
   },
   {
     "source": "videoss/kllippy_Dcto5kmxS5l.mp4",
     "resource": "editorial-video-04.mp4",
     "poster": "editorial-video-04.jpg",
     "personID": "film-04",
-    "sha256": "4c54aa505fc33034e200ca1f24279d8f29b54f71f97b983ab9b9577e4920dcc7"
+    "sha256": "4c54aa505fc33034e200ca1f24279d8f29b54f71f97b983ab9b9577e4920dcc7",
+    "posterTime": 0
   },
   {
     "source": "videoss/mlnanell_DdnlotKtOkt.mp4",
     "resource": "editorial-video-05.mp4",
     "poster": "editorial-video-05.jpg",
     "personID": "film-05",
-    "sha256": "74fad5e99476f631cf744360f5add253c1ef5f9c14b4d93e82b017ba593f80e0"
+    "sha256": "74fad5e99476f631cf744360f5add253c1ef5f9c14b4d93e82b017ba593f80e0",
+    "posterTime": 0.5
   },
   {
     "source": "videoss/nexeeo_ysr_DZkGtL0Mg4f.mp4",
     "resource": "editorial-video-06.mp4",
     "poster": "editorial-video-06.jpg",
     "personID": "film-06",
-    "sha256": "5f7b29f46bd2075f911b3af1e2145f86d7add551474a85f0fa5f453800e33a9c"
+    "sha256": "5f7b29f46bd2075f911b3af1e2145f86d7add551474a85f0fa5f453800e33a9c",
+    "posterTime": 0.5
   },
   {
     "source": "videoss/ommyoungg_DbOIQ1boH7u.mp4",
     "resource": "editorial-video-07.mp4",
     "poster": "editorial-video-07.jpg",
     "personID": "film-07",
-    "sha256": "fa4f77ad647157b2d4ab7171ba66bb14e950501b0e9e88458accd027daafa9e4"
+    "sha256": "fa4f77ad647157b2d4ab7171ba66bb14e950501b0e9e88458accd027daafa9e4",
+    "posterTime": 0
   },
   {
     "source": "videoss/prashantrawat106_DePCWBkJhD1.mp4",
     "resource": "editorial-video-08.mp4",
     "poster": "editorial-video-08.jpg",
     "personID": "film-08",
-    "sha256": "f04a0555b85badad66b4fa7e98c3e31e45737fa5bd24042072084918c5642139"
+    "sha256": "f04a0555b85badad66b4fa7e98c3e31e45737fa5bd24042072084918c5642139",
+    "posterTime": 0.5
   },
   {
     "source": "videoss/rebecaoksana_DceUNyXIVDh.mp4",
     "resource": "editorial-video-09.mp4",
     "poster": "editorial-video-09.jpg",
     "personID": "film-09",
-    "sha256": "1b2a205cecec7a1d3bc3d92ea2aec593974698cd63a31cbc029e2a63f12d3ee5"
+    "sha256": "1b2a205cecec7a1d3bc3d92ea2aec593974698cd63a31cbc029e2a63f12d3ee5",
+    "posterTime": 0
   },
   {
     "source": "videoss/spythesparrow_DblWQnNtGJT.mp4",
     "resource": "editorial-video-10.mp4",
     "poster": "editorial-video-10.jpg",
     "personID": "film-10",
-    "sha256": "7d3c444aefce581ea33eb8030c9e7695d9d5f9213e8fcccaf67db355aae60e18"
+    "sha256": "7d3c444aefce581ea33eb8030c9e7695d9d5f9213e8fcccaf67db355aae60e18",
+    "posterTime": 0.5
   },
   {
     "source": "videoss/yiyimiao__DNF51OzSjXw.mp4",
     "resource": "editorial-video-11.mp4",
     "poster": "editorial-video-11.jpg",
     "personID": "film-11",
-    "sha256": "c964be269512bc37fdde7ae5ec69147b24c78933040cc3901986c158aa0e06bb"
+    "sha256": "c964be269512bc37fdde7ae5ec69147b24c78933040cc3901986c158aa0e06bb",
+    "posterTime": 0
   },
   {
     "source": "videoss/zotov_bgd_DdwzWgSRB5o.mp4",
     "resource": "editorial-video-12.mp4",
     "poster": "editorial-video-12.jpg",
     "personID": "film-12",
-    "sha256": "b4128b459d8413c4418c22c77f9eae869c229dfd9963bcee6db261a00464c14f"
+    "sha256": "b4128b459d8413c4418c22c77f9eae869c229dfd9963bcee6db261a00464c14f",
+    "posterTime": 0.5
   }
 ]

@@ -1,0 +1,71 @@
+{
+  "source": "fixed-local-presentation",
+  "currentAccountSource": "wallet-spending-ledger",
+  "periods": {
+    "daily": "Current calendar day",
+    "weekly": "Current calendar week",
+    "allTime": "All dated spending through now"
+  },
+  "users": [
+    {
+      "personID": "mia",
+      "daily": 2860,
+      "weekly": 18400,
+      "allTime": 86400
+    },
+    {
+      "personID": "lily",
+      "daily": 2240,
+      "weekly": 21600,
+      "allTime": 72800
+    },
+    {
+      "personID": "ella",
+      "daily": 1980,
+      "weekly": 12960,
+      "allTime": 96400
+    },
+    {
+      "personID": "ava",
+      "daily": 1640,
+      "weekly": 14800,
+      "allTime": 64200
+    },
+    {
+      "personID": "noah",
+      "daily": 1280,
+      "weekly": 9840,
+      "allTime": 53200
+    },
+    {
+      "personID": "leo",
+      "daily": 960,
+      "weekly": 11200,
+      "allTime": 48600
+    },
+    {
+      "personID": "film-01",
+      "daily": 720,
+      "weekly": 7680,
+      "allTime": 35800
+    },
+    {
+      "personID": "film-02",
+      "daily": 580,
+      "weekly": 6240,
+      "allTime": 42400
+    },
+    {
+      "personID": "film-04",
+      "daily": 400,
+      "weekly": 4960,
+      "allTime": 28600
+    },
+    {
+      "personID": "film-07",
+      "daily": 240,
+      "weekly": 3280,
+      "allTime": 19400
+    }
+  ]
+}

@@ -21,6 +21,26 @@ struct ArtButton: View {
     var action: () -> Void
     var body: some View { Button(action: action) { Artwork(name: asset).frame(width: size, height: size).frame(minWidth: 44, minHeight: 44).contentShape(Rectangle()) }.buttonStyle(.plain).accessibilityLabel(label) }
 }
+struct FollowButton: View {
+    @EnvironmentObject private var store: AppStore
+    let personID: String
+    var size: CGFloat = 44
+    var contentStyle = false
+    private var following: Bool { store.state?.following.contains(personID) == true }
+    private var asset: String {
+        if contentStyle { return following ? "control-content-followed" : "control-content-follow" }
+        return following ? "control-selected" : "control-follow"
+    }
+    var body: some View {
+        if personID != store.me.id {
+            ArtButton(label: following ? "Unfollow" : "Follow", asset: asset, size: size) {
+                store.toggleFollow(personID)
+            }
+            .accessibilityValue(following ? "Following" : "Not following")
+            .accessibilityAddTraits(following ? [.isSelected] : [])
+        }
+    }
+}
 struct PinkButton: View {
     let title: String
     var asset: String? = nil
@@ -104,12 +124,13 @@ struct MediaArtwork: View {
     @EnvironmentObject private var store: AppStore
     let reference: String
     var mode: ContentMode = .fill
+    var alignment: Alignment = .center
     var body: some View {
         GeometryReader { geo in
             Group {
                 if let url = store.mediaURL(reference), let image = UIImage(contentsOfFile: url.path) { Image(uiImage: image).resizable() }
                 else { Image(reference.isEmpty || reference.hasPrefix("media/") ? "wardrobe-placeholder" : reference).resizable() }
-            }.aspectRatio(contentMode: mode).frame(width: geo.size.width, height: geo.size.height).clipped()
+            }.aspectRatio(contentMode: mode).frame(width: geo.size.width, height: geo.size.height, alignment: alignment).clipped()
         }.accessibilityLabel(reference == "wardrobe-placeholder" ? "Wardrobe illustration" : "Photo")
     }
 }
@@ -163,10 +184,26 @@ struct NoticeOverlay: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {
         if let notice = store.notice {
-            ZStack { Color.black.opacity(0.35).ignoresSafeArea(); VStack(spacing: 18) { Artwork(name: "brand-mascot").frame(width: 62, height: 62).clipShape(RoundedRectangle(cornerRadius: 18)); Text(notice.title).font(.tutuTitle3.bold()); Text(notice.message).font(.tutuSubheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); PinkButton(title: "Got it") { store.notice = nil } }.padding(24).background(Palette.blush, in: RoundedRectangle(cornerRadius: 26)).padding(28).frame(maxWidth: 440) }.accessibilityAddTraits(.isModal).zIndex(100)
+            ZStack { Color.black.opacity(0.35).ignoresSafeArea(); VStack(spacing: 18) { Artwork(name: notice.success ? "control-selected" : "brand-mascot").frame(width: 62, height: 62).clipShape(RoundedRectangle(cornerRadius: 18)); Text(notice.title).font(.tutuTitle3.bold()); Text(notice.message).font(.tutuSubheadline).multilineTextAlignment(.center).foregroundStyle(Palette.secondary); PinkButton(title: notice.success ? "Done" : "Got it") { store.notice = nil } }.padding(24).background(Palette.blush, in: RoundedRectangle(cornerRadius: 26)).padding(28).frame(maxWidth: 440) }.accessibilityAddTraits(.isModal).zIndex(100)
         }
     }
 }
 extension View {
     func panel() -> some View { padding(16).background(.white.opacity(0.88), in: RoundedRectangle(cornerRadius: 20)) }
+}
+
+
+/// Covers every pushed content surface, including destinations opened before a safety action.
+private struct ModerationVisibility: ViewModifier {
+    let hidden: Bool
+    func body(content: Content) -> some View {
+        Group {
+            if hidden {
+                Page(title: "Content hidden") { EmptyState(title: "This content is hidden") }
+            } else { content }
+        }
+    }
+}
+extension View {
+    func moderationVisibility(hidden: Bool) -> some View { modifier(ModerationVisibility(hidden: hidden)) }
 }

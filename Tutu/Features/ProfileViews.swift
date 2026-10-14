@@ -6,9 +6,9 @@ struct ProfileStats: View {
     var isMe: Bool { person.id == store.me.id }
     var body: some View {
         HStack(spacing: 0) {
-            stat(isMe ? store.state?.followers.count ?? 0 : 12 + Catalog.people.firstIndex(of: person, default: 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
+            stat(isMe ? store.state?.followers.count ?? 0 : 12 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
             Divider().frame(height: 26)
-            stat(isMe ? store.state?.following.count ?? 0 : 8 + Catalog.people.firstIndex(of: person, default: 0) * 3, "Following", route: isMe ? .relationships("Following") : nil)
+            stat(isMe ? store.state?.following.count ?? 0 : 8 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 3, "Following", route: isMe ? .relationships("Following") : nil)
             Divider().frame(height: 26)
             stat(isMe ? store.state?.likedLooks.count ?? 0 : 0, "Likes", route: nil)
         }.padding(.vertical, 12)
@@ -59,7 +59,7 @@ struct MyProfileView: View {
                                 Text(store.me.name).font(.outfit(size: 17, weight: .bold, design: .rounded)).lineLimit(1).minimumScaleFactor(0.8)
                                 HStack(spacing: 4) {
                                     PersonGenderMark(person: store.me)
-                                    Text("\(store.me.age)").font(.outfit(size: 12, design: .rounded))
+                                    if store.me.birthday != nil { Text("\(store.me.age)").font(.outfit(size: 12, design: .rounded)) }
                                 }.padding(.horizontal, 7).padding(.vertical, 4).background(.white.opacity(0.55), in: Capsule())
                             }
                             Text("@" + store.me.handle).font(.outfit(size: 13, design: .rounded)).foregroundStyle(Palette.secondary)
@@ -157,7 +157,7 @@ struct ProfileView: View {
                         HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); ArtButton(label: "More", asset: "nav-more") { more = true } }.padding(16)
                     }
                     VStack(alignment: .leading, spacing: 16) {
-                        VStack(alignment: .leading, spacing: 8) { HStack { Text(person.name).font(.tutuTitle2.bold()); PersonGenderMark(person: person); if !person.catalog { Text("\(person.age)").font(.tutuCaption) }; Spacer() }; Text("@" + person.handle).font(.tutuSubheadline); Text(person.country).font(.tutuCaption) }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(Palette.blush, in: RoundedRectangle(cornerRadius: 18))
+                        VStack(alignment: .leading, spacing: 8) { HStack { Text(person.name).font(.tutuTitle2.bold()); PersonGenderMark(person: person); if person.birthday != nil { Text("\(person.age)").font(.tutuCaption) }; Spacer() }; Text("@" + person.handle).font(.tutuSubheadline); Text(person.location).font(.tutuCaption) }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(Palette.blush, in: RoundedRectangle(cornerRadius: 18))
                         Text(person.bio).font(.tutuSubheadline).fixedSize(horizontal: false, vertical: true)
                         InterestTags(values: person.interests)
                         ProfileStats(person: person)
@@ -176,13 +176,14 @@ struct ProfileView: View {
                 }
             }
             HStack(spacing: 10) {
-                ArtButton(label: "Follow", asset: store.state?.following.contains(personID) == true ? "control-selected" : "control-follow") { store.toggleFollow(personID) }
+                FollowButton(personID: personID)
                 NavigationLink(value: Route.chat(personID)) { Text("Start a Chat").font(.tutuHeadline).foregroundStyle(.white).frame(maxWidth: .infinity).frame(height: 50).background { Image("button-base").resizable() } }.buttonStyle(.plain)
                 ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }
             }.padding(.horizontal, 16).padding(.vertical, 8).background(.white)
         }.background(Palette.blush).toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $more) { MemberActions(targetID: personID, authorID: personID, kind: "member") }
             .sheet(isPresented: $gifts) { GiftDeliveryView(personID: personID) }
+            .moderationVisibility(hidden: store.isPersonHidden(personID))
     }
 }
 struct EditProfileView: View {
@@ -231,14 +232,111 @@ struct AlbumView: View {
     let personID: String
     let initialIndex: Int
     @State private var index = 0
-    @State private var more = false
+    @State private var report: ReportTarget?
     var person: Person { store.person(personID) }
     var body: some View {
         VStack(spacing: 0) {
-            HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); Text("\(person.photos.isEmpty ? 0 : index + 1) / \(person.photos.count)").font(.tutuHeadline); Spacer(); if personID != store.me.id { ArtButton(label: "More", asset: "nav-more") { more = true } } else { Color.clear.frame(width: 44, height: 44) } }.padding(12).background(Palette.blush)
+            HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); Text("\(person.photos.isEmpty ? 0 : index + 1) / \(person.photos.count)").font(.tutuHeadline); Spacer(); if personID != store.me.id { ArtButton(label: "More", asset: "nav-more") { if person.photos.indices.contains(index) { report = ReportTarget(id: person.photos[index], author: personID, kind: "photo") } } } else { Color.clear.frame(width: 44, height: 44) } }.padding(12).background(Palette.blush)
             if person.photos.isEmpty { EmptyState(title: "No photos yet").frame(maxHeight: .infinity) }
             else { TabView(selection: $index) { ForEach(Array(person.photos.enumerated()), id: \.offset) { i, reference in MediaArtwork(reference: reference, mode: .fit).tag(i) } }.tabViewStyle(.page(indexDisplayMode: .never)) }
-            HStack { NavigationLink(value: Route.profile(personID)) { HStack { Avatar(person: person, size: 38); Text(person.name).font(.tutuHeadline) } }.buttonStyle(.plain); Spacer(); if personID != store.me.id { ArtButton(label: "Follow", asset: store.state?.following.contains(personID) == true ? "control-selected" : "control-follow") { store.toggleFollow(personID) } } }.padding(16).background(Palette.blush)
-        }.background(Color.black).toolbar(.hidden, for: .navigationBar).onAppear { index = min(max(0, initialIndex), max(0, person.photos.count - 1)) }.sheet(isPresented: $more) { MemberActions(targetID: person.photos.indices.contains(index) ? person.photos[index] : personID, authorID: personID, kind: "photo") }
+            HStack { NavigationLink(value: Route.profile(personID)) { HStack { Avatar(person: person, size: 38); Text(person.name).font(.tutuHeadline) } }.buttonStyle(.plain); Spacer(); if personID != store.me.id { FollowButton(personID: personID) } }.padding(16).background(Palette.blush)
+        }.background(Color.black).toolbar(.hidden, for: .navigationBar).onAppear { index = min(max(0, initialIndex), max(0, person.photos.count - 1)) }.sheet(item: $report) { MemberActions(targetID: $0.id, authorID: $0.author, kind: $0.kind) }
+            .onChange(of: person.photos) { _, photos in index = min(index, max(0, photos.count - 1)) }
+            .moderationVisibility(hidden: store.isPersonHidden(personID))
+    }
+}
+
+
+/// Compact live-room business card. Profile and album navigation happen after dismissal.
+struct RoomHostCard: View {
+    @EnvironmentObject private var store: AppStore
+    let personID: String
+    let onClose: () -> Void
+    let onProfile: () -> Void
+    let onMessage: () -> Void
+    let onPhoto: (Int) -> Void
+    private var person: Person { store.person(personID) }
+    private var photos: [String] { Array(person.photos.prefix(3)) }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    identity
+                    if !person.bio.isEmpty {
+                        Text(person.bio).font(.outfit(size: 13)).foregroundStyle(Palette.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    InterestTags(values: person.interests)
+                    ProfileStats(person: person)
+                    if !photos.isEmpty { photoStrip }
+                }.padding(.horizontal, 18).padding(.top, 22).padding(.bottom, 8)
+            }.scrollIndicators(.hidden)
+            HStack(spacing: 10) {
+                FollowButton(personID: personID, size: 48)
+                cardButton("Profile", primary: false, action: onProfile)
+                if personID != store.me.id {
+                    cardButton("Message", primary: true, action: onMessage)
+                }
+            }.padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 12)
+        }
+        .background {
+            GeometryReader { geometry in
+                Image("profile-background").resizable().scaledToFill()
+                    .frame(width: geometry.size.width, height: geometry.size.height).clipped()
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            ArtButton(label: "Close profile card", asset: "nav-close", size: 24, action: onClose).padding(4)
+        }
+    }
+    private var identity: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Avatar(person: person, size: 76)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(person.name).font(.outfit(size: 21, weight: .bold)).lineLimit(1).minimumScaleFactor(0.8)
+                Text("@" + person.handle).font(.outfit(size: 12)).foregroundStyle(Palette.secondary).lineLimit(1)
+                if person.age > 0 || !person.gender.isEmpty {
+                    HStack(spacing: 5) {
+                        PersonGenderMark(person: person)
+                        Text([person.age > 0 ? String(person.age) : "", person.gender].filter { !$0.isEmpty }.joined(separator: " · "))
+                            .font(.outfit(size: 12, weight: .medium))
+                    }.padding(.horizontal, 8).padding(.vertical, 3)
+                        .background(.white.opacity(0.75), in: Capsule())
+                }
+                if !person.location.isEmpty {
+                    Text(person.location).font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }.frame(maxWidth: .infinity, alignment: .leading)
+        }.padding(.trailing, 24)
+    }
+    private var photoStrip: some View {
+        GeometryReader { geometry in
+            let width = max(0, (geometry.size.width - CGFloat(photos.count - 1) * 10) / CGFloat(photos.count))
+            HStack(spacing: 10) {
+                ForEach(Array(photos.enumerated()), id: \.offset) { index, photo in
+                    Button { onPhoto(index) } label: {
+                        MediaArtwork(reference: photo, alignment: .top)
+                            .frame(width: width, height: 110)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }.buttonStyle(.plain).accessibilityLabel("View photo \(index + 1)")
+                }
+            }
+        }.frame(height: 110)
+    }
+    private func cardButton(_ title: String, primary: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title).font(.outfit(size: 15, weight: .semibold))
+                .foregroundStyle(primary ? Color.white : Palette.pink)
+                .frame(maxWidth: .infinity).frame(height: 48)
+                .background {
+                    if primary { Image("button-base").resizable() }
+                    else { Color.white.opacity(0.85) }
+                }
+                .clipShape(Capsule())
+                .overlay { if !primary { Capsule().strokeBorder(Palette.pink.opacity(0.65), lineWidth: 1) } }
+                .contentShape(Capsule())
+        }.buttonStyle(.plain)
     }
 }

@@ -27,15 +27,6 @@
     "bundled": true
   },
   {
-    "asset": "profile-background",
-    "source": "sucai/Group 920@2x.png",
-    "size": [
-      780,
-      868
-    ],
-    "bundled": false
-  },
-  {
     "asset": "checkin-background",
     "source": "sucai/Group 1024@2x.png",
     "size": [
@@ -869,6 +860,33 @@
     "size": [
       204,
       288
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "profile-background",
+    "source": "sucai/Group 920@2x.png",
+    "size": [
+      780,
+      868
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-profile",
+    "source": "sucai/Group 972@2x.png",
+    "size": [
+      168,
+      72
+    ],
+    "bundled": true
+  },
+  {
+    "asset": "button-message",
+    "source": "sucai/Group 966@2x.png",
+    "size": [
+      282,
+      100
     ],
     "bundled": true
   }

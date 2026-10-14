@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A76E1E839314F16BC521B78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */; };
 		0042C69213717CB8FE46F5D0 /* editorial-video-09.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */; };
 		0063EAEAE5183B1160B87C45 /* editorial-photo-055.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */; };
 		034A1960C348B814E548D3CD /* editorial-photo-063.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 305978C4883B394BEE7E8D1E /* editorial-photo-063.jpg */; };
@@ -139,6 +140,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0553B5AF7FF8BF34E6030CFD /* editorial-photo-066.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-066.jpg"; sourceTree = "<group>"; };
 		05EE02D4E79019B9510E679A /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		07544FC632D4C476D1166F32 /* editorial-photo-051.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-051.jpg"; sourceTree = "<group>"; };
@@ -152,7 +154,7 @@
 		1587ED47D831BA823E8FC734 /* TutuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutuApp.swift; sourceTree = "<group>"; };
 		165BCF6419D6D0B8213FD811 /* editorial-photo-029.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-029.jpg"; sourceTree = "<group>"; };
 		17905B9FDBE90C3D9018827E /* editorial-video-11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-11.jpg"; sourceTree = "<group>"; };
-		1A5489AB6076E30F00120E8A /* editorial-video-03.mp4 */ = {isa = PBXFileReference; path = "editorial-video-03.mp4"; sourceTree = "<group>"; };
+		1A5489AB6076E30F00120E8A /* editorial-video-03.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-03.mp4"; sourceTree = "<group>"; };
 		20D8A928880D6D70F55C0582 /* editorial-photo-067.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-067.jpg"; sourceTree = "<group>"; };
 		22EB1C4D7935142077A8C7BB /* AccountVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVault.swift; sourceTree = "<group>"; };
 		24029D202C9E8A7FD6C59EC7 /* editorial-photo-015.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-015.jpg"; sourceTree = "<group>"; };
@@ -175,9 +177,9 @@
 		381484A4C4B0EEEBD208C3CC /* editorial-photo-065.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-065.jpg"; sourceTree = "<group>"; };
 		39DFF58096DF477BAD682CB3 /* editorial-video-08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-08.jpg"; sourceTree = "<group>"; };
 		3AA57621CCA688DA5568FC2C /* Tutu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tutu.entitlements; sourceTree = "<group>"; };
-		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3ED9EDEA2BA8B470F396AC28 /* editorial-video-12.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-12.jpg"; sourceTree = "<group>"; };
-		3F65388BD24083F56A3BF513 /* editorial-video-12.mp4 */ = {isa = PBXFileReference; path = "editorial-video-12.mp4"; sourceTree = "<group>"; };
+		3F65388BD24083F56A3BF513 /* editorial-video-12.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-12.mp4"; sourceTree = "<group>"; };
 		3F874230DA0208C93EF66EAA /* EditorialCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EditorialCatalog.json; sourceTree = "<group>"; };
 		409E146AB055F3F551339930 /* editorial-photo-021.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-021.jpg"; sourceTree = "<group>"; };
 		422F066AE5427401FF86CDEC /* editorial-photo-064.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-064.jpg"; sourceTree = "<group>"; };
@@ -185,13 +187,13 @@
 		45E317C0889843EF1196AD85 /* editorial-video-04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-04.jpg"; sourceTree = "<group>"; };
 		47F1960AD6832795FB7602F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		49E824C2E8649F3924A3DE8D /* editorial-photo-073.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-073.jpg"; sourceTree = "<group>"; };
-		4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */ = {isa = PBXFileReference; path = "editorial-video-11.mp4"; sourceTree = "<group>"; };
-		4C5149CB012F96D33B622BA0 /* editorial-video-04.mp4 */ = {isa = PBXFileReference; path = "editorial-video-04.mp4"; sourceTree = "<group>"; };
+		4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-11.mp4"; sourceTree = "<group>"; };
+		4C5149CB012F96D33B622BA0 /* editorial-video-04.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-04.mp4"; sourceTree = "<group>"; };
 		502D591D61247D2D60FCF17D /* editorial-photo-005.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-005.jpg"; sourceTree = "<group>"; };
 		503318918B50FAB93AEBBE69 /* editorial-photo-062.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-062.jpg"; sourceTree = "<group>"; };
 		5268FDD5918B6CA0EC1F4FEC /* editorial-photo-072.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-072.jpg"; sourceTree = "<group>"; };
-		53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */ = {isa = PBXFileReference; path = "editorial-video-01.mp4"; sourceTree = "<group>"; };
-		546B8D7442DAF43D26C8BD18 /* editorial-video-06.mp4 */ = {isa = PBXFileReference; path = "editorial-video-06.mp4"; sourceTree = "<group>"; };
+		53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-01.mp4"; sourceTree = "<group>"; };
+		546B8D7442DAF43D26C8BD18 /* editorial-video-06.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-06.mp4"; sourceTree = "<group>"; };
 		5526DE1F2366B1BC9101E7CE /* editorial-photo-009.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-009.jpg"; sourceTree = "<group>"; };
 		5604141EEAF4FC5938E8ADDF /* editorial-photo-012.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-012.jpg"; sourceTree = "<group>"; };
 		5617B93F7591A7B513DC3B1A /* editorial-photo-020.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-020.jpg"; sourceTree = "<group>"; };
@@ -199,7 +201,7 @@
 		58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-09.jpg"; sourceTree = "<group>"; };
 		5B55C58196D1EE15222466BE /* TutuOutfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Bold.ttf"; sourceTree = "<group>"; };
 		5FB39181DE748041A50741EE /* editorial-photo-036.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-036.jpg"; sourceTree = "<group>"; };
-		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 		66E8F3CF373048730E7F66BE /* editorial-photo-028.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-028.jpg"; sourceTree = "<group>"; };
 		67D7F29B2307EB1FB587548E /* editorial-photo-019.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-019.jpg"; sourceTree = "<group>"; };
@@ -222,7 +224,7 @@
 		8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-069.jpg"; sourceTree = "<group>"; };
 		8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-040.jpg"; sourceTree = "<group>"; };
 		90A36CEC4F9E84BE9137764B /* StylistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistViews.swift; sourceTree = "<group>"; };
-		917DD650B28755B5483CDE3A /* editorial-video-02.mp4 */ = {isa = PBXFileReference; path = "editorial-video-02.mp4"; sourceTree = "<group>"; };
+		917DD650B28755B5483CDE3A /* editorial-video-02.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-02.mp4"; sourceTree = "<group>"; };
 		94D067FD835BEF09D57D9346 /* TutuOutfit-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Medium.ttf"; sourceTree = "<group>"; };
 		94E2ED874B46143CB21FDA6A /* editorial-photo-006.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-006.jpg"; sourceTree = "<group>"; };
 		954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-055.jpg"; sourceTree = "<group>"; };
@@ -233,7 +235,7 @@
 		A109CA3DBCF096843CA2C6DF /* TutuOutfit-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Regular.ttf"; sourceTree = "<group>"; };
 		A18A9AF222CAD9CA9F3C2C73 /* editorial-photo-031.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-031.jpg"; sourceTree = "<group>"; };
 		A4F023FFD81FBC513DAF71C9 /* LookViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookViews.swift; sourceTree = "<group>"; };
-		A585039E0BE2BA60B8CD3A1E /* editorial-video-08.mp4 */ = {isa = PBXFileReference; path = "editorial-video-08.mp4"; sourceTree = "<group>"; };
+		A585039E0BE2BA60B8CD3A1E /* editorial-video-08.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-08.mp4"; sourceTree = "<group>"; };
 		A9F9ECD309AD0F4899EF0801 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		AA60654C10D49BD6CEE7973B /* editorial-photo-038.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-038.jpg"; sourceTree = "<group>"; };
 		AB002EE708FF41AEC715E9B9 /* editorial-video-03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-03.jpg"; sourceTree = "<group>"; };
@@ -248,10 +250,10 @@
 		BF311ED2832B6ACA294E558B /* editorial-photo-024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-024.jpg"; sourceTree = "<group>"; };
 		BF9403F4E794E98AE62C1E3E /* editorial-video-07.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-07.jpg"; sourceTree = "<group>"; };
 		C05F9F7BD9E5F502670AE096 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
-		C174CDE198243D32AF8EFAF9 /* editorial-video-10.mp4 */ = {isa = PBXFileReference; path = "editorial-video-10.mp4"; sourceTree = "<group>"; };
-		C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */ = {isa = PBXFileReference; path = "editorial-video-07.mp4"; sourceTree = "<group>"; };
+		C174CDE198243D32AF8EFAF9 /* editorial-video-10.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-10.mp4"; sourceTree = "<group>"; };
+		C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-07.mp4"; sourceTree = "<group>"; };
 		C47BFD09DC1C97A2B7B2B274 /* editorial-video-06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-06.jpg"; sourceTree = "<group>"; };
-		C5DB482D7C4AC4BB19BFC6B5 /* editorial-video-05.mp4 */ = {isa = PBXFileReference; path = "editorial-video-05.mp4"; sourceTree = "<group>"; };
+		C5DB482D7C4AC4BB19BFC6B5 /* editorial-video-05.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-05.mp4"; sourceTree = "<group>"; };
 		C7E4D745F2FC714D749CF640 /* editorial-photo-045.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-045.jpg"; sourceTree = "<group>"; };
 		C9AF209F9EB0585B8ECDCF0C /* editorial-photo-026.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-026.jpg"; sourceTree = "<group>"; };
 		CB1AC12F3F7A0B19EF609D56 /* editorial-photo-056.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-056.jpg"; sourceTree = "<group>"; };
@@ -262,7 +264,7 @@
 		DC62699C1FD685761D676F66 /* editorial-photo-025.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-025.jpg"; sourceTree = "<group>"; };
 		DCD8F720E5DBF36EA7E56F5C /* editorial-photo-050.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-050.jpg"; sourceTree = "<group>"; };
 		E15CF12320984CC67900B4FE /* TutuOutfit-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-SemiBold.ttf"; sourceTree = "<group>"; };
-		E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */ = {isa = PBXFileReference; path = "editorial-video-09.mp4"; sourceTree = "<group>"; };
+		E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "editorial-video-09.mp4"; sourceTree = "<group>"; };
 		EA0A32B237AC61A6F3D55116 /* editorial-photo-042.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-042.jpg"; sourceTree = "<group>"; };
 		EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylistService.swift; sourceTree = "<group>"; };
 		ECEC435F652A788A0F08EB8D /* RoomViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViews.swift; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 		AABE0E246FC2796F535BB8E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */,
 				2D8DA50E15561B9B5E88865B /* Assets.xcassets */,
 				3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */,
 				38F60965054D1F2DB14B34AB /* Content */,
@@ -524,11 +527,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2600;
-				TargetAttributes = {
-					9915FD2F8F5FA085256C78BC = {
-						ProvisioningStyle = Automatic;
-					};
-				};
 			};
 			buildConfigurationList = 1F69ACF6CAAE6D1974FE256A /* Build configuration list for PBXProject "Tutu" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -540,7 +538,6 @@
 			);
 			mainGroup = C92ACD06723CF0506CDA36BA;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -554,6 +551,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A76E1E839314F16BC521B78 /* LaunchScreen.storyboard in Resources */,
 				80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */,
 				D747D72BE500E334AEA112B8 /* EditorialCatalog.json in Resources */,
 				C3A7E53E3BF7DFE0AB92620F /* Outfit-OFL.txt in Resources */,
@@ -833,8 +831,9 @@
 				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -842,8 +841,13 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -854,8 +858,9 @@
 				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -863,8 +868,13 @@
 				);
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

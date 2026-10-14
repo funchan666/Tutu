@@ -45,7 +45,7 @@ struct WalletView: View {
                             HStack(spacing: 12) { Artwork(name: "gift-bear").frame(width: 52, height: 52); VStack(alignment: .leading, spacing: 4) { Text("Gift & charm collection").font(.outfit(size: 15, weight: .semibold)); Text("40–1,800 coins each · collect and wear").font(.outfit(size: 12)).foregroundStyle(Palette.secondary) }; Spacer(minLength: 0) }
                         }.buttonStyle(.plain)
                         Text("Always free: messages, voice and video chats, AI style conversations, browsing, likes, comments and posting.").font(.outfit(size: 13)).foregroundStyle(Palette.secondary)
-                        Text("Gift delivery to another member is currently unavailable. Purchased collectibles are available in your backpack and as your profile charm.").font(.outfit(size: 11)).foregroundStyle(Palette.secondary)
+                        Text("Gift delivery to another member is currently unavailable. Use your collected gifts as profile charms or reusable room effects on this device. Heart Beat room effects are free.").font(.outfit(size: 11)).foregroundStyle(Palette.secondary)
                     }.panel()
                     Button(wallet.recovering ? "Checking purchases…" : "Check pending purchases") { Task { await wallet.recover(store: store) } }
                         .font(.outfit(size: 14, weight: .semibold)).foregroundStyle(Palette.pink).frame(minHeight: 44).disabled(wallet.recovering || wallet.purchasing != nil)
@@ -117,7 +117,7 @@ struct GiftDeliveryView: View {
             ScrollView { LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) { ForEach(Gift.all) { gift in Button { selected = gift } label: { VStack { Artwork(name: gift.image).frame(height: 62); Text("×\(store.state?.inventory[gift.id] ?? 0)").font(.tutuCaption) }.padding(8).frame(maxWidth: .infinity).background(selected == gift ? Palette.pink.opacity(0.15) : .white, in: RoundedRectangle(cornerRadius: 15)) }.buttonStyle(.plain) } } }
             HStack { Button("Less") { quantity = max(1, quantity - 1) }; Spacer(); Text("\(selected.name) × \(quantity)").font(.tutuHeadline); Spacer(); Button("More") { quantity = min(99, quantity + 1) } }.foregroundStyle(Palette.pink).frame(minHeight: 44)
             PinkButton(title: "Send gift", busy: busy) {
-                guard !((store.state?.blocked.contains(personID)) ?? false) else { store.show("Member blocked", "Unblock this member before sending a gift."); return }
+                guard !store.isPersonHidden(personID) else { store.show("Member blocked", "Unblock this member before sending a gift."); return }
                 guard (store.state?.inventory[selected.id] ?? 0) >= quantity else { store.show("Your backpack needs a little love", "Get this item from Gift Shop before sending it."); return }
                 store.show("Gift delivery unavailable", "Your gift hasn't been delivered. All items remain in your backpack. Please try again later.")
             }

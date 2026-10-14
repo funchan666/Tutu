@@ -6,6 +6,7 @@ struct Person: Codable, Identifiable, Hashable {
     var handle: String
     var birthday: Date? = Calendar.current.date(from: DateComponents(year: 2000, month: 1, day: 1))!
     var country = "United States"
+    var city: String? = nil
     var language = "English"
     var gender = "Woman"
     var bio = "Small moments, interesting conversations. Come say hello and share your day."
@@ -14,6 +15,7 @@ struct Person: Codable, Identifiable, Hashable {
     var photos: [String] = ["wardrobe-placeholder"]
     var isOnline: Bool? = nil
     var catalog = true
+    var location: String { [city ?? "", country].filter { !$0.isEmpty }.joined(separator: ", ") }
     var age: Int { birthday.flatMap { Calendar.current.dateComponents([.year], from: $0, to: Date()).year } ?? 0 }
 }
 struct Look: Codable, Identifiable, Hashable {
@@ -33,16 +35,41 @@ struct LookComment: Codable, Identifiable {
     var text: String
     var created = Date()
 }
+enum RoomCategories {
+    static let options = ["Daily", "Streetwear", "Minimalist", "Chic"]
+    static let filters = ["All"] + options
+    // Older locally saved rooms did not have a fashion category. Keep them discoverable.
+    static func resolved(_ value: String) -> String { options.contains(value) ? value : "Daily" }
+}
+enum VoiceRoomTopics {
+    static let options = ["Outfit Tips", "Style Talk", "Vintage Finds"]
+    static let filters = ["All"] + options
+    static func resolved(_ topic: String?) -> String {
+        guard let topic, options.contains(topic) else { return "Style Talk" }
+        return topic
+    }
+}
 struct StyleRoom: Codable, Identifiable, Hashable {
     var id: String
     var hostID: String
     var title: String
     var category: String
     var voice: Bool
+    var voiceTopic: String? = nil
     var isBroadcasting: Bool? = nil
+    var video: String? = nil
+    var viewerCount: Int? = nil
     var seats = 8
     var cover = "wardrobe-placeholder"
     var localOnly = true
+    var styleCategory: String { RoomCategories.resolved(category) }
+    var conversationTopic: String { VoiceRoomTopics.resolved(voiceTopic) }
+}
+struct RoomMessage: Codable, Identifiable {
+    var id = UUID().uuidString
+    let personID: String
+    let text: String
+    var giftID: String? = nil
 }
 struct ConversationMessage: Codable, Identifiable {
     var id = UUID().uuidString
@@ -64,10 +91,27 @@ struct Gift: Identifiable, Hashable {
     ]
 }
 struct WalletEntry: Codable, Identifiable {
+    enum Kind: String, Codable { case spending, credit, refund }
     var id = UUID().uuidString
     var title: String
     var amount: Int
     var date = Date()
+    var kind: Kind? = nil
+    var coinsSpent: Int {
+        guard amount < 0, amount != Int.min else { return 0 }
+        if let kind { return kind == .spending ? -amount : 0 }
+        // Old records have no kind. Recognize only the existing purchase titles.
+        if title == "Runway Ribbon" { return -amount }
+        for gift in Gift.all {
+            let prefix = gift.name + " ×"
+            if title.hasPrefix(prefix), let quantity = Int(title.dropFirst(prefix.count)), quantity > 0 { return -amount }
+        }
+        return 0
+    }
+}
+struct ModerationContent: Codable, Hashable {
+    let kind: String
+    let id: String
 }
 struct ReportDraft: Codable, Identifiable {
     var id = UUID().uuidString
@@ -76,6 +120,8 @@ struct ReportDraft: Codable, Identifiable {
     var kind: String
     var reason: String
     var detail: String
+    var context: String? = nil
+    var locallyHandled: Bool? = nil
     var date = Date()
     var delivered = false
 }
@@ -103,6 +149,8 @@ struct ProfileState: Codable {
     var conversations: [String: [ConversationMessage]] = [:]
     var stylist: [ConversationMessage] = []
     // Optional additions keep existing profiles decodable.
+    var roomMessages: [String: [RoomMessage]]? = nil
+    var hiddenContent: Set<ModerationContent>? = nil
     var welcomeEligible: Bool? = nil
     var welcomeGranted: Bool? = nil
     var welcomeSeen: Bool? = nil
@@ -142,12 +190,31 @@ enum LegalLinks {
     static let terms = URL(string: "https://sites.google.com/view/tutu-termsofservice/heavy")!
     static let privacy = URL(string: "https://sites.google.com/view/tutu-privacy-policy/heavy")!
 }
+struct EditorialProfile: Decodable {
+    let birthday: String
+    let gender: String
+    let country: String
+    let city: String
+    let bio: String
+    let interests: [String]
+    var birthDate: Date? {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.isLenient = false
+        return formatter.date(from: birthday)
+    }
+}
 struct EditorialItem: Decodable {
     let id: String
     let name: String
     let handle: String
     let image: String
     let video: String?
+    let avatar: String?
+    let photos: [String]?
+    let profile: EditorialProfile?
     let style: String
 }
 enum Catalog {
@@ -157,12 +224,40 @@ enum Catalog {
         return items
     }()
     static let people: [Person] = items.map { item in
-        Person(id: item.id, name: item.name, handle: item.handle, birthday: nil, country: "", gender: "",
-               bio: "A personal edit of everyday style.", interests: [item.style], avatar: item.image, photos: [item.image])
+        Person(id: item.id, name: item.name, handle: item.handle,
+               birthday: item.profile?.birthDate, country: item.profile?.country ?? "", city: item.profile?.city,
+               gender: item.profile?.gender ?? "", bio: item.profile?.bio ?? "A personal edit of everyday style.",
+               interests: item.profile?.interests ?? [item.style], avatar: item.avatar ?? item.image, photos: item.photos ?? [item.image])
     }
-    static let rooms: [StyleRoom] = people.prefix(18).enumerated().map { index, p in
-        StyleRoom(id: "room-\(p.id)", hostID: p.id, title: p.interests[0] + " style edit", category: ["Pop", "Acoustic", "Singing", "K-Pop"][index % 4], voice: index % 2 != 0, cover: p.photos[0])
-    }
+    static let rooms: [StyleRoom] = {
+        // Six supplied videos, selected for readable first-frame covers.
+        // Viewer counts are fixed local presentation values, not live presence statistics.
+        let selections = [
+            ("film-01", "Soft Tailoring", "Chic", 48),
+            ("film-02", "Street Style Crew", "Streetwear", 56),
+            ("film-04", "After Dark Layers", "Streetwear", 45),
+            ("film-07", "A Walk in Style", "Daily", 52),
+            ("film-09", "Everyday Pairings", "Minimalist", 47),
+            ("film-11", "City Light Look", "Daily", 54)
+        ]
+        let liveRooms: [StyleRoom] = selections.compactMap { id, title, category, viewerCount in
+            guard let item = items.first(where: { $0.id == id }), let video = item.video else { return nil }
+            return StyleRoom(id: "room-\(id)", hostID: id, title: title, category: category,
+                             voice: false, video: video, viewerCount: viewerCount, cover: item.image)
+        }
+        // Voice-room covers use supplied host portraits; counts are local presentation data.
+        let voiceHosts = ["lily", "ava", "editorial-001", "editorial-005", "editorial-008", "noah", "editorial-011", "editorial-013"]
+        let voiceTitles = ["Vintage finds & coffee", "Everyday outfit chat", "Color stories", "The layering lounge", "Weekend wardrobe", "City style conversations", "Vintage closet favorites", "Minimal mood"]
+        let voiceCounts = [48, 52, 46, 55, 49, 51, 47, 54]
+        let voiceTopics = ["Vintage Finds", "Outfit Tips", "Outfit Tips", "Outfit Tips", "Style Talk", "Style Talk", "Vintage Finds", "Style Talk"]
+        let voiceRooms: [StyleRoom] = voiceHosts.enumerated().compactMap { index, id in
+            guard let person = people.first(where: { $0.id == id }) else { return nil }
+            return StyleRoom(id: "room-\(id)", hostID: id, title: voiceTitles[index],
+                             category: RoomCategories.resolved(person.interests.first ?? "Daily"),
+                             voice: true, voiceTopic: voiceTopics[index], viewerCount: voiceCounts[index], cover: person.avatar)
+        }
+        return liveRooms + voiceRooms
+    }()
     static let looks: [Look] = items.map { item in
         Look(id: "look-\(item.id)", authorID: item.id, text: item.style + " inspiration. Find the details that feel like you.", media: [item.image], video: item.video, category: item.style)
     }

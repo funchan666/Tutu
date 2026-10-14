@@ -17,6 +17,9 @@ struct DiscoverView: View {
                     .buttonStyle(.plain).accessibilityLabel("My profile")
             }
         }.onChange(of: focused) { _, _ in MoviePlayback.shared.stop() }.onDisappear { MoviePlayback.shared.stop() }
+            .onChange(of: store.looks.map(\.id)) { _, ids in
+                if let focused, !ids.contains(focused) { self.focused = ids.first }
+            }
     }
 }
 struct DiscoverLook: View {
@@ -41,10 +44,7 @@ struct DiscoverLook: View {
                                 Text(store.person(look.authorID).name).font(.outfit(size: 16, weight: .bold, design: .rounded))
                             }.buttonStyle(.plain)
                             if look.authorID != store.me.id {
-                                ArtButton(label: store.state?.following.contains(look.authorID) == true ? "Unfollow" : "Follow",
-                                          asset: store.state?.following.contains(look.authorID) == true ? "control-content-followed" : "control-content-follow", size: 32) {
-                                    store.toggleFollow(look.authorID)
-                                }
+                                FollowButton(personID: look.authorID, size: 32, contentStyle: true)
                             }
                         }
                         Text(look.text).font(.outfit(size: 12, design: .rounded)).lineSpacing(3).lineLimit(3)
@@ -70,7 +70,7 @@ struct PostDetailView: View {
     @State private var text = ""
     @State private var report: ReportTarget?
     var look: Look? { store.looks.first { $0.id == postID } }
-    var comments: [LookComment] { (store.state?.comments ?? []).filter { $0.postID == postID && !(store.state?.blocked.contains($0.authorID) ?? false) } }
+    var comments: [LookComment] { store.comments.filter { $0.postID == postID } }
     var body: some View {
         Page(title: "Look") {
             if let look {
@@ -99,7 +99,8 @@ struct PostDetailView: View {
             } else { EmptyState(title: "This post is unavailable") }
         }.sheet(item: $report) { MemberActions(targetID: $0.id, authorID: $0.author, kind: $0.kind) }
             .onAppear { text = store.state?.drafts["comment-" + postID] ?? "" }
-            .onDisappear { if !text.isEmpty { store.commit { $0.drafts["comment-" + postID] = text } }; MoviePlayback.shared.stop() }
+            .onDisappear { if !text.isEmpty, look != nil { store.commit { $0.drafts["comment-" + postID] = text } }; MoviePlayback.shared.stop() }
+            .moderationVisibility(hidden: look == nil)
     }
 }
 struct ReportTarget: Identifiable { let id: String; let author: String; let kind: String }
@@ -149,7 +150,7 @@ struct ComposeLookView: View {
     @Published private(set) var failure = ""
     private var observation: NSKeyValueObservation?
     private var ending: NSObjectProtocol?
-    func open(_ url: URL) {
+    func open(_ url: URL, loop: Bool = false) {
         if activeURL == url { return }
         stop(); let item = AVPlayerItem(url: url); player = AVPlayer(playerItem: item); activeURL = url
         observation = item.observe(\.status, options: [.new]) { [weak self] item, _ in
@@ -160,7 +161,11 @@ struct ComposeLookView: View {
             }
         }
         ending = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in guard self?.activeURL == url else { return }; self?.playing = false }
+            Task { @MainActor [weak self] in
+                guard let self, self.activeURL == url else { return }
+                if loop, self.playing { self.player?.seek(to: .zero); self.player?.play() }
+                else { self.playing = false }
+            }
         }
     }
     func toggle() {
@@ -197,8 +202,19 @@ struct MovieView: View {
 }
 struct MovieLayer: UIViewRepresentable {
     let player: AVPlayer
-    func makeUIView(context: Context) -> MovieLayerView { let v = MovieLayerView(); v.playerLayer.videoGravity = .resizeAspect; v.playerLayer.player = player; return v }
-    func updateUIView(_ uiView: MovieLayerView, context: Context) { uiView.playerLayer.player = player }
+    var fillsFrame = false
+    func makeUIView(context: Context) -> MovieLayerView {
+        let view = MovieLayerView()
+        view.clipsToBounds = true
+        view.playerLayer.videoGravity = fillsFrame ? .resizeAspectFill : .resizeAspect
+        view.playerLayer.player = player
+        return view
+    }
+    func updateUIView(_ uiView: MovieLayerView, context: Context) {
+        uiView.playerLayer.videoGravity = fillsFrame ? .resizeAspectFill : .resizeAspect
+        uiView.playerLayer.player = player
+    }
+    static func dismantleUIView(_ uiView: MovieLayerView, coordinator: ()) { uiView.playerLayer.player = nil }
 }
 final class MovieLayerView: UIView {
     override class var layerClass: AnyClass { AVPlayerLayer.self }
