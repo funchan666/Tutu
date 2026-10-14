@@ -46,22 +46,70 @@ struct PolicyWebSurface: UIViewRepresentable {
 enum MediaSelection { case image(UIImage), movie(URL) }
 struct MediaSourceView: View {
     var allowVideo = false
+    var title = "Add your media"
+    var subtitle = "Choose a favorite or capture something new."
     var completion: (MediaSelection) -> Void
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var store: AppStore
     @State private var source: CaptureSource?
+    @State private var pendingSelection: MediaSelection?
     var body: some View {
-        VStack(spacing: 16) {
-            HStack { Text("Add your media").font(.tutuTitle3.bold()); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }
-            MenuRow(title: "Take a photo") { open(camera: true, video: false) }
-            if allowVideo { MenuRow(title: "Record a video") { open(camera: true, video: true) } }
-            MenuRow(title: "Choose from library") { source = CaptureSource(camera: false, video: allowVideo) }
-            Text("Your selection stays on this device until a sharing service is available.").font(.tutuCaption).foregroundStyle(Palette.secondary)
-        }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }
-            .sheet(item: $source) { s in NativeMediaPicker(source: s) { result in
-                source = nil
-                if let result { completion(result); dismiss() }
-            } }
+        VStack(alignment: .leading, spacing: 20) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title).font(.outfit(size: 22, weight: .bold))
+                    Text(subtitle).font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                }
+                Spacer(minLength: 0)
+                ArtButton(label: "Close", asset: "nav-close", size: 28) { dismiss() }
+            }
+            ScrollView {
+                VStack(spacing: 12) {
+                    sourceRow("Photo library", detail: allowVideo ? "Photos and videos you love" : "Find the perfect photo", artwork: "icon-photo") {
+                        source = CaptureSource(camera: false, video: allowVideo)
+                    }
+                    sourceRow("Take a photo", detail: "Capture a fresh moment", artwork: "icon-camera") {
+                        open(camera: true, video: false)
+                    }
+                    if allowVideo {
+                        sourceRow("Record a video", detail: "A moment in motion", artwork: "icon-camera") {
+                            open(camera: true, video: true)
+                        }
+                    }
+                }
+            }.scrollIndicators(.hidden)
+        }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .foregroundStyle(Palette.ink).background(Palette.blush)
+            .presentationBackground(Palette.blush).presentationCornerRadius(30)
+            .presentationDragIndicator(.hidden).presentationDetents([.height(allowVideo ? 440 : 340), .large])
+            .overlay { NoticeOverlay() }
+            .sheet(item: $source, onDismiss: finishSelection) { selectedSource in
+                NativeMediaPicker(source: selectedSource) { result in
+                    pendingSelection = result
+                    source = nil
+                }
+            }
+    }
+    private func sourceRow(_ title: String, detail: String, artwork: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Artwork(name: artwork).frame(width: 36, height: 36).allowsHitTesting(false)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(title).font(.tutuHeadline)
+                    Text(detail).font(.tutuCaption).foregroundStyle(Palette.secondary)
+                }
+                Spacer(minLength: 0)
+                Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 13, height: 13)
+            }.padding(18).frame(maxWidth: .infinity, minHeight: 82, alignment: .leading)
+                .background(.white, in: RoundedRectangle(cornerRadius: 18))
+                .contentShape(RoundedRectangle(cornerRadius: 18))
+        }.buttonStyle(.plain)
+    }
+    private func finishSelection() {
+        guard let selection = pendingSelection else { return }
+        pendingSelection = nil
+        completion(selection)
+        dismiss()
     }
     func open(camera: Bool, video: Bool) {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else { store.show("Camera unavailable", "Choose a photo from your library instead."); return }

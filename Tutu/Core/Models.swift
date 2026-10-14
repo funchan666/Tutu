@@ -77,6 +77,7 @@ struct ConversationMessage: Codable, Identifiable {
     var outgoing: Bool
     var created = Date()
     var status: String = "Not sent"
+    var replySource: String? = nil
 }
 struct Gift: Identifiable, Hashable {
     let id: String
@@ -148,6 +149,8 @@ struct ProfileState: Codable {
     var mediaDrafts: [String: String] = [:]
     var conversations: [String: [ConversationMessage]] = [:]
     var stylist: [ConversationMessage] = []
+    var stylistFreeUsed: Int? = nil
+    var stylistCompletedTurns: Set<String>? = nil
     // Optional additions keep existing profiles decodable.
     var roomMessages: [String: [RoomMessage]]? = nil
     var hiddenContent: Set<ModerationContent>? = nil

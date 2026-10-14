@@ -2,6 +2,8 @@ import SwiftUI
 
 enum CoinEconomy {
     static let welcomeCoins = 360
+    static let stylistFreeReplies = 5
+    static let stylistReplyPrice = 20
     static let runwayFrame = "runway-ribbon"
     static let runwayPrice = 240
 }

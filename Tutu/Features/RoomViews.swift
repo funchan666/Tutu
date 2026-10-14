@@ -628,7 +628,7 @@ struct CreateRoomView: View {
                             Artwork(name: "icon-mic").frame(width: 36, height: 36)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("8 seats, one conversation").font(.tutuSubheadline.bold())
-                                Text("Guests request a seat. You choose who joins.").font(.tutuCaption).foregroundStyle(Palette.secondary)
+                                Text("Bring your next style conversation together.").font(.tutuCaption).foregroundStyle(Palette.secondary)
                             }
                         }
                     }
