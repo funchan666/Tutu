@@ -122,6 +122,9 @@
   ],
   "extensionProtocolFile": "social-protocol.json",
   "realtime": {
-    "transport": "rtLink"
+    "transport": "rtLink",
+    "connectionValuePath": ["data", "token"],
+    "urlPlaceholder": "#{webSocketUrl}",
+    "channelPlaceholder": "#{roomId}"
   }
 }

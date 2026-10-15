@@ -52,6 +52,9 @@ struct ConfiguredRealtimeTicket {
     }
 
     init(connectionFields: [String: Any], now: Date = Date()) throws {
+        if let rawURL = connectionFields["url"] as? String, rawURL.contains("#{") {
+            throw ConfiguredRealtimeError.unresolvedPlaceholder
+        }
         if connectionFields["url"] == nil,
            connectionFields["keyName"] != nil,
            connectionFields["mac"] != nil,
@@ -76,6 +79,9 @@ struct ConfiguredRealtimeTicket {
         }
         var room: String?
         if let value = connectionFields["roomId"] {
+            if let text = value as? String, text.contains("#{") {
+                throw ConfiguredRealtimeError.unresolvedPlaceholder
+            }
             guard let text = value as? String,
                   !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 throw ConfiguredRealtimeError.invalidIdentity
@@ -159,6 +165,9 @@ struct ConfiguredRealtimeConfiguration {
               let channel = attach["channel"] as? String,
               !channel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw ConfiguredRealtimeError.invalidSubscription
+        }
+        guard !channel.contains("#{") else {
+            throw ConfiguredRealtimeError.unresolvedPlaceholder
         }
         self.ticket = ticket
         channelName = channel

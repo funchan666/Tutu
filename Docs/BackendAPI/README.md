@@ -111,29 +111,28 @@
 
 **部署与未验证项**：两个后台导入 JSON 的内容未改变，无需因本次客户端更新重新导入。线上实际连接载荷、attach 的订阅/发布权限、刷新响应、原生收发及 ACK、前后台恢复、网页/APNs/真实支付均未联调。私有网关若与标准发布协议有差异，需在后续获准联调时确认，不能由静态核对保证服务支持。
 
-## 2026-10-15 · 登录错误定位与后端直连返回要求
+## 2026-10-15 · 修正直连响应占位符
 
-用户授权对现有登录接口做最小范围线上排查，并明确选择保持地址直连、由后台返回 `url` 和 `attach`；不恢复 Ably SDK、不增加客户端旧 TokenRequest 换票请求、不调用 rtLink。以下记录更新上节“线上载荷未验证”的范围，不代表原生 App 登录全链路已经通过。
+用户提供后台截图确认 `#{webSocketUrl}` 才是完整 WebSocket 直连地址，`#{roomId}` 为对应房间参数。此前将 `#{tokenResult}` 继续作为直连信息来源的模板有误；上节“保留 tokenResult、无需重新导入”的结论被本节替代。平台已经支持直连占位符，不需要因此修改后端凭证生成实现，也不增加客户端换票或 rtLink 请求。
 
-- 使用独立诊断安装标识、当前应用版本和既有四个公共请求字段请求 `/tutu/passport/fitting-pass`，APNs token 为空；未使用用户 Apple/邮箱凭证，也未操作用户现有会话。这是接口结构排查，不等于截图中同一账号的登录复现。
-- 实际 HTTP 200、业务 code 0；`data.token` 是含 `keyName/nonce/mac/capability/timestamp/ttl/clientId` 的旧 TokenRequest 对象，clientId 为 app，没有 `url/attach`。当前原生直连解析器无法消费该结构。这与迁移前 SDK 消费 TokenRequest 的方式不同，说明线上返回与迁移后的客户端输入契约不兼容。
-- 原 `ConfiguredRealtimeError` 没有 LocalizedError 描述，界面因此暴露 Swift 错误域和错误0。客户端现已区分旧票据、URL、订阅、身份、到期时间等失败原因；Debug 只记录固定错误类别，界面使用可读错误提示。不记录票据、连接 URL、签名、频道或完整响应。
+### 原因与本次修正
 
-### 后端需要修改的内容
+- 经用户授权，以独立诊断安装标识、当前版本、空 APNs token 和既有整数模式字段请求认证接口，实际得到 HTTP 200/code 0，`data.token` 为旧 TokenRequest 对象，缺少 url/attach。该结果对应当时已部署的旧 `#{tokenResult}` 模板，不代表平台不支持地址直连，也不是对截图账号的完整登录复现。
+- `responses/auth-response.json` 与最终接口模板改用 `#{webSocketUrl}` 和 `#{roomId}`。外层仍保留 `data.token` 作为现有客户端读取槽位；这里 token 只是 JSON 字段名，不表示仍使用 TokenRequest。该对象直接提供 url、roomId、clientId 和 attach。
+- `url` 使用 `#{webSocketUrl}` 原值；`roomId` 和 `attach.channel` 使用同一次响应中的 `#{roomId}` 原值，不额外拼接频道前缀。attach.action 为整数 10，clientId 为 app。attach.params.rewind 为字符串 1，沿用迁移前 SDK 的首条历史消息订阅行为，但由后台响应提供，客户端不写死 rewind。
+- 原生客户端继续解析 `data.token` 对象（或该对象的一层 JSON 字符串），在 action 4 后发送原样 attach，action 11 后才 ready，action 15 交既有业务处理；认证、恢复和续期使用相同解析入口。已有路由等待、业务消息、StoreKit 1 与支付补单保持不变。
+- 旧票据、未展开占位符、URL、订阅、身份和过期参数分别识别；界面不再暴露 Swift 错误域和错误0。Debug 仅记录固定错误类别，不输出连接 URL、票据、签名或完整响应。
 
-保留 App ID `75252159`、现有域名、认证路径和公共请求字段。修改实际生成 `#{tokenResult}` 的服务逻辑，使认证和现有刷新调用均返回以下结构；不是在控制台填入一次性的静态连接地址。
+### 控制台操作
 
-| 响应位置 | 要求 |
-| --- | --- |
-| `data.token` | JSON 对象，或一层编码该对象的 JSON 字符串；不额外包 `result` 层，不返回旧 TokenRequest。 |
-| `data.token.url` | 当前会话真实可用、完整的 `wss://` URL，鉴权参数由服务端生成；不返回占位符，不依赖客户端补 URL、Header 或再次请求 rtLink。 |
-| `data.token.attach` | 完整订阅 JSON 对象，`action` 为整数 10、`channel` 为当前会话实际授权的非空频道。客户端在 action 4 后原样发送。 |
-| `data.token.clientId` | 可省略；若返回，必须是字符串 `app`。 |
-| `data.token.roomId` | 可省略；若返回，必须是非空字符串，同一会话刷新时保持一致。 |
-| `data.token.expiresAt` | 可省略；若返回，必须是未来时间的 Unix 毫秒数，不能用秒或数字字符串。 |
+选择 App ID `75252159`，在接口管理导入本次更新的 `generated/接口模板-75252159.json`，核对 `/tutu/passport/fitting-pass` 响应并保存。修改内容仅为此认证响应，其他五个接口和所有配置映射不变。`generated/配置模板-75252159.json` 内容未变，无需重复导入；无需修改域名、请求字段或四个业务事件。
 
-服务端继续在对应频道发送既有 `RunwayDoorReady` 等业务事件，保留原发送方、消息格式和支付逻辑。若既有业务依赖历史首条路由消息，需由后端在 attach 中提供对应订阅参数，或在订阅后发送；客户端不擅自固定 rewind。刷新必须继续提供同一会话的新有效地址及相同频道。
+也可以仅将上述认证接口的响应内容替换为：
 
-订阅动作依据：[Ably 原生连接与 attach 协议](https://ably.com/blog/how-to-connect-to-ably-directly-part-1)。旧 TokenRequest 是用于取得访问凭证的签名请求，不是完整连接地址；两者不能互换。
+```json
+{"code":0,"message":"ok","data":{"token":{"url":"#{webSocketUrl}","roomId":"#{roomId}","clientId":"app","attach":{"action":10,"channel":"#{roomId}","params":{"rewind":"1"}}}}}
+```
 
-**交付边界**：本仓库未包含后端服务实现，因此未修改线上 tokenResult 生成逻辑。既有导入模板仍保留动态 `#{tokenResult}`，无需重复导入当前未变化的模板。当前只完成失败分类、可读提示和静态差异检查；登录恢复仍取决于后台完成上述变更。未编译、未运行自动化测试、未建立诊断 WebSocket、未触发购买或修改后台配置。后端更新后需核对新响应并按授权验证订阅和登录结果。
+后台必须动态展开占位符，不要把某次连接 URL 或房间值固化进模板。url 应是完整有效 wss 地址，roomId 应是非空实际房间字符串。可选 expiresAt 若日后返回，按现有解析器采用 Unix 毫秒数；本次模板不虚构期限。
+
+**验证边界**：本次完成模板生成及源码/JSON/差异静态检查，未编译、未运行自动化测试、未启动 App、未建立诊断 WebSocket、未触发支付。已授权的线上请求仅确认旧模板的实际响应结构；新版模板尚需用户导入保存，再核对占位符展开值与订阅结果。未宣称登录已经恢复。后台订阅动作依据：[Ably 原生连接与 attach 协议](https://ably.com/blog/how-to-connect-to-ably-directly-part-1)。

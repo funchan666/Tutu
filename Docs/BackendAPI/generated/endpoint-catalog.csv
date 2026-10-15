@@ -1,6 +1,6 @@
 ﻿role,method,path,response_file,note,response_chars,response_utf8_bytes
 loginMethods,POST,/tutu/arrival/entry,responses/login-methods.json,explicit configured response; backend capability is separate,63,63
-authenticate,POST,/tutu/passport/fitting-pass,responses/auth-response.json,explicit configured response; backend capability is separate,59,59
+authenticate,POST,/tutu/passport/fitting-pass,responses/auth-response.json,explicit configured response; backend capability is separate,175,175
 confirmPurchase,POST,/tutu/wallet/settlement,responses/purchase-response.json,explicit configured response; backend capability is separate,25,25
 editorial,POST,/tutu/catalog/editorial,responses/editorial.json,JSON request body {}; content file relative to BackendAPI,25594,25598
 rooms,POST,/tutu/catalog/rooms,responses/rooms.json,JSON request body {}; content file relative to BackendAPI,7098,7098
