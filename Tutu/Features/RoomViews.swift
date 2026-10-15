@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 private enum RoomPanel: String, Identifiable {
     case options, members, invitation, report, gifts, hostProfile, messageActions
@@ -700,31 +701,153 @@ struct CallView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scene
+    @Environment(\.openURL) private var openURL
     let personID: String
     let video: Bool
     @StateObject private var camera = CameraService()
-    @State private var started = false
-    var body: some View {
-        ZStack {
-            SceneBackground(name: "party-background")
-            if video && camera.ready { CameraSurface(session: camera.capture).ignoresSafeArea() }
-            VStack(spacing: 24) {
-                HStack { Text(ui: video ? "Video call" : "Voice call").font(.tutuHeadline); Spacer(); ArtButton(label: "Close call", asset: "nav-close") { camera.stop(); dismiss() } }
-                Spacer()
-                Avatar(person: store.person(personID), size: 94)
-                Text(store.person(personID).name).font(.tutuTitle.bold())
-                Text(started ? camera.status : "Preparing…").font(.tutuSubheadline).multilineTextAlignment(.center).padding(16).background(.black.opacity(0.4), in: RoundedRectangle(cornerRadius: 18))
-                Text("No call has connected.").font(.tutuCaption)
-                Spacer()
-                HStack { if video { Button("Switch camera") { Task { await camera.flip() } } }; Spacer(); Button(LocalizedStringKey(camera.microphoneEnabled ? "Mute" : "Unmute")) { camera.setMicrophoneEnabled(!camera.microphoneEnabled) }.disabled(!camera.ready) }.font(.tutuSubheadline.bold()).frame(minHeight: 44)
-                PinkButton(title: "End call") { camera.stop(); dismiss() }
-            }.padding(24).foregroundStyle(.white)
-        }.toolbar(.hidden, for: .navigationBar).task {
-            guard store.state?.following.contains(personID) == true, store.followerIDs.contains(personID), !store.isPersonHidden(personID) else { store.show("A little connection first", "Follow each other before starting a call."); dismiss(); return }
-            await camera.start(video: video); started = true
-        }.onDisappear { camera.stop() }.onChange(of: scene) { _, phase in if phase != .active { camera.stop(); dismiss() } }
-            .moderationVisibility(hidden: store.isPersonHidden(personID))
+    @State private var busy = false
+    @State private var visible = false
+    @State private var captureTask: Task<Void, Never>?
+    private var permissionDenied: Bool {
+        let microphone = AVCaptureDevice.authorizationStatus(for: .audio)
+        let lens = AVCaptureDevice.authorizationStatus(for: .video)
+        return microphone == .denied || microphone == .restricted ||
+            (video && (lens == .denied || lens == .restricted))
     }
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                header.padding(20)
+                ScrollView {
+                    VStack(spacing: 20) {
+                        preview.frame(height: max(240, min(420, geometry.size.height * 0.44)))
+                        statusPanel
+                        HStack(alignment: .top, spacing: 12) {
+                            control(title: camera.microphoneEnabled ? "Mute" : "Unmute", asset: "icon-mic",
+                                    enabled: camera.microphoneAvailable && !busy, selected: !camera.microphoneEnabled) {
+                                camera.setMicrophoneEnabled(!camera.microphoneEnabled)
+                            }
+                            if video {
+                                control(title: "Switch camera", asset: "call-video", enabled: camera.ready && !busy) {
+                                    prepareCapture(flipping: true)
+                                }
+                            }
+                        }
+                    }.padding(.horizontal, 20).padding(.bottom, 20)
+                }.scrollIndicators(.hidden)
+                Button(action: endCall) {
+                    HStack(spacing: 10) {
+                        Artwork(name: "call-voice").frame(width: 28, height: 28).rotationEffect(.degrees(135))
+                        Text("End call").font(.tutuHeadline)
+                    }.foregroundStyle(.white).frame(maxWidth: .infinity).frame(height: 56)
+                        .background { Image("button-base").resizable() }
+                }.buttonStyle(.plain).padding(.horizontal, 24).padding(.vertical, 12)
+            }
+        }
+        .background { SceneBackground(name: "party-background") }
+        .foregroundStyle(.white).toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            guard store.state?.following.contains(personID) == true, store.followerIDs.contains(personID), !store.isPersonHidden(personID) else {
+                store.show("A little connection first", "Follow each other before starting a call."); dismiss(); return
+            }
+            visible = true; prepareCapture()
+        }
+        .onDisappear { stopCapture() }
+        .onChange(of: scene) { _, phase in
+            // System permission sheets temporarily make the app inactive. Do not dismiss then.
+            if phase == .background { endCall() }
+        }
+        .onChange(of: store.sessionID) { _, _ in endCall() }
+        .moderationVisibility(hidden: store.isPersonHidden(personID))
+    }
+
+    private var header: some View {
+        HStack(spacing: 10) {
+            Avatar(person: store.person(personID), size: 42)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(store.person(personID).name).font(.outfit(size: 18, weight: .semibold)).lineLimit(1)
+                Text(ui: video ? "Video call" : "Voice call").font(.tutuCaption).foregroundStyle(.white.opacity(0.75))
+            }
+            Spacer()
+            ArtButton(label: "Close call", asset: "nav-close", size: 28) { endCall() }
+                .background(.white.opacity(0.9), in: Circle())
+        }
+    }
+
+    private var preview: some View {
+        ZStack {
+            Palette.ink
+            if video && camera.ready {
+                CameraSurface(session: camera.capture)
+                    .accessibilityLabel("Your local camera preview")
+            } else if video {
+                VStack(spacing: 16) {
+                    Artwork(name: "call-video").frame(width: 76, height: 76)
+                    Text(ui: busy ? "Preparing…" : "Camera preview is unavailable")
+                        .font(.tutuSubheadline).multilineTextAlignment(.center)
+                }.padding(20)
+            } else {
+                VStack(spacing: 20) {
+                    Avatar(person: store.person(personID), size: 116)
+                    Text(store.person(personID).name).font(.outfit(size: 26, weight: .bold))
+                    Artwork(name: "call-voice").frame(width: 40, height: 40)
+                }
+            }
+        }
+        .overlay(alignment: .bottomLeading) {
+            if video && camera.ready {
+                Text("You · Local preview").font(.outfit(size: 12, weight: .semibold))
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Palette.ink.opacity(0.85), in: Capsule()).padding(14)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 28))
+        .overlay { RoundedRectangle(cornerRadius: 28).strokeBorder(.white.opacity(0.18), lineWidth: 1) }
+    }
+
+    private var statusPanel: some View {
+        VStack(spacing: 10) {
+            Text(ui: busy ? "Preparing…" : video && camera.ready ? "Your camera is ready" : camera.ready ? "Your microphone is ready" : "Check your permissions")
+                .font(.outfit(size: 17, weight: .semibold))
+            Text("Calls are not available yet. No call is connected.")
+                .font(.tutuCaption).foregroundStyle(.white.opacity(0.8))
+            if !busy && (!camera.ready || !camera.microphoneAvailable) {
+                Text(ui: camera.status).font(.tutuCaption).foregroundStyle(.white.opacity(0.85))
+                Button(permissionDenied ? "Open Settings" : "Try again") {
+                    if permissionDenied, let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                    else { prepareCapture() }
+                }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44)
+            }
+        }.multilineTextAlignment(.center).padding(16).frame(maxWidth: .infinity)
+            .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 20))
+    }
+
+    private func control(title: String, asset: String, enabled: Bool, selected: Bool = false, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Artwork(name: asset).frame(width: 32, height: 32).frame(width: 58, height: 58)
+                    .background(selected ? Palette.pink.opacity(0.3) : Color.white.opacity(0.14), in: Circle())
+                Text(ui: title).font(.outfit(size: 12, weight: .medium)).multilineTextAlignment(.center)
+            }.frame(maxWidth: .infinity).opacity(enabled ? 1 : 0.45)
+        }.buttonStyle(.plain).disabled(!enabled)
+            .accessibilityAddTraits(selected ? [.isSelected] : [])
+    }
+
+    private func prepareCapture(flipping: Bool = false) {
+        guard visible, !busy else { return }
+        busy = true
+        captureTask = Task { @MainActor in
+            if flipping { await camera.flip(previewWithoutMicrophone: true) }
+            else { await camera.start(video: video, previewWithoutMicrophone: video) }
+            guard !Task.isCancelled, visible else { return }
+            busy = false; captureTask = nil
+        }
+    }
+    private func stopCapture() {
+        visible = false; captureTask?.cancel(); captureTask = nil; busy = false; camera.stop()
+    }
+    private func endCall() { stopCapture(); dismiss() }
 }
 struct LeaderboardView: View {
     @EnvironmentObject private var store: AppStore

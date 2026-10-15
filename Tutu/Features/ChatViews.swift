@@ -38,7 +38,18 @@ struct ChatView: View {
     var body: some View {
         Page(title: person.name) {
             VStack(spacing: 0) {
-                HStack { NavigationLink(value: Route.profile(personID)) { HStack { Avatar(person: person, size: 38); Text("Profile").font(.tutuSubheadline.bold()) } }.buttonStyle(.plain); Spacer(); Button("Video call") { beginCall(true) }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44); ArtButton(label: "More", asset: "nav-more") { more = true } }.padding(.horizontal, 16)
+                HStack(spacing: 8) {
+                    NavigationLink(value: Route.profile(personID)) {
+                        HStack(spacing: 8) {
+                            Avatar(person: person, size: 38)
+                            Text("Profile").font(.tutuSubheadline.bold()).lineLimit(1)
+                        }.frame(minHeight: 48)
+                    }.buttonStyle(.plain)
+                    Spacer(minLength: 0)
+                    callButton(video: false)
+                    callButton(video: true)
+                    ArtButton(label: "More", asset: "nav-more", size: 30) { more = true }
+                }.padding(.horizontal, 16).padding(.bottom, 8)
                 ScrollViewReader { reader in
                     ScrollView {
                         VStack(spacing: 18) {
@@ -65,7 +76,7 @@ struct ChatView: View {
                 }
                 VStack(spacing: 12) {
                     HStack { ArtButton(label: "More tools", asset: "nav-create", size: 34) { tools.toggle() }; TextField("Say hi…", text: $text, axis: .vertical).lineLimit(1...5).padding(14).background(.white, in: RoundedRectangle(cornerRadius: 23)); ArtButton(label: "Send message", asset: "icon-send") { send() } }
-                    if tools { HStack(spacing: 22) { ArtButton(label: "Photo or video", asset: "icon-photo") { media = true }; ArtButton(label: "Voice message", asset: "icon-mic") { voice = true }; ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }; Button("Voice call") { beginCall(false) }.font(.tutuCaption.bold()).foregroundStyle(Palette.pink); Spacer() }.padding(.horizontal, 10) }
+                    if tools { HStack(spacing: 22) { ArtButton(label: "Photo or video", asset: "icon-photo") { media = true }; ArtButton(label: "Voice message", asset: "icon-mic") { voice = true }; ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }; Spacer() }.padding(.horizontal, 10) }
                 }.padding(12).background(Palette.blush)
             }
         }.onAppear { text = store.state?.drafts[personID] ?? ""; attachment = store.state?.mediaDrafts[personID]; session = store.sessionID }
@@ -78,6 +89,16 @@ struct ChatView: View {
             .sheet(isPresented: $voice) { VoiceRecorderView(personID: personID) }
             .fullScreenCover(item: $call) { CallView(personID: personID, video: $0.video).environmentObject(store).overlay { NoticeOverlay() } }
             .moderationVisibility(hidden: store.isPersonHidden(personID))
+    }
+    private func callButton(video: Bool) -> some View {
+        Button { beginCall(video) } label: {
+            VStack(spacing: 3) {
+                Artwork(name: video ? "call-video" : "call-voice").frame(width: 28, height: 28)
+                Text(ui: video ? "Video" : "Voice").font(.outfit(size: 10, weight: .semibold))
+                    .foregroundStyle(Palette.ink).lineLimit(1).minimumScaleFactor(0.8)
+            }.frame(width: 56, height: 54)
+                .background(.white.opacity(0.85), in: RoundedRectangle(cornerRadius: 16))
+        }.buttonStyle(.plain).accessibilityLabel(Text(ui: video ? "Video call" : "Voice call"))
     }
     func beginCall(_ video: Bool) {
         guard !store.isPersonHidden(personID) else { store.show("Member blocked", "Unblock this member first."); return }
