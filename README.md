@@ -2,7 +2,7 @@
 
 Native SwiftUI iPhone app for outfit inspiration, curated fashion videos and personal style collections. Minimum deployment target: iOS 17. Open `Tutu.xcodeproj` with scheme `Tutu`; `project.yml` is the XcodeGen source.
 
-The current Bundle ID is `im.seex.sao2`. Keep the registered application, signing capabilities, URL scheme and App Store Connect products consistent with that identity. Release configuration retains debug symbols in the separate dSYM and enables standard symbol stripping. A dSYM is useful for crash diagnosis and is not an application resource.
+The current Bundle ID is `com.tutustyleoutfit.lookbook`. Keep the registered application, signing capabilities, URL scheme and App Store Connect products consistent with that identity. Release configuration retains debug symbols in the separate dSYM and enables standard symbol stripping. A dSYM is useful for crash diagnosis and is not an application resource.
 
 ## Content and current functionality
 

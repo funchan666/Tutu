@@ -4,15 +4,9 @@ Prepared from the current source implementation. English copy uses ASCII text, n
 
 ## Bundle ID
 
-Current project and URL scheme: `im.seex.sao2`.
+Current project and URL scheme: `com.tutustyleoutfit.lookbook`.
 
-Optional identifiers for a new registration, not applied to this existing project:
-
-- `app.tutu.outfitjournal`
-- `app.tutu.stylecollection`
-- `com.tutu.lookbook`
-
-Use the existing registered Bundle ID if the app record and In-App Purchases already belong to it. Do not switch the identifier without aligning the app record, signing capabilities, authentication and product configuration.
+Selected Bundle ID applied to the project. App Store Connect registration, signing capabilities, authentication and In-App Purchase configuration must use the same app identity; console setup has not been verified.
 
 ## App name
 

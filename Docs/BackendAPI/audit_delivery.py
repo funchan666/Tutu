@@ -63,7 +63,7 @@ for key,event in contract['events'].items():
  assert json.loads(row['messageTemplate'])==event['template']
  assert '\n' not in row['messageTemplate']
 plist=plistlib.loads((repo/'Tutu/Info.plist').read_bytes())
-assert 'im.seex.sao2' in [scheme for row in plist['CFBundleURLTypes'] for scheme in row['CFBundleURLSchemes']]
+assert 'com.tutustyleoutfit.lookbook' in [scheme for row in plist['CFBundleURLTypes'] for scheme in row['CFBundleURLSchemes']]
 for key in ['NSCameraUsageDescription','NSMicrophoneUsageDescription','NSPhotoLibraryUsageDescription']: assert len(plist[key])>15
 project=json.loads(subprocess.check_output(['plutil','-convert','json','-o','-',str(repo/'Tutu.xcodeproj/project.pbxproj')]))['objects']
 source_ids=[x for o in project.values() if o.get('isa')=='PBXSourcesBuildPhase' for x in o['files']]
@@ -77,7 +77,7 @@ products={o['productName'] for o in project.values() if o.get('isa')=='XCSwiftPa
 assert {'Ably','Alamofire'}<=products
 for o in project.values():
  if o.get('isa')=='XCBuildConfiguration' and 'PRODUCT_BUNDLE_IDENTIFIER' in o['buildSettings']:
-  assert o['buildSettings']['PRODUCT_BUNDLE_IDENTIFIER']=='im.seex.sao2'
+  assert o['buildSettings']['PRODUCT_BUNDLE_IDENTIFIER']=='com.tutustyleoutfit.lookbook'
   assert str(o['buildSettings']['TARGETED_DEVICE_FAMILY'])=='1'
 assert not (resources/'Content/EditorialCatalog.json').exists()
 assert 'Docs/BackendAPI' not in (repo/'Tutu.xcodeproj/project.pbxproj').read_text()

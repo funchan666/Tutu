@@ -14,7 +14,7 @@
 
 ## 工程与协议
 
-- 保留 SwiftUI、iOS 17、原 Bundle ID `im.seex.sao2`、团队 `JPTS6M4T5B`、iPhone-only、现有签名设置和 Release 运行 Scheme。原 `project.yml` 的旧 Bundle ID 已与实际工程同步。
+- 保留 SwiftUI、iOS 17、用户指定的 Bundle ID `com.tutustyleoutfit.lookbook`、团队 `JPTS6M4T5B`、iPhone-only、现有签名设置和 Release 运行 Scheme。原 `project.yml` 的旧 Bundle ID 已与实际工程同步。
 - 已配置三个现有摄像头/麦克风/相册用途文案、Bundle ID URL Scheme、推送 entitlement。真机 APNs 仍需 Apple 开发者账号对应 App ID 与描述文件启用 Push Notifications；本轮没有操作开发者后台。
 - 原工程无 SPM SDK。加入并锁定 Ably **1.4.0**、Alamofire **5.12.2**，`Package.resolved` 同时记录 delta-codec 1.3.5、msgpack 0.4.0。执行的 `xcodebuild -resolvePackageDependencies` 仅解析依赖，未构建。对应 Ably 的 `ARTTokenRequest.fromJson`、频道 options、订阅/发布与连接 API 已对照解析后的公开头文件；这不等于编译验证。
 - 原创 UI 素材与原生布局保留；本轮仅调整已有欢迎页局部等待与纯文字支付遮罩。按 UI 路由读取 Claude Design，用于原生层级/反馈审阅；Taste 的网页重设计、Garden HTML/出图工作流不适用于本次既有素材的接入，不新造图标或 HTML。
