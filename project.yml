@@ -25,6 +25,7 @@ targets:
       path: Tutu/Info.plist
       properties:
         CFBundleDisplayName: Tutu
+        CFBundleLocalizations: [en, zh-Hans, es, fr, ja]
         UIAppFonts: [TutuOutfit-Regular.ttf, TutuOutfit-Medium.ttf, TutuOutfit-SemiBold.ttf, TutuOutfit-Bold.ttf]
         CFBundleShortVersionString: '1.0.0'
         CFBundleVersion: '1'

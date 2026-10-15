@@ -56,6 +56,7 @@ struct StyleRoom: Codable, Identifiable, Hashable {
     var category: String
     var voice: Bool
     var voiceTopic: String? = nil
+    // Explicit activity state. A saved room alone does not mean its host is broadcasting.
     var isBroadcasting: Bool? = nil
     var video: String? = nil
     var viewerCount: Int? = nil
@@ -209,6 +210,12 @@ struct EditorialProfile: Decodable {
         return formatter.date(from: birthday)
     }
 }
+struct EditorialComment: Decodable {
+    let id: String
+    let authorID: String
+    let text: String
+    let createdAt: TimeInterval
+}
 struct EditorialItem: Decodable {
     let id: String
     let name: String
@@ -219,6 +226,11 @@ struct EditorialItem: Decodable {
     let photos: [String]?
     let profile: EditorialProfile?
     let style: String
+    let caption: String?
+    let likeCount: Int?
+    let publishedAt: TimeInterval?
+    let comments: [EditorialComment]?
+    let reservedForProfile: Bool?
 }
 enum Catalog {
     static let items: [EditorialItem] = {
@@ -226,7 +238,9 @@ enum Catalog {
               let data = try? Data(contentsOf: url), let items = try? JSONDecoder().decode([EditorialItem].self, from: data) else { return [] }
         return items
     }()
-    static let people: [Person] = items.map { item in
+    static let profileAvatar = items.first(where: { $0.reservedForProfile == true })?.image ?? "brand-mascot"
+    static let reservedProfileIDs = Set(items.filter { $0.reservedForProfile == true }.map(\.id))
+    static let people: [Person] = items.filter { $0.reservedForProfile != true }.map { item in
         Person(id: item.id, name: item.name, handle: item.handle,
                birthday: item.profile?.birthDate, country: item.profile?.country ?? "", city: item.profile?.city,
                gender: item.profile?.gender ?? "", bio: item.profile?.bio ?? "A personal edit of everyday style.",
@@ -246,7 +260,7 @@ enum Catalog {
         let liveRooms: [StyleRoom] = selections.compactMap { id, title, category, viewerCount in
             guard let item = items.first(where: { $0.id == id }), let video = item.video else { return nil }
             return StyleRoom(id: "room-\(id)", hostID: id, title: title, category: category,
-                             voice: false, video: video, viewerCount: viewerCount, cover: item.image)
+                             voice: false, isBroadcasting: true, video: video, viewerCount: viewerCount, cover: item.image)
         }
         // Voice-room covers use supplied host portraits; counts are local presentation data.
         let voiceSelections: [(hostID: String, title: String, topic: String, count: Int)] = [
@@ -273,11 +287,20 @@ enum Catalog {
             guard let person = people.first(where: { $0.id == selection.hostID }) else { return nil }
             return StyleRoom(id: "room-\(selection.hostID)", hostID: selection.hostID, title: selection.title,
                              category: RoomCategories.resolved(person.interests.first ?? "Daily"),
-                             voice: true, voiceTopic: selection.topic, viewerCount: selection.count, cover: person.avatar)
+                             voice: true, voiceTopic: selection.topic, isBroadcasting: true, viewerCount: selection.count, cover: person.avatar)
         }
         return liveRooms + voiceRooms
     }()
-    static let looks: [Look] = items.map { item in
-        Look(id: "look-\(item.id)", authorID: item.id, text: item.style + " inspiration. Find the details that feel like you.", media: [item.image], video: item.video, category: item.style)
+    static let looks: [Look] = items.filter { $0.reservedForProfile != true }.map { item in
+        Look(id: "look-\(item.id)", authorID: item.id, text: item.caption ?? (item.style + " inspiration. Find the details that feel like you."), media: [item.image], video: item.video,
+             created: Date(timeIntervalSince1970: item.publishedAt ?? 1791792000), category: item.style)
+    }
+    // The other six supplied videos belong to live rooms. Never mix them into Discover.
+    static let discoverIDs = ["film-03", "film-05", "film-06", "film-08", "film-10", "film-12"].map { "look-" + $0 }
+    static let comments: [LookComment] = items.flatMap { item in
+        (item.comments ?? []).map {
+            LookComment(id: $0.id, postID: "look-\(item.id)", authorID: $0.authorID, text: $0.text,
+                        created: Date(timeIntervalSince1970: $0.createdAt))
+        }
     }
 }

@@ -18,8 +18,8 @@ struct LegalWebView: View {
     @State private var reload = UUID()
     var body: some View {
         VStack(spacing: 0) {
-            HStack { Text(page.title).font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }.padding(16)
-            if !error.isEmpty { VStack(spacing: 18) { Text(error); PinkButton(title: "Try again") { error = ""; reload = UUID() }; Link("Open in browser", destination: page.url) }.padding(24) }
+            HStack { Text(ui: page.title).font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }.padding(16)
+            if !error.isEmpty { VStack(spacing: 18) { Text(ui: error); PinkButton(title: "Try again") { error = ""; reload = UUID() }; Link("Open in browser", destination: page.url) }.padding(24) }
             PolicyWebSurface(url: page.url, error: $error).id(reload)
         }.background(Palette.blush)
     }
@@ -48,6 +48,7 @@ struct MediaSourceView: View {
     var allowVideo = false
     var title = "Add your media"
     var subtitle = "Choose a favorite or capture something new."
+    var avatarPerson: Person? = nil
     var completion: (MediaSelection) -> Void
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var store: AppStore
@@ -57,14 +58,33 @@ struct MediaSourceView: View {
         VStack(alignment: .leading, spacing: 20) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(title).font(.outfit(size: 22, weight: .bold))
-                    Text(subtitle).font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                    Text(ui: title).font(.outfit(size: 22, weight: .bold))
+                    if avatarPerson == nil { Text(ui: subtitle).font(.tutuSubheadline).foregroundStyle(Palette.secondary) }
                 }
                 Spacer(minLength: 0)
                 ArtButton(label: "Close", asset: "nav-close", size: 28) { dismiss() }
             }
+            if let avatarPerson {
+                HStack(spacing: 16) {
+                    Avatar(person: avatarPerson, size: 68).allowsHitTesting(false)
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(avatarPerson.name).font(.tutuHeadline).lineLimit(1)
+                        Text("A little photo. All your style.").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
             ScrollView {
-                VStack(spacing: 12) {
+                if avatarPerson != nil {
+                    HStack(spacing: 12) {
+                        avatarSource("Photo library", detail: "Choose your favorite", artwork: "icon-photo") {
+                            source = CaptureSource(camera: false, video: false, cropImage: true)
+                        }
+                        avatarSource("Take a photo", detail: "Capture a new look", artwork: "icon-camera") {
+                            open(camera: true, video: false)
+                        }
+                    }
+                } else {
+                  VStack(spacing: 12) {
                     sourceRow("Photo library", detail: allowVideo ? "Photos and videos you love" : "Find the perfect photo", artwork: "icon-photo") {
                         source = CaptureSource(camera: false, video: allowVideo)
                     }
@@ -76,12 +96,13 @@ struct MediaSourceView: View {
                             open(camera: true, video: true)
                         }
                     }
+                  }
                 }
             }.scrollIndicators(.hidden)
         }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .foregroundStyle(Palette.ink).background(Palette.blush)
             .presentationBackground(Palette.blush).presentationCornerRadius(30)
-            .presentationDragIndicator(.hidden).presentationDetents([.height(allowVideo ? 440 : 340), .large])
+            .presentationDragIndicator(.hidden).presentationDetents([.height(avatarPerson != nil ? 360 : (allowVideo ? 440 : 340)), .large])
             .overlay { NoticeOverlay() }
             .sheet(item: $source, onDismiss: finishSelection) { selectedSource in
                 NativeMediaPicker(source: selectedSource) { result in
@@ -90,13 +111,25 @@ struct MediaSourceView: View {
                 }
             }
     }
+    private func avatarSource(_ title: String, detail: String, artwork: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 12) {
+                Artwork(name: artwork).frame(width: 38, height: 38).allowsHitTesting(false)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(ui: title).font(.outfit(size: 15, weight: .semibold))
+                    Text(ui: detail).font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
+                }.fixedSize(horizontal: false, vertical: true)
+            }.frame(maxWidth: .infinity, minHeight: 116, alignment: .leading).padding(16)
+                .background(.white, in: RoundedRectangle(cornerRadius: 20)).contentShape(Rectangle())
+        }.buttonStyle(.plain)
+    }
     private func sourceRow(_ title: String, detail: String, artwork: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 14) {
                 Artwork(name: artwork).frame(width: 36, height: 36).allowsHitTesting(false)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(title).font(.tutuHeadline)
-                    Text(detail).font(.tutuCaption).foregroundStyle(Palette.secondary)
+                    Text(ui: title).font(.tutuHeadline)
+                    Text(ui: detail).font(.tutuCaption).foregroundStyle(Palette.secondary)
                 }
                 Spacer(minLength: 0)
                 Artwork(name: "nav-back").rotationEffect(.degrees(180)).frame(width: 13, height: 13)
@@ -120,11 +153,11 @@ struct MediaSourceView: View {
                 let audio = await AVCaptureDevice.requestAccess(for: .audio)
                 guard audio else { store.show("Microphone access needed", "Enable Microphone for Tutu in the Settings app."); return }
             }
-            source = CaptureSource(camera: camera, video: video)
+            source = CaptureSource(camera: camera, video: video, cropImage: avatarPerson != nil && !video)
         }
     }
 }
-struct CaptureSource: Identifiable { let id = UUID(); let camera: Bool; let video: Bool }
+struct CaptureSource: Identifiable { let id = UUID(); let camera: Bool; let video: Bool; var cropImage = false }
 struct NativeMediaPicker: UIViewControllerRepresentable {
     let source: CaptureSource
     let completion: (MediaSelection?) -> Void
@@ -132,6 +165,7 @@ struct NativeMediaPicker: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let view = UIImagePickerController(); view.delegate = context.coordinator
         view.sourceType = source.camera ? .camera : .photoLibrary
+        view.allowsEditing = source.cropImage && !source.video
         view.mediaTypes = source.video ? (source.camera ? [UTType.movie.identifier] : [UTType.image.identifier, UTType.movie.identifier]) : [UTType.image.identifier]
         view.videoMaximumDuration = 60; view.videoQuality = .typeMedium
         if source.camera && source.video { view.cameraCaptureMode = .video }
@@ -144,7 +178,7 @@ struct NativeMediaPicker: UIViewControllerRepresentable {
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { completion(nil) }
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             if let url = info[.mediaURL] as? URL { completion(.movie(url)) }
-            else if let image = info[.originalImage] as? UIImage { completion(.image(image)) }
+            else if let image = (info[.editedImage] ?? info[.originalImage]) as? UIImage { completion(.image(image)) }
             else { completion(nil) }
         }
     }

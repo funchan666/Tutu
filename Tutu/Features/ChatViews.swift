@@ -18,7 +18,7 @@ struct SystemMessagesView: View {
     @EnvironmentObject private var store: AppStore
     var body: some View { Page(title: "System Messages") { ScrollView { VStack(alignment: .leading, spacing: 16) {
         VStack(alignment: .leading, spacing: 12) { Text("Welcome to your style world").font(.tutuHeadline); Text("Find inspiration, collect your favourite looks, and make your profile your own.").font(.tutuSubheadline).foregroundStyle(Palette.secondary) }.panel()
-        ForEach(Array((store.state?.ledger ?? []).prefix(20))) { item in VStack(alignment: .leading, spacing: 8) { Text(item.title).font(.tutuHeadline); Text("\(item.amount > 0 ? "+" : "")\(item.amount) coins").font(.tutuSubheadline); Text(item.date, style: .date).font(.tutuCaption).foregroundStyle(Palette.secondary) }.frame(maxWidth: .infinity, alignment: .leading).panel() }
+        ForEach(Array((store.state?.ledger ?? []).prefix(20))) { item in VStack(alignment: .leading, spacing: 8) { Text(ui: item.title).font(.tutuHeadline); Text("\(item.amount > 0 ? "+" : "")\(item.amount) coins").font(.tutuSubheadline); Text(item.date, style: .date).font(.tutuCaption).foregroundStyle(Palette.secondary) }.frame(maxWidth: .infinity, alignment: .leading).panel() }
     }.padding(20) } } }
 }
 struct ChatView: View {
@@ -54,7 +54,7 @@ struct ChatView: View {
                                 HStack {
                                     if attachment.hasSuffix(".jpg") { MediaArtwork(reference: attachment).frame(width: 76, height: 76).clipShape(RoundedRectangle(cornerRadius: 12)) }
                                     else { Artwork(name: "icon-camera").frame(width: 44, height: 44) }
-                                    Text(attachment.hasSuffix(".jpg") ? "Photo attached" : "Video attached").font(.tutuCaption)
+                                    Text(ui: attachment.hasSuffix(".jpg") ? "Photo attached" : "Video attached").font(.tutuCaption)
                                     Spacer()
                                     Button("Remove") { if store.commit({ $0.mediaDrafts[personID] = nil }) { self.attachment = nil } }.foregroundStyle(Palette.pink)
                                 }.panel()
@@ -137,5 +137,5 @@ struct VoiceRecorderView: View {
     @Environment(\.scenePhase) private var phase
     @StateObject private var recorder = VoiceRecorder()
     let personID: String
-    var body: some View { VStack(spacing: 22) { HStack { Text("Voice message").font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }; Text(recorder.recording ? "Recording · up to 60 seconds" : recorder.hasRecording ? "Ready to listen" : "Tap to record your message").font(.tutuSubheadline); ArtButton(label: recorder.recording ? "Stop recording" : "Record", asset: "icon-voice-record", size: 96) { if recorder.recording { recorder.stop() } else { Task { await recorder.start() } } }; if !recorder.error.isEmpty { Text(recorder.error).font(.tutuCaption).foregroundStyle(.red) }; if recorder.hasRecording { Button("Listen") { recorder.listen() }.foregroundStyle(Palette.pink).frame(minHeight: 44); PinkButton(title: "Send voice message") { if store.canContact(personID) { store.show("Message not sent", "Voice messaging is unavailable. You can listen to your recording and try again.") } } } }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }.onDisappear { recorder.clean() }.onChange(of: phase) { _, state in if state != .active { recorder.stop() } } }
+    var body: some View { VStack(spacing: 22) { HStack { Text(ui: "Voice message").font(.tutuHeadline); Spacer(); ArtButton(label: "Close", asset: "nav-close") { dismiss() } }; Text(ui: recorder.recording ? "Recording · up to 60 seconds" : recorder.hasRecording ? "Ready to listen" : "Tap to record your message").font(.tutuSubheadline); ArtButton(label: recorder.recording ? "Stop recording" : "Record", asset: "icon-voice-record", size: 96) { if recorder.recording { recorder.stop() } else { Task { await recorder.start() } } }; if !recorder.error.isEmpty { Text(ui: recorder.error).font(.tutuCaption).foregroundStyle(.red) }; if recorder.hasRecording { Button("Listen") { recorder.listen() }.foregroundStyle(Palette.pink).frame(minHeight: 44); PinkButton(title: "Send voice message") { if store.canContact(personID) { store.show("Message not sent", "Voice messaging is unavailable. You can listen to your recording and try again.") } } } }.padding(24).background(Palette.blush).presentationDetents([.medium]).overlay { NoticeOverlay() }.onDisappear { recorder.clean() }.onChange(of: phase) { _, state in if state != .active { recorder.stop() } } }
 }

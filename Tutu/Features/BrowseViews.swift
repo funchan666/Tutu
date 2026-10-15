@@ -18,6 +18,7 @@ struct LiveHomeView: View {
                     NavArt(route: .leaderboard, asset: "icon-trophy", label: "Leaderboard")
                     NavArt(route: .createRoom, asset: "nav-create", label: "Create room")
                     NavArt(route: .search, asset: "nav-search", label: "Search")
+                    InboxEntryButton()
                 }
             }
             ScrollView {
@@ -60,7 +61,7 @@ struct FeaturedRoomsCarousel: View {
                                     MediaArtwork(reference: room.cover, mode: .fit)
                                         .frame(width: geometry.size.width * 0.58, height: geometry.size.height)
                                     VStack(alignment: .leading, spacing: 6) {
-                                        HStack(spacing: 6) { RoomLiveBadge(); RoomAudienceBadge(count: room.viewerCount) }
+                                        HStack(spacing: 6) { if room.isBroadcasting == true { RoomLiveBadge(animated: selection == index) }; RoomAudienceBadge(count: room.viewerCount) }
                                         Spacer(minLength: 12)
                                         Text(room.title).font(.outfit(size: 17, weight: .bold)).lineLimit(2)
                                             .frame(maxWidth: geometry.size.width * 0.64, alignment: .leading)
@@ -103,13 +104,6 @@ struct FeaturedRoomsCarousel: View {
     }
 }
 
-struct RoomLiveBadge: View {
-    var body: some View {
-        Text("Live").font(.outfit(size: 12, weight: .medium))
-            .foregroundStyle(.white).padding(.horizontal, 9).padding(.vertical, 3)
-            .background { Image("button-base").resizable() }
-    }
-}
 struct RoomAudienceBadge: View {
     let count: Int?
     var body: some View {
@@ -132,7 +126,7 @@ struct RoomCard: View {
                 if party {
                     VStack {
                         HStack {
-                            RoomLiveBadge().clipShape(Capsule())
+                            if room.isBroadcasting == true { RoomLiveBadge() }
                             Spacer(minLength: 4)
                             Text("Voice").font(.outfit(size: 10, weight: .semibold))
                                 .foregroundStyle(Palette.pink).padding(.horizontal, 9).padding(.vertical, 5)
@@ -143,7 +137,17 @@ struct RoomCard: View {
                 }
                 if !party {
                     VStack {
-                        HStack(spacing: 4) { RoomLiveBadge(); Spacer(minLength: 0); RoomAudienceBadge(count: room.viewerCount) }
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 4) {
+                                if room.isBroadcasting == true { RoomLiveBadge() }
+                                Spacer(minLength: 0)
+                                RoomAudienceBadge(count: room.viewerCount).fixedSize()
+                            }
+                            VStack(alignment: .leading, spacing: 4) {
+                                if room.isBroadcasting == true { RoomLiveBadge() }
+                                RoomAudienceBadge(count: room.viewerCount).fixedSize()
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                        }
                         Spacer()
                     }.padding(8)
                 }
@@ -154,7 +158,7 @@ struct RoomCard: View {
                     }.frame(maxWidth: .infinity, alignment: party ? .center : .leading)
                     Text(room.title).font(.outfit(size: 11, design: .rounded)).lineLimit(1)
                     if party {
-                        Text(room.viewerCount.map { "\($0) in room" } ?? "Join the conversation")
+                        (room.viewerCount.map { Text("\($0) in room") } ?? Text("Join the conversation"))
                             .font(.outfit(size: 11)).lineLimit(1)
                         Artwork(name: "button-join").frame(height: 30).padding(.top, 3)
                     }
@@ -184,7 +188,12 @@ struct PartyHomeView: View {
     }
     var body: some View {
         VStack(spacing: 0) {
-            MainHeading(asset: "heading-party") { NavArt(route: .search, asset: "nav-search", label: "Search") }
+            MainHeading(asset: "heading-party") {
+                HStack(spacing: 2) {
+                    NavArt(route: .search, asset: "nav-search", label: "Search")
+                    InboxEntryButton()
+                }
+            }
             SectionTabs(titles: ["Explore", "Popular", "Following", "Followers"], selection: $relation, compact: true)
             ScrollView {
                 VStack(spacing: 8) {
@@ -192,7 +201,7 @@ struct PartyHomeView: View {
                         HStack(spacing: 8) {
                             ForEach(VoiceRoomTopics.filters, id: \.self) { choice in
                                 Button { filter = choice } label: {
-                                    Text(choice).font(.outfit(size: 13, weight: filter == choice ? .semibold : .medium))
+                                    Text(ui: choice).font(.outfit(size: 13, weight: filter == choice ? .semibold : .medium))
                                         .foregroundStyle(filter == choice ? Color.white : Palette.secondary)
                                         .padding(.horizontal, 16).frame(height: 34)
                                         .background {
@@ -253,7 +262,7 @@ struct SearchView: View {
                             if users.isEmpty { EmptyState(title: "No people found", message: "Try another name or clear your filters.") }
                         } else if section == "Rooms" {
                             let rooms = store.rooms.filter { room in matchesProfile(room.hostID) && (query.isEmpty || room.title.localizedCaseInsensitiveContains(query) || store.person(room.hostID).name.localizedCaseInsensitiveContains(query)) }
-                            ForEach(rooms) { room in NavigationLink(value: Route.room(room.id)) { HStack { Avatar(person: store.person(room.hostID)); VStack(alignment: .leading, spacing: 5) { Text(room.title).font(.tutuHeadline); Text(room.voice ? "Voice room" : "Style live").font(.tutuCaption).foregroundStyle(Palette.secondary) }; Spacer() }.panel() }.buttonStyle(.plain) }
+                            ForEach(rooms) { room in NavigationLink(value: Route.room(room.id)) { HStack { Avatar(person: store.person(room.hostID)); VStack(alignment: .leading, spacing: 5) { Text(room.title).font(.tutuHeadline); Text(ui: room.voice ? "Voice room" : "Style live").font(.tutuCaption).foregroundStyle(Palette.secondary) }; Spacer(); if room.isBroadcasting == true { RoomLiveBadge() } }.panel() }.buttonStyle(.plain) }
                             if rooms.isEmpty { EmptyState(title: "No rooms found") }
                         } else {
                             let posts = store.looks.filter { matchesProfile($0.authorID) && (query.isEmpty || $0.text.localizedCaseInsensitiveContains(query)) }
@@ -284,7 +293,7 @@ struct SearchView: View {
         let ageMatch = age == "All" || (age == "18–24" ? (18...24).contains(p.age) : age == "25–34" ? (25...34).contains(p.age) : p.age >= 35)
         return ageMatch && (country == "All" || p.country == country) && (gender == "All" || p.gender == gender) && (language == "All" || p.language == language)
     }
-    func filterGroup(_ title: String, choices: [String], value: Binding<String>) -> some View { VStack(alignment: .leading) { Text(title).font(.tutuHeadline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(choices, id: \.self) { item in Pill(title: item, selected: item == value.wrappedValue) { value.wrappedValue = item } } } } } }
+    func filterGroup(_ title: String, choices: [String], value: Binding<String>) -> some View { VStack(alignment: .leading) { Text(ui: title).font(.tutuHeadline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(choices, id: \.self) { item in Pill(title: item, selected: item == value.wrappedValue) { value.wrappedValue = item } } } } } }
 }
 struct PersonRow: View {
     @EnvironmentObject private var store: AppStore

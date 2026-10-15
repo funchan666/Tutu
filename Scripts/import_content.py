@@ -12,11 +12,14 @@ names=['Harper','Riley','Alex','Jordan','Quinn','Sky','Avery','Taylor','Blair','
 # Curated supplied portraits for room hosts; these are editorial associations, not identity matching.
 host_portraits={1:31,2:45,4:61,7:24,9:28,11:3}
 host_profiles=json.loads((ROOT/'Scripts/host_profiles.json').read_text())["profiles"]
+discover_content={item["id"]: item for item in json.loads((ROOT/"Scripts/discover_content.json").read_text())["items"]}
 records=[];manifest=[]
 for n,index in enumerate(order):
     src=photos[index]; name=f'editorial-photo-{index+1:03}.jpg';shutil.copy2(src,DEST/name)
     pid,display=primary[n] if n<6 else (f'editorial-{index+1:03}',names[(n-6)%len(names)])
     records.append(dict(id=pid,name=display,handle=f'{display.lower()}.edit{index+1:02}',image='bundle/'+name,video=None,style=['Streetwear','Vintage','Minimalist','Daily'][n%4]))
+    # Reserve this supplied photo exclusively for the local account avatar.
+    if index + 1 == 70: records[-1]["reservedForProfile"] = True
     manifest.append(dict(source=str(src.relative_to(ROOT)),resource=name,personID=pid,sha256=hashlib.sha256(src.read_bytes()).hexdigest()))
 for n,src in enumerate(videos):
     name=f'editorial-video-{n+1:02}.mp4'; poster=f'editorial-video-{n+1:02}.jpg';shutil.copy2(src,DEST/name)
@@ -29,6 +32,7 @@ for n,src in enumerate(videos):
         record["avatar"]=f'bundle/editorial-photo-{host_portraits[n+1]:03}.jpg'
         record["photos"]=[record["avatar"],record["image"]]
     if pid in host_profiles: record["profile"]=host_profiles[pid]
+    if pid in discover_content: record.update(discover_content[pid])
     records.insert(min(n*5+3,len(records)),record)
     manifest.append(dict(source=str(src.relative_to(ROOT)),resource=name,poster=poster,posterTime=0 if n+1 in {1,2,4,7,9,11} else 0.5,personID=pid,sha256=hashlib.sha256(src.read_bytes()).hexdigest()))
 (DEST/'EditorialCatalog.json').write_text(json.dumps(records,indent=2)+'\n')

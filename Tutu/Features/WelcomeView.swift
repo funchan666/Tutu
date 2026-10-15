@@ -56,7 +56,7 @@ struct WelcomeView: View {
                                 error = ""
                                 emailMode = true
                             }
-                            if !error.isEmpty { Text(error).font(.tutuCaption).foregroundStyle(.white).multilineTextAlignment(.center) }
+                            if !error.isEmpty { Text(ui: error).font(.tutuCaption).foregroundStyle(.white).multilineTextAlignment(.center) }
                             legalFooter(onPhoto: true)
                         }.padding(.horizontal, 22).padding(.bottom, 16)
                     }.frame(width: geometry.size.width, height: geometry.size.height)
@@ -78,13 +78,13 @@ struct WelcomeView: View {
                     if creating { creating = false }
                     else { emailMode = false; store.returnToLogin = false }
                 }.disabled(busy)
-                Text(creating ? "Create your account" : "Welcome Back").font(.outfit(size: 30, weight: .bold, design: .rounded)).padding(.top, 28)
-                Text(creating ? "Your next connection starts with your style." : "Log in to continue your story.").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
+                Text(ui: creating ? "Create your account" : "Welcome Back").font(.outfit(size: 30, weight: .bold, design: .rounded)).padding(.top, 28)
+                Text(ui: creating ? "Your next connection starts with your style." : "Log in to continue your story.").font(.tutuSubheadline).foregroundStyle(Palette.secondary)
                 if creating { Field(title: "Your name", text: $name) }
                 Field(title: "Email Address", text: $email).keyboardType(.emailAddress).textContentType(.emailAddress)
                 Field(title: "Password", text: $password, secure: true).textContentType(creating ? .newPassword : .password)
                 legalFooter(onPhoto: false)
-                if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
+                if !error.isEmpty { Text(ui: error).font(.tutuSubheadline).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                 PinkButton(title: creating ? "Create Account" : "Log In", asset: creating ? "button-register" : "button-login", busy: busy) {
                     guard requireConsent() else { return }
                     busy = true; error = ""
@@ -94,7 +94,7 @@ struct WelcomeView: View {
                         catch { self.error = error.localizedDescription }
                     }
                 }.padding(.top, 24)
-                Button(creating ? "Already have an account? Log In" : "Don't have an account? Create Account") { creating.toggle(); error = "" }.disabled(busy).font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(maxWidth: .infinity).padding(.vertical, 12)
+                Button(LocalizedStringKey(creating ? "Already have an account? Log In" : "Don't have an account? Create Account")) { creating.toggle(); error = "" }.disabled(busy).font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(maxWidth: .infinity).padding(.vertical, 12)
             }.padding(20)
         }.scrollDismissesKeyboard(.interactively).background(SceneBackground())
     }
@@ -156,11 +156,11 @@ struct WelcomeView: View {
     }
 
     private func consentLinks(color: Color) -> AttributedString {
-        var terms = AttributedString("User Agreement")
+        var terms = AttributedString(store.appLanguage.text("User Agreement"))
         terms.link = LegalPage.terms.url
         terms.underlineStyle = .single
         terms.font = Font.outfit(size: 12, weight: .medium, relativeTo: .caption)
-        var privacy = AttributedString("Privacy Policy")
+        var privacy = AttributedString(store.appLanguage.text("Privacy Policy"))
         privacy.link = LegalPage.privacy.url
         privacy.underlineStyle = .single
         privacy.font = Font.outfit(size: 12, weight: .medium, relativeTo: .caption)
@@ -189,7 +189,7 @@ struct WelcomeView: View {
             showingConsentPrompt = false
             legal = page
         } label: {
-            Text(page.title)
+            Text(ui: page.title)
                 .font(.outfit(size: 12, weight: .semibold, relativeTo: .caption))
                 .underline()
                 .fixedSize()

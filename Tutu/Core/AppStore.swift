@@ -6,6 +6,17 @@ import UserNotifications
     @Published var notice: Notice?
     @Published var tab = 0
     @Published var returnToLogin = false
+    @Published private(set) var appLanguage = AppLanguage.saved
+    @Published private(set) var accountExit: AccountExitProgress?
+
+    func selectLanguage(_ language: AppLanguage) {
+        guard language != appLanguage else { return }
+        // Save the account copy first; don't display success if storage failed.
+        if state != nil, !commit({ $0.preferences.language = language.rawValue }) { return }
+        UserDefaults.standard.set(language.rawValue, forKey: AppLanguage.preferenceKey)
+        appLanguage = language
+        syncReminder()
+    }
     @Published var minimizedRoom: StyleRoom?
     @Published var welcomeVisible = false
     @Published var coinPrompt: CoinSpend?
@@ -23,7 +34,7 @@ import UserNotifications
         state?.hiddenContent?.contains(ModerationContent(kind: kind, id: id)) == true
     }
     func isPersonHidden(_ id: String) -> Bool {
-        state?.blocked.contains(id) == true || isContentHidden("member", id)
+        Catalog.reservedProfileIDs.contains(id) || state?.blocked.contains(id) == true || isContentHidden("member", id)
     }
     func isRoomHidden(_ room: StyleRoom) -> Bool {
         isPersonHidden(room.hostID) || isContentHidden("room", room.id) || isContentHidden("photo", room.cover)
@@ -38,9 +49,33 @@ import UserNotifications
                 && !$0.media.contains(where: { isContentHidden("photo", $0) })
         }
     }
+    var likedLooks: [Look] {
+        looks.filter { state?.likedLooks.contains($0.id) == true }
+    }
     var rooms: [StyleRoom] { ((state?.rooms ?? []) + Catalog.rooms).filter { !isRoomHidden($0) } }
     var comments: [LookComment] {
-        (state?.comments ?? []).filter { !isPersonHidden($0.authorID) && !isContentHidden("comment", $0.id) }
+        (Catalog.comments + (state?.comments ?? [])).filter { !isPersonHidden($0.authorID) && !isContentHidden("comment", $0.id) }
+    }
+    var discoverLooks: [Look] {
+        let visible = looks
+        let ownVideos = visible.filter { $0.authorID == me.id && $0.video != nil }
+        return ownVideos + Catalog.discoverIDs.compactMap { id in visible.first { $0.id == id && $0.video != nil } }
+    }
+    func likeCount(for look: Look) -> Int {
+        let baseline = Catalog.items.first { "look-" + $0.id == look.id }?.likeCount ?? 0
+        return baseline + (state?.likedLooks.contains(look.id) == true ? 1 : 0)
+    }
+    @discardableResult func setLookLiked(_ id: String, liked: Bool) -> Bool {
+        guard looks.contains(where: { $0.id == id }) else { return false }
+        return commit { value in
+            if liked { value.likedLooks.insert(id) } else { value.likedLooks.remove(id) }
+        }
+    }
+    @discardableResult func addComment(to postID: String, text: String) -> Bool {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, looks.contains(where: { $0.id == postID }) else { return false }
+        let comment = LookComment(postID: postID, authorID: me.id, text: String(trimmed.prefix(1000)))
+        return commit { $0.comments.append(comment); $0.drafts["comment-" + postID] = nil }
     }
     func conversation(_ personID: String) -> [ConversationMessage] {
         guard !isPersonHidden(personID) else { return [] }
@@ -62,7 +97,7 @@ import UserNotifications
                 return try JSONDecoder().decode(ProfileState.self, from: Data(contentsOf: profileURL))
             }.value
             guard !Task.isCancelled else { return }
-            state = restored
+            state = try restored.map { try profileWithDefaultAvatar($0) }
             if restored != nil { syncReminder() }
         } catch {
             notice = Notice(title: "Could not open your profile", message: "Your saved data was left unchanged. Please sign in again.")
@@ -86,12 +121,24 @@ import UserNotifications
             } else { try files.removeItem(at: staged) }
         }
     }
-    private func read(_ id: String) throws -> ProfileState { try JSONDecoder().decode(ProfileState.self, from: Data(contentsOf: location(id))) }
+    private func read(_ id: String) throws -> ProfileState {
+        try profileWithDefaultAvatar(JSONDecoder().decode(ProfileState.self, from: Data(contentsOf: location(id))))
+    }
+    /// Upgrade only the old placeholder. Never replace a photo chosen by the account owner.
+    private func profileWithDefaultAvatar(_ profile: ProfileState) throws -> ProfileState {
+        guard profile.person.avatar.isEmpty || profile.person.avatar == "brand-mascot",
+              Catalog.profileAvatar != "brand-mascot" else { return profile }
+        var updated = profile
+        updated.person.avatar = Catalog.profileAvatar
+        try write(updated)
+        return updated
+    }
     private func write(_ value: ProfileState) throws {
         try files.createDirectory(at: location(value.person.id).deletingLastPathComponent(), withIntermediateDirectories: true)
         try JSONEncoder().encode(value).write(to: location(value.person.id), options: [.atomic, .completeFileProtectionUnlessOpen])
     }
     @discardableResult func commit(_ operation: (inout ProfileState) throws -> Void) -> Bool {
+        guard accountExit == nil else { return false }
         guard var next = state else { show("Sign in required", "Sign in to keep your changes."); return false }
         do { try operation(&next); try write(next); state = next; return true }
         catch { show("Could not save", error.localizedDescription); return false }
@@ -131,7 +178,7 @@ import UserNotifications
             let id = UUID().uuidString
             let account = LocalAccount(id: id, email: email, salt: salt, verifier: verifier)
             let displayName = creating ? String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(40)) : "Style Friend"
-            var profile = ProfileState(person: Person(id: id, name: displayName, handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            var profile = ProfileState(person: Person(id: id, name: displayName, handle: "style" + id.prefix(6).lowercased(), birthday: nil, avatar: Catalog.profileAvatar, photos: [], catalog: false))
             profile.welcomeEligible = true
             try write(profile)
             accounts.append(account)
@@ -145,7 +192,7 @@ import UserNotifications
         if let account = accounts.first(where: { $0.appleUserID == userID }) { state = try read(account.id) }
         else {
             let id = UUID().uuidString
-            var profile = ProfileState(person: Person(id: id, name: name?.isEmpty == false ? name! : "Style Friend", handle: "style" + id.prefix(6).lowercased(), birthday: nil, photos: [], catalog: false))
+            var profile = ProfileState(person: Person(id: id, name: name?.isEmpty == false ? name! : "Style Friend", handle: "style" + id.prefix(6).lowercased(), birthday: nil, avatar: Catalog.profileAvatar, photos: [], catalog: false))
             profile.welcomeEligible = true
             try write(profile)
             accounts.append(LocalAccount(id: id, email: email ?? "", salt: Data(), verifier: Data(), appleUserID: userID))
@@ -154,26 +201,59 @@ import UserNotifications
         }
         UserDefaults.standard.set(sessionID, forKey: "activeProfile"); tab = 0; syncReminder()
     }
-    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = true; UserDefaults.standard.removeObject(forKey: "activeProfile") }
-    func deleteAccount() throws {
-        guard let id = sessionID else { return }
+    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = false; UserDefaults.standard.removeObject(forKey: "activeProfile") }
+    /// Keep the current screen behind the progress overlay until the success phase finishes.
+    func finishAccountSession(deleting: Bool) {
+        guard accountExit == nil, let profile = state else { return }
+        let id = profile.person.id
+        notice = nil
+        accountExit = AccountExitProgress(deleting: deleting, succeeded: false)
+        let accountRoot = root
+        Task { @MainActor in
+            do {
+                // Give the progress state time to render, then perform file/Keychain work off the UI actor.
+                try await Task.sleep(for: .milliseconds(350))
+                if deleting {
+                    try await Task.detached(priority: .userInitiated) {
+                        try Self.removeAccountData(id: id, root: accountRoot, profile: profile)
+                    }.value
+                } else {
+                    UserDefaults.standard.removeObject(forKey: "activeProfile")
+                }
+                guard sessionID == id else { accountExit = nil; return }
+                accountExit = AccountExitProgress(deleting: deleting, succeeded: true)
+                try await Task.sleep(for: .milliseconds(1300))
+                signOut()
+                accountExit = nil
+            } catch {
+                accountExit = nil
+                show(deleting ? "Could not delete account" : "Could not log out", error.localizedDescription)
+            }
+        }
+    }
+
+    nonisolated private static func removeAccountData(id: String, root: URL, profile: ProfileState) throws {
+        let files = FileManager.default
         let accounts = try AccountVault.load()
-        // Stage files for rollback; never claim deletion while Keychain data remains.
         let source = root.appendingPathComponent(id, isDirectory: true)
         let staged = root.appendingPathComponent(id + ".deleting", isDirectory: true)
         if files.fileExists(atPath: staged.path), !files.fileExists(atPath: source.path) { try files.moveItem(at: staged, to: source) }
         if files.fileExists(atPath: source.path) { try files.moveItem(at: source, to: staged) }
         do { try AccountVault.save(accounts.filter { $0.id != id }) }
-        catch { if files.fileExists(atPath: staged.path) { try? files.moveItem(at: staged, to: source) }; throw error }
+        catch {
+            if files.fileExists(atPath: staged.path) { try? files.moveItem(at: staged, to: source) }
+            throw error
+        }
         do {
             if files.fileExists(atPath: staged.path) { try files.removeItem(at: staged) }
         } catch {
             try? AccountVault.save(accounts)
             if files.fileExists(atPath: staged.path) { try? files.moveItem(at: staged, to: source) }
-            if let state { try? write(state) }
+            try? files.createDirectory(at: source, withIntermediateDirectories: true)
+            try? JSONEncoder().encode(profile).write(to: source.appendingPathComponent("profile.json"), options: [.atomic, .completeFileProtectionUnlessOpen])
             throw error
         }
-        signOut(); returnToLogin = false
+        UserDefaults.standard.removeObject(forKey: "activeProfile")
     }
     func show(_ title: String, _ message: String) { notice = Notice(title: title, message: message) }
     func toggleFollow(_ id: String) {
@@ -270,7 +350,7 @@ import UserNotifications
             guard sessionID == accountID, state?.preferences.notifications == true,
                   settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return }
             let content = UNMutableNotificationContent()
-            content.title = "A little reward awaits"; content.body = "Visit Daily Check for today's coins and activity points."; content.sound = .default
+            content.title = appLanguage.text("A little reward awaits"); content.body = appLanguage.text("Visit Daily Check for today's coins and activity points."); content.sound = .default
             do {
                 try await center.add(UNNotificationRequest(identifier: "daily-checkin", content: content, trigger: UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: 18), repeats: true)))
                 if sessionID != accountID { center.removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]) }
@@ -279,3 +359,5 @@ import UserNotifications
     }
 }
 struct Notice: Identifiable { let id = UUID(); let title: String; let message: String; var success = false }
+
+struct AccountExitProgress { let deleting: Bool; let succeeded: Bool }

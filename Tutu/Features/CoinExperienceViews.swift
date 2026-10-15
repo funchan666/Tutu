@@ -37,11 +37,11 @@ struct CoinSpendOverlay: View {
                 VStack(spacing: 16) {
                     Text("A LITTLE STYLE UPGRADE").font(.outfit(size: 10, weight: .bold)).tracking(1.5).foregroundStyle(Palette.pink)
                     Artwork(name: prompt.artwork).frame(width: 110, height: 110)
-                    Text(prompt.title).font(.outfit(size: 23, weight: .bold)).multilineTextAlignment(.center)
-                    Text(prompt.detail).font(.outfit(size: 14)).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
+                    Text(ui: prompt.title).font(.outfit(size: 23, weight: .bold)).multilineTextAlignment(.center)
+                    Text(ui: prompt.detail).font(.outfit(size: 14)).foregroundStyle(Palette.secondary).multilineTextAlignment(.center)
                     HStack { Text("Your balance"); Spacer(); CoinLabel(amount: store.state?.coins ?? 0) }.font(.outfit(size: 14))
                     HStack { Text("After this purchase"); Spacer(); CoinLabel(amount: max(0, (store.state?.coins ?? 0) - prompt.amount)) }.font(.outfit(size: 14))
-                    PinkButton(title: "Use \(prompt.amount) coins") { store.confirmCoinSpend() }
+                    PinkButton(title: store.appLanguage.format("Use %lld coins", prompt.amount)) { store.confirmCoinSpend() }
                     Button("Keep browsing") { store.coinPrompt = nil }.font(.outfit(size: 14)).foregroundStyle(Palette.secondary).frame(minHeight: 44)
                 }.padding(24).background(Palette.blush, in: RoundedRectangle(cornerRadius: 28)).padding(24).frame(maxWidth: 430)
             }.accessibilityAddTraits(.isModal).zIndex(90)

@@ -27,7 +27,7 @@ struct WalletView: View {
                                     Artwork(name: "icon-coin").frame(width: 38, height: 38)
                                     Text(pack.total.formatted()).font(.outfit(size: 20, weight: .bold)).minimumScaleFactor(0.7).lineLimit(1)
                                     Text("COINS").font(.outfit(size: 9, weight: .semibold)).tracking(1.4).foregroundStyle(Palette.secondary)
-                                    Text(wallet.purchasing == pack.id ? "Connecting…" : wallet.products[pack.id]?.displayPrice ?? "US$" + pack.referenceUSD)
+                                    Text(ui: wallet.purchasing == pack.id ? "Connecting…" : wallet.products[pack.id]?.displayPrice ?? "US$" + pack.referenceUSD)
                                         .font(.outfit(size: 12, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.65)
                                         .frame(maxWidth: .infinity).frame(height: 34).background(Palette.blush, in: Capsule())
                                 }.padding(10).frame(maxWidth: .infinity).frame(height: 160).background(.white, in: RoundedRectangle(cornerRadius: 18))
@@ -35,7 +35,7 @@ struct WalletView: View {
                             .accessibilityLabel("\(pack.total) coins, US reference price \(pack.referenceUSD) dollars. Buy from Apple.")
                         }
                     }
-                    if !wallet.status.isEmpty { Text(wallet.status).font(.outfit(size: 13)).foregroundStyle(Palette.secondary) }
+                    if !wallet.status.isEmpty { Text(ui: wallet.status).font(.outfit(size: 13)).foregroundStyle(Palette.secondary) }
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Where your coins go").font(.outfit(size: 21, weight: .bold))
                         NavigationLink(value: Route.atelier) {
@@ -44,7 +44,18 @@ struct WalletView: View {
                         NavigationLink(value: Route.shop(false)) {
                             HStack(spacing: 12) { Artwork(name: "gift-bear").frame(width: 52, height: 52); VStack(alignment: .leading, spacing: 4) { Text("Gift & charm collection").font(.outfit(size: 15, weight: .semibold)); Text("40–1,800 coins each · collect and wear").font(.outfit(size: 12)).foregroundStyle(Palette.secondary) }; Spacer(minLength: 0) }
                         }.buttonStyle(.plain)
-                        Text("Always free: messages, voice and video chats, AI style conversations, browsing, likes, comments and posting.").font(.outfit(size: 13)).foregroundStyle(Palette.secondary)
+                        NavigationLink(value: Route.stylist("Minimalist", "Daily")) {
+                            HStack(spacing: 12) {
+                                Artwork(name: "tab-studio-active").frame(width: 52, height: 52)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Style consultations").font(.outfit(size: 15, weight: .semibold))
+                                    Text("\(store.stylistFreeRemaining) of \(CoinEconomy.stylistFreeReplies) starter replies left · then \(CoinEconomy.stylistReplyPrice) coins per reply").font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
+                                    Text("On-device AI when available, otherwise curated style guides. Confirm each paid reply; canceled or unsaved replies use no coins.").font(.outfit(size: 11)).foregroundStyle(Palette.secondary)
+                                }
+                                Spacer(minLength: 0)
+                            }
+                        }.buttonStyle(.plain)
+                        Text("Always free: member messages, voice and video chats, browsing, likes, comments and posting.").font(.outfit(size: 13)).foregroundStyle(Palette.secondary)
                         Text("Gift delivery to another member is currently unavailable. Use your collected gifts as profile charms or reusable room effects on this device. Heart Beat room effects are free.").font(.outfit(size: 11)).foregroundStyle(Palette.secondary)
                     }.panel()
                     Button(wallet.recovering ? "Checking purchases…" : "Check pending purchases") { Task { await wallet.recover(store: store) } }
@@ -56,7 +67,7 @@ struct WalletView: View {
                         if let debt = store.state?.refundDebt, debt > 0 { Text("Refund adjustment remaining: \(debt) coins. Future credits settle this first.").font(.outfit(size: 12)).foregroundStyle(Palette.secondary) }
                         if store.state?.ledger.isEmpty != false { Text("Your coin activity will appear here.").font(.outfit(size: 14)).foregroundStyle(Palette.secondary) }
                         ForEach(Array((store.state?.ledger ?? []).prefix(30))) { entry in
-                            HStack { VStack(alignment: .leading, spacing: 5) { Text(entry.title).font(.outfit(size: 14)); Text(entry.date, style: .date).font(.outfit(size: 11)).foregroundStyle(Palette.secondary) }; Spacer(); Text(entry.amount > 0 ? "+\(entry.amount)" : "\(entry.amount)").font(.outfit(size: 14, weight: .semibold)).foregroundStyle(entry.amount >= 0 ? Palette.pink : Palette.ink) }
+                            HStack { VStack(alignment: .leading, spacing: 5) { Text(ui: entry.title).font(.outfit(size: 14)); Text(entry.date, style: .date).font(.outfit(size: 11)).foregroundStyle(Palette.secondary) }; Spacer(); Text(entry.amount > 0 ? "+\(entry.amount)" : "\(entry.amount)").font(.outfit(size: 14, weight: .semibold)).foregroundStyle(entry.amount >= 0 ? Palette.pink : Palette.ink) }
                         }
                     }.panel()
                 }.padding(16)
@@ -126,26 +137,102 @@ struct GiftDeliveryView: View {
 }
 struct CheckinView: View {
     @EnvironmentObject private var store: AppStore
-    var checked: Bool { store.state?.checkinDates.contains(AppStore.dayKey(Date())) == true }
-    let rewards = [10,20,10,20,10,20,100]
+    private let rewards = [10, 20, 10, 20, 10, 20, 100]
+    private var checked: Bool { store.state?.checkinDates.contains(AppStore.dayKey(Date())) == true }
+    private var currentDay: Int {
+        let streak = store.state?.checkinStreak ?? 0
+        if checked { return min(7, max(1, streak)) }
+        let calendar = Calendar.current
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: Date()))!
+        guard let last = store.state?.highestCheckinDate,
+              calendar.isDate(last, inSameDayAs: yesterday) else { return 1 }
+        return streak % 7 + 1
+    }
+    private var completedDays: Int { checked ? currentDay : currentDay - 1 }
+
     var body: some View {
-        Page(title: "Daily Check") {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // The supplied artwork already contains the headline; do not repeat it.
-                    GeometryReader { geometry in
-                        Image("checkin-background").resizable().scaledToFit()
-                            .frame(width: geometry.size.width)
-                            .offset(y: -geometry.size.width * 200 / 780)
-                    }.aspectRatio(780.0 / 650.0, contentMode: .fit).clipped()
-                    HStack { Text("Day \(max(1, store.state?.checkinStreak ?? 0)) of 7").font(.tutuHeadline); Spacer(); NavigationLink(value: Route.info("Daily Check")) { Artwork(name: "nav-help").frame(width: 26, height: 26).frame(width: 44, height: 44) } }.padding(.horizontal, 18)
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
-                        ForEach(0..<7) { index in VStack(spacing: 10) { Text("Day \(index+1)").font(.tutuCaption.bold()); Artwork(name: "icon-coin").frame(height: 36); Text("× \(rewards[index])").font(.tutuSubheadline.bold()); if checked && index < (store.state?.checkinStreak ?? 0) { Artwork(name: "control-check").frame(width: 20, height: 20) } }.frame(maxWidth: .infinity).frame(height: 130).background(.white, in: RoundedRectangle(cornerRadius: 18)).overlay(RoundedRectangle(cornerRadius: 18).stroke(index+1 == store.state?.checkinStreak ? Palette.pink : .clear, lineWidth: 1.5)) }
-                    }.padding(.horizontal, 18)
-                    PinkButton(title: checked ? "Checked in today" : "Check In", asset: checked ? nil : "button-checkin") { if !checked { store.checkIn() } }.disabled(checked).padding(.horizontal, 18)
-                    HStack { CoinLabel(amount: store.state?.coins ?? 0); Spacer(); Text("\(store.state?.points ?? 0) points · Lv. \(store.state?.level ?? 1)").font(.tutuSubheadline) }.padding(20)
-                }.padding(.bottom, 20)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                PageHeader(title: "Daily Check")
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        // Keep the supplied illustration and its baked-in headline above the rewards.
+                        Color.clear.frame(height: max(120, geometry.size.width * 850 / 780 - geometry.safeAreaInsets.top - 50))
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 14) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Day \(currentDay) of 7").font(.tutuHeadline)
+                                    Text(ui: checked ? "Today's reward is yours" : "A little style, a daily reward")
+                                        .font(.tutuCaption).foregroundStyle(Palette.secondary)
+                                }
+                                Spacer()
+                                NavigationLink(value: Route.info("Daily Check")) {
+                                    Artwork(name: "nav-help").frame(width: 24, height: 24).frame(width: 44, height: 44)
+                                }.buttonStyle(.plain).accessibilityLabel("Check-in rules")
+                            }
+                            Grid(horizontalSpacing: 8, verticalSpacing: 8) {
+                                GridRow {
+                                    ForEach(0..<4) { rewardCell($0) }
+                                }
+                                GridRow {
+                                    rewardCell(4)
+                                    rewardCell(5)
+                                    rewardCell(6).gridCellColumns(2)
+                                }
+                            }
+                        }
+                        .padding(14)
+                        .background(.white.opacity(0.94), in: RoundedRectangle(cornerRadius: 24))
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 16)
+                    }
+                }
+                VStack(spacing: 10) {
+                    HStack {
+                        CoinLabel(amount: store.state?.coins ?? 0)
+                        Spacer()
+                        (checked ? Text("See you tomorrow") : Text("+\(rewards[currentDay - 1]) coins today"))
+                            .font(.tutuCaption).foregroundStyle(Palette.secondary)
+                    }
+                    PinkButton(title: checked ? "Checked in today" : "Check In", asset: checked ? nil : "button-checkin") {
+                        if !checked { store.checkIn() }
+                    }.disabled(checked)
+                }
+                .padding(.horizontal, 20).padding(.top, 12).padding(.bottom, 8)
+                .background(Palette.blush.opacity(0.97))
             }
+            .background {
+                GeometryReader { canvas in
+                    // Full-width page artwork, anchored to the screen top without cropping its headline.
+                    Image("checkin-background").resizable().scaledToFit()
+                        .frame(width: canvas.size.width, height: canvas.size.width * 1688 / 780, alignment: .top)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                }.ignoresSafeArea()
+            }
+            .background(Palette.blush.ignoresSafeArea())
         }
+        .toolbar(.hidden, for: .navigationBar)
+        .foregroundStyle(Palette.ink)
+    }
+
+    private func rewardCell(_ index: Int) -> some View {
+        let completed = index < completedDays
+        let isToday = index + 1 == currentDay
+        return VStack(spacing: 7) {
+            Text("Day \(index + 1)").font(.tutuCaption.weight(.semibold))
+            HStack(spacing: 6) {
+                Artwork(name: "icon-coin").frame(width: 30, height: 30)
+                if index == 6 { Text("100").font(.tutuHeadline) }
+            }
+            Text(ui: completed ? "Claimed" : (index == 6 ? "Weekly bonus" : "+\(rewards[index])"))
+                .font(.outfit(size: 11, weight: .semibold, design: .rounded))
+                .foregroundStyle(isToday ? Palette.pink : Palette.secondary)
+        }
+        .frame(maxWidth: .infinity).frame(height: 98)
+        .background(isToday ? Palette.blush : Palette.blush.opacity(0.4), in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(isToday ? Palette.pink.opacity(0.7) : .clear, lineWidth: 1))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Day \(index + 1), \(rewards[index]) coins, \(completed ? "claimed" : (isToday ? "today" : "upcoming"))")
     }
 }

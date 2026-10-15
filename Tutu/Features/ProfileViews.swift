@@ -4,13 +4,16 @@ struct ProfileStats: View {
     @EnvironmentObject private var store: AppStore
     let person: Person
     var isMe: Bool { person.id == store.me.id }
+    private var receivedLikes: Int {
+        store.looks.filter { $0.authorID == person.id }.reduce(0) { $0 + store.likeCount(for: $1) }
+    }
     var body: some View {
         HStack(spacing: 0) {
             stat(isMe ? store.followerIDs.count : 12 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
             Divider().frame(height: 26)
             stat(isMe ? store.state?.following.count ?? 0 : 8 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 3, "Following", route: isMe ? .relationships("Following") : nil)
             Divider().frame(height: 26)
-            stat(isMe ? store.state?.likedLooks.count ?? 0 : 0, "Likes", route: nil)
+            stat(isMe ? store.likedLooks.count : receivedLikes, "Likes", route: nil)
         }.padding(.vertical, 12)
     }
     func stat(_ count: Int, _ name: String, route: Route?) -> some View {
@@ -19,7 +22,7 @@ struct ProfileStats: View {
             else { label(count, name) }
         }.frame(maxWidth: .infinity)
     }
-    func label(_ count: Int, _ name: String) -> some View { VStack(spacing: 7) { Text(count.formatted()).font(.outfit(size: 16, weight: .bold, design: .rounded)); Text(name).font(.outfit(size: 12, design: .rounded)).foregroundStyle(Palette.secondary) } }
+    func label(_ count: Int, _ name: String) -> some View { VStack(spacing: 7) { Text(count.formatted()).font(.outfit(size: 16, weight: .bold, design: .rounded)); Text(ui: name).font(.outfit(size: 12, design: .rounded)).foregroundStyle(Palette.secondary) } }
 }
 extension Array where Element: Equatable { func firstIndex(of element: Element, default fallback: Int) -> Int { firstIndex(of: element) ?? fallback } }
 struct InterestTags: View {
@@ -39,14 +42,14 @@ struct MyProfileView: View {
     @State private var section = "My Looks"
     @State private var media = false
     var posts: [Look] {
-        section == "Likes" ? store.looks.filter { store.state?.likedLooks.contains($0.id) == true } : store.looks.filter { $0.authorID == store.me.id }
+        section == "Likes" ? store.likedLooks : store.looks.filter { $0.authorID == store.me.id }
     }
     var body: some View {
         VStack(spacing: 0) {
             MainHeading(asset: "heading-profile") {
                 HStack(spacing: 2) {
                     NavArt(route: .atelier, asset: "runway-frame", label: "Style Atelier")
-                    NavArt(route: .inbox, asset: "nav-more", label: "Messages")
+                    InboxEntryButton()
                     NavArt(route: .settings, asset: "nav-settings", label: "Settings")
                 }
             }
@@ -75,19 +78,28 @@ struct MyProfileView: View {
                         SectionTabs(titles: ["My Looks", "My Closet", "Likes"], selection: $section, compact: true)
                         profileMedia.frame(height: 158)
                     }
-                    Artwork(name: "profile-shortcuts")
-                        .overlay {
-                            HStack(spacing: 0) {
-                                shortcut("Get Coins", route: .wallet)
-                                shortcut("Backpack", route: .shop(true))
-                                shortcut("My Level", route: .info("My Level"))
-                                shortcut("Daily Check", route: .checkin)
+                    if store.appLanguage == .english {
+                        Artwork(name: "profile-shortcuts")
+                            .overlay {
+                                HStack(spacing: 0) {
+                                    shortcut("Get Coins", route: .wallet)
+                                    shortcut("Backpack", route: .shop(true))
+                                    shortcut("My Level", route: .info("My Level"))
+                                    shortcut("Daily Check", route: .checkin)
+                                }
                             }
+                    } else {
+                        HStack(alignment: .top, spacing: 8) {
+                            localizedShortcut("Get Coins", asset: "icon-coin", route: .wallet)
+                            localizedShortcut("Backpack", asset: "icon-gift", route: .shop(true))
+                            localizedShortcut("My Level", asset: "gift-star", route: .info("My Level"))
+                            localizedShortcut("Daily Check", asset: "control-check", route: .checkin)
                         }
+                    }
                     HStack {
                         CoinLabel(amount: store.state?.coins ?? 0)
                         Spacer()
-                        Text(store.state?.checkinDates.contains(AppStore.dayKey(Date())) == true ? "Checked in today" : "A little reward awaits")
+                        Text(ui: store.state?.checkinDates.contains(AppStore.dayKey(Date())) == true ? "Checked in today" : "A little reward awaits")
                             .font(.outfit(size: 11, design: .rounded)).foregroundStyle(Palette.secondary)
                     }
                 }.padding(.horizontal, 16).padding(.bottom, 12)
@@ -135,6 +147,15 @@ struct MyProfileView: View {
             action().font(.outfit(size: 12, weight: .medium, design: .rounded)).foregroundStyle(Palette.pink).frame(minHeight: 44)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+    private func localizedShortcut(_ title: String, asset: String, route: Route) -> some View {
+        NavigationLink(value: route) {
+            VStack(spacing: 9) {
+                Artwork(name: asset).frame(width: 34, height: 34)
+                Text(ui: title).font(.tutuCaption).multilineTextAlignment(.center)
+            }.frame(maxWidth: .infinity, minHeight: 86).padding(.vertical, 8)
+                .background(Palette.blush, in: RoundedRectangle(cornerRadius: 14))
+        }.buttonStyle(.plain)
+    }
     func shortcut(_ name: String, route: Route) -> some View {
         NavigationLink(value: route) { Color.clear.frame(maxWidth: .infinity, maxHeight: .infinity).contentShape(Rectangle()) }
             .buttonStyle(.plain).accessibilityLabel(name)
@@ -146,44 +167,185 @@ struct ProfileView: View {
     let personID: String
     @State private var section = "Posts"
     @State private var more = false
-    @State private var gifts = false
-    var person: Person { store.person(personID) }
+    private var person: Person { store.person(personID) }
+    private var posts: [Look] { store.looks.filter { $0.authorID == personID } }
+    private var broadcastingRoom: StyleRoom? {
+        store.rooms.first {
+            $0.hostID == personID && $0.isBroadcasting == true &&
+            ($0.voice || $0.video.flatMap { store.mediaURL($0) } != nil)
+        }
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ZStack(alignment: .top) {
-                        MediaArtwork(reference: person.photos.first ?? "wardrobe-placeholder").frame(height: 350)
-                        HStack { ArtButton(label: "Back", asset: "nav-back") { dismiss() }; Spacer(); ArtButton(label: "More", asset: "nav-more") { more = true } }.padding(16)
-                    }
-                    VStack(alignment: .leading, spacing: 16) {
-                        VStack(alignment: .leading, spacing: 8) { HStack { Text(person.name).font(.tutuTitle2.bold()); PersonGenderMark(person: person); if person.birthday != nil { Text("\(person.age)").font(.tutuCaption) }; Spacer() }; Text("@" + person.handle).font(.tutuSubheadline); Text(person.location).font(.tutuCaption) }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(Palette.blush, in: RoundedRectangle(cornerRadius: 18))
-                        Text(person.bio).font(.tutuSubheadline).fixedSize(horizontal: false, vertical: true)
-                        InterestTags(values: person.interests)
-                        ProfileStats(person: person)
-                        if let room = store.rooms.first(where: { $0.hostID == personID }) { NavigationLink(value: Route.room(room.id)) { Artwork(name: room.voice ? "voice-banner" : "live-banner").frame(height: 52) }.buttonStyle(.plain) }
-                        SectionTabs(titles: ["Posts", "Photo album"], selection: $section).padding(.horizontal, -16)
-                        if store.state?.blocked.contains(personID) == true { EmptyState(title: "This member is blocked", message: "You can manage blocked members in Privacy settings.") }
-                        else if section == "Posts" {
-                            let posts = store.looks.filter { $0.authorID == personID }
-                            ForEach(posts) { LookRow(look: $0) }
-                            if posts.isEmpty { EmptyState(title: "No posts yet") }
-                        } else {
-                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) { ForEach(Array(person.photos.enumerated()), id: \.offset) { i, ref in NavigationLink(value: Route.album(personID, i)) { MediaArtwork(reference: ref).frame(height: 138).clipShape(RoundedRectangle(cornerRadius: 14)) } } }
-                            if person.photos.isEmpty { EmptyState(title: "No photos yet") }
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        hero(width: geometry.size.width, safeTop: geometry.safeAreaInsets.top)
+                        VStack(alignment: .leading, spacing: 24) {
+                            identity
+                            if !person.bio.isEmpty || !person.interests.isEmpty { introduction }
+                            if let room = broadcastingRoom { roomEntry(room) }
+                            contentTabs
+                            profileContent
                         }
-                    }.padding(16).background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 26, topTrailingRadius: 26)).padding(.top, -24)
+                        .padding(.horizontal, 20).padding(.top, 26).padding(.bottom, 28)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.white, in: UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
+                        .padding(.top, -30)
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .ignoresSafeArea(.container, edges: .top)
+                actionBar
+            }
+        }
+        .foregroundStyle(Palette.ink).background(.white)
+        .toolbar(.hidden, for: .navigationBar)
+        .sheet(isPresented: $more) { MemberActions(targetID: personID, authorID: personID, kind: "member") }
+        .moderationVisibility(hidden: store.isPersonHidden(personID))
+    }
+
+    private func hero(width: CGFloat, safeTop: CGFloat) -> some View {
+        MediaArtwork(reference: person.avatar, alignment: .top)
+            .frame(height: width * 1.24)
+            .overlay(alignment: .top) {
+                HStack {
+                    ArtButton(label: "Back", asset: "nav-back", size: 26) { dismiss() }
+                        .background(.white.opacity(0.94), in: Circle())
+                    Spacer()
+                    ArtButton(label: "More", asset: "nav-more", size: 28) { more = true }
+                        .background(.white.opacity(0.94), in: Circle())
+                }.padding(.horizontal, 18).padding(.top, safeTop + 8)
+            }
+    }
+
+    private var identity: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 7) {
+                Text(person.name).font(.outfit(size: 30, weight: .bold))
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("@" + person.handle).font(.outfit(size: 14)).foregroundStyle(Palette.secondary)
+                    .textSelection(.enabled)
+            }
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) { demographicBadge; locationLabel }
+                VStack(alignment: .leading, spacing: 10) { demographicBadge; locationLabel }
+            }
+            ProfileStats(person: person)
+                .padding(.horizontal, 4)
+                .background(.white.opacity(0.8), in: RoundedRectangle(cornerRadius: 18))
+        }
+        .padding(18).frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            Image("profile-background").resizable().scaledToFill()
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+    }
+
+    @ViewBuilder private var demographicBadge: some View {
+        if person.age > 0 || !person.gender.isEmpty {
+            HStack(spacing: 5) {
+                PersonGenderMark(person: person)
+                if person.age > 0 { Text(String(person.age)).monospacedDigit() }
+                if !person.gender.isEmpty { Text(ui: person.gender) }
+            }
+            .font(.outfit(size: 12, weight: .medium))
+            .padding(.horizontal, 10).padding(.vertical, 6)
+            .background(.white.opacity(0.9), in: Capsule())
+        }
+    }
+
+    @ViewBuilder private var locationLabel: some View {
+        if !person.location.isEmpty {
+            Text(person.location).font(.outfit(size: 12, weight: .medium))
+                .foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var introduction: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Style notes").font(.outfit(size: 13, weight: .semibold)).foregroundStyle(Palette.pink)
+            if !person.bio.isEmpty {
+                Text(person.bio).font(.outfit(size: 17)).lineSpacing(4)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            if !person.interests.isEmpty {
+                // Adaptive cells keep every interest visible instead of clipping a single row.
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), alignment: .leading)], alignment: .leading, spacing: 8) {
+                    ForEach(person.interests, id: \.self) { interest in
+                        Text(interest).font(.outfit(size: 12, weight: .medium))
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                            .background(Palette.blush, in: Capsule())
+                    }
                 }
             }
-            HStack(spacing: 10) {
-                FollowButton(personID: personID)
-                NavigationLink(value: Route.chat(personID)) { Text("Start a Chat").font(.tutuHeadline).foregroundStyle(.white).frame(maxWidth: .infinity).frame(height: 50).background { Image("button-base").resizable() } }.buttonStyle(.plain)
-                ArtButton(label: "Send a gift", asset: "icon-gift") { gifts = true }
-            }.padding(.horizontal, 16).padding(.vertical, 8).background(.white)
-        }.background(Palette.blush).toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $more) { MemberActions(targetID: personID, authorID: personID, kind: "member") }
-            .sheet(isPresented: $gifts) { GiftDeliveryView(personID: personID) }
-            .moderationVisibility(hidden: store.isPersonHidden(personID))
+        }
+    }
+
+    private func roomEntry(_ room: StyleRoom) -> some View {
+        NavigationLink(value: Route.room(room.id)) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 7) {
+                    RoomLiveBadge(title: room.voice ? "Voice room" : "Live Now")
+                    Text(room.title).font(.outfit(size: 12)).foregroundStyle(Palette.secondary).lineLimit(2)
+                }
+                Spacer(minLength: 4)
+                Text("Join").font(.outfit(size: 13, weight: .semibold)).foregroundStyle(.white)
+                    .padding(.horizontal, 18).frame(minHeight: 44)
+                    .background { Image("button-base").resizable() }
+            }
+            .padding(14).background(Palette.blush, in: RoundedRectangle(cornerRadius: 20))
+        }.buttonStyle(.plain)
+    }
+
+    private var contentTabs: some View {
+        HStack(spacing: 6) {
+            contentTab("Posts", count: posts.count)
+            contentTab("Photo album", count: person.photos.count)
+        }.padding(5).background(Palette.blush, in: Capsule())
+    }
+
+    private func contentTab(_ title: String, count: Int) -> some View {
+        Button { withAnimation(.easeInOut(duration: 0.2)) { section = title } } label: {
+            HStack(spacing: 6) {
+                Text(ui: title).font(.outfit(size: 14, weight: .semibold))
+                Text(String(count)).font(.outfit(size: 11, weight: .medium)).monospacedDigit()
+            }
+            .foregroundStyle(section == title ? Palette.pink : Palette.secondary)
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .background(section == title ? Color.white : Color.clear, in: Capsule())
+        }.buttonStyle(.plain).accessibilityAddTraits(section == title ? [.isSelected] : [])
+    }
+
+    @ViewBuilder private var profileContent: some View {
+        if section == "Posts" {
+            ForEach(posts) { LookRow(look: $0) }
+            if posts.isEmpty { EmptyState(title: "No posts yet") }
+        } else {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                ForEach(Array(person.photos.enumerated()), id: \.offset) { index, reference in
+                    NavigationLink(value: Route.album(personID, index)) {
+                        MediaArtwork(reference: reference, alignment: .top)
+                            .aspectRatio(0.78, contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }.buttonStyle(.plain).accessibilityLabel("View photo \(index + 1)")
+                }
+            }
+            if person.photos.isEmpty { EmptyState(title: "No photos yet") }
+        }
+    }
+
+    private var actionBar: some View {
+        HStack(spacing: 14) {
+            FollowButton(personID: personID, size: 50)
+            NavigationLink(value: Route.chat(personID)) {
+                Text("Start a Chat").font(.tutuHeadline).foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).frame(minHeight: 50)
+                    .background { Image("button-base").resizable() }
+            }.buttonStyle(.plain)
+        }.padding(.horizontal, 20).padding(.vertical, 12).background(.white)
     }
 }
 struct EditProfileView: View {
@@ -209,14 +371,19 @@ struct EditProfileView: View {
                     choice("Gender", values: ["Woman", "Man", "Nonbinary", "Prefer not to say"], selection: $gender)
                     VStack(alignment: .leading, spacing: 12) { Text("Your interests").font(.tutuHeadline); LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 8) { ForEach(["Minimalist", "Streetwear", "Vintage", "Music", "Travel", "Style", "Pop", "Singing"], id: \.self) { tag in Pill(title: tag, selected: tags.contains(tag)) { if tags.contains(tag) { tags.remove(tag) } else if tags.count < 5 { tags.insert(tag) } } } } }
                     VStack(alignment: .leading) { Text("About you").font(.tutuHeadline); TextEditor(text: $bio).frame(height: 110).padding(10).scrollContentBackground(.hidden).background(.white, in: RoundedRectangle(cornerRadius: 16)); Text("\(bio.count)/300").font(.tutuCaption).foregroundStyle(Palette.secondary) }
-                    if !error.isEmpty { Text(error).foregroundStyle(.red).font(.tutuSubheadline) }
+                    if !error.isEmpty { Text(ui: error).foregroundStyle(.red).font(.tutuSubheadline) }
                     PinkButton(title: "Save", asset: "button-save") { save() }
                 }.padding(20)
             }.scrollDismissesKeyboard(.interactively)
         }.onAppear { if person == nil { person = store.me; name = store.me.name; bio = store.me.bio; country = store.me.country; gender = store.me.gender; tags = Set(store.me.interests); birthday = store.me.birthday.map(AppStore.dayKey) ?? "" } }
-            .sheet(isPresented: $media) { MediaSourceView { item in do { let ref = try store.importMedia(item); person?.avatar = ref.reference } catch { self.error = error.localizedDescription } } }
+            .sheet(isPresented: $media) {
+                MediaSourceView(title: "Your profile photo", avatarPerson: person ?? store.me) { item in
+                    do { let ref = try store.importMedia(item); person?.avatar = ref.reference }
+                    catch { self.error = error.localizedDescription }
+                }
+            }
     }
-    func choice(_ name: String, values: [String], selection: Binding<String>) -> some View { VStack(alignment: .leading, spacing: 12) { Text(name).font(.tutuHeadline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(values, id: \.self) { value in Pill(title: value, selected: value == selection.wrappedValue) { selection.wrappedValue = value } } } } } }
+    func choice(_ name: String, values: [String], selection: Binding<String>) -> some View { VStack(alignment: .leading, spacing: 12) { Text(ui: name).font(.tutuHeadline); ScrollView(.horizontal, showsIndicators: false) { HStack { ForEach(values, id: \.self) { value in Pill(title: value, selected: value == selection.wrappedValue) { selection.wrappedValue = value } } } } } }
     func save() {
         let format = DateFormatter(); format.calendar = Calendar(identifier: .gregorian); format.locale = Locale(identifier: "en_US_POSIX"); format.dateFormat = "yyyy-MM-dd"; format.isLenient = false
         guard let dob = format.date(from: birthday), format.string(from: dob) == birthday, let age = Calendar.current.dateComponents([.year], from: dob, to: Date()).year, (18...110).contains(age) else { error = "Enter a valid birthday. You must be 18 or older."; return }
@@ -327,7 +494,7 @@ struct RoomHostCard: View {
     }
     private func cardButton(_ title: String, primary: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title).font(.outfit(size: 15, weight: .semibold))
+            Text(ui: title).font(.outfit(size: 15, weight: .semibold))
                 .foregroundStyle(primary ? Color.white : Palette.pink)
                 .frame(maxWidth: .infinity).frame(height: 48)
                 .background {

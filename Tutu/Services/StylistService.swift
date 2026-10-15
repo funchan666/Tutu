@@ -9,19 +9,19 @@ struct StylistReply {
 }
 struct StyleDirection: Identifiable {
     let name: String
-    let photo: String
+    let image: String
     let detail: String
     var id: String { name }
-    var image: String { "bundle/editorial-photo-\(photo).jpg" }
+    // Original Tutu lookbook artwork; independent of user-supplied content photos.
     static let all = [
-        StyleDirection(name: "Minimalist", photo: "004", detail: "Clean lines, quiet tones"),
-        StyleDirection(name: "Streetwear", photo: "022", detail: "Relaxed proportions"),
-        StyleDirection(name: "Vintage", photo: "045", detail: "Character in every layer"),
-        StyleDirection(name: "Soft Tailoring", photo: "031", detail: "Structure, softened"),
-        StyleDirection(name: "Smart Casual", photo: "028", detail: "Easy, polished essentials"),
-        StyleDirection(name: "Cozy", photo: "014", detail: "Texture and comfort"),
-        StyleDirection(name: "City Chic", photo: "002", detail: "A little everyday drama"),
-        StyleDirection(name: "Weekend", photo: "003", detail: "Off-duty favorites")
+        StyleDirection(name: "Minimalist", image: "stylist-minimalist", detail: "Clean lines, quiet tones"),
+        StyleDirection(name: "Streetwear", image: "stylist-streetwear", detail: "Relaxed proportions"),
+        StyleDirection(name: "Vintage", image: "stylist-vintage", detail: "Character in every layer"),
+        StyleDirection(name: "Soft Tailoring", image: "stylist-soft-tailoring", detail: "Structure, softened"),
+        StyleDirection(name: "Smart Casual", image: "stylist-smart-casual", detail: "Easy, polished essentials"),
+        StyleDirection(name: "Cozy", image: "stylist-cozy", detail: "Texture and comfort"),
+        StyleDirection(name: "City Chic", image: "stylist-city-chic", detail: "A little everyday drama"),
+        StyleDirection(name: "Weekend", image: "stylist-weekend", detail: "Off-duty favorites")
     ]
 }
 enum StylistService {
@@ -135,10 +135,17 @@ private enum StylistGuides {
         let q = message.lowercased()
         let chinese = message.unicodeScalars.contains { (0x3400...0x9FFF).contains($0.value) }
         let previous = history.filter { !$0.outgoing }.map(\.text)
-        let matched = topics.first { topic in topic.keys.contains { key in
-            if key.unicodeScalars.contains(where: { $0.value > 127 }) { return q.contains(key) }
-            return q.split(whereSeparator: { !$0.isLetter }).contains { $0.hasPrefix(key) }
-        } }
+        func topic(for query: String) -> Topic? {
+            topics.first { topic in topic.keys.contains { key in
+                if key.unicodeScalars.contains(where: { $0.value > 127 }) { return query.contains(key) }
+                return query.split(whereSeparator: { !$0.isLetter }).contains { $0.hasPrefix(key) }
+            } }
+        }
+        var matched = topic(for: q)
+        if matched == nil, ["another", "different", "more casual", "more formal", "换一个", "还有", "再来", "更休闲"].contains(where: { q.contains($0) }),
+           let lastQuestion = history.last(where: { $0.outgoing })?.text.lowercased() {
+            matched = topic(for: lastQuestion)
+        }
         if q.contains("photo") || q.contains("picture") || q.contains("照片") || q.contains("图片") {
             return chinese ? "照片会留在你的灵感板中，这里的建议不会读取照片内容。请描述衣服的颜色、款式以及准备去的场合，我可以根据文字给你搭配建议。" : "Your photo stays in your inspiration board; these suggestions don't read images. Describe the colors, pieces and occasion, and we can build a combination from your words."
         }

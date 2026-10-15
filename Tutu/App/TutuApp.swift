@@ -4,7 +4,7 @@ import SwiftUI
     @StateObject private var store = AppStore()
     @StateObject private var wallet = WalletService()
     var body: some Scene {
-        WindowGroup { StartupGateView().font(.tutuBody).environmentObject(store).environmentObject(wallet).preferredColorScheme(.light).tint(Palette.pink) }
+        WindowGroup { StartupGateView().font(.tutuBody).environmentObject(store).environmentObject(wallet).environment(\.locale, store.appLanguage.locale).preferredColorScheme(.light).tint(Palette.pink) }
     }
 }
 enum Route: Hashable {
@@ -21,9 +21,12 @@ struct RootView: View {
                     .navigationDestination(for: Route.self) { route in destination(route) }
                     .toolbar(.hidden, for: .navigationBar)
             }.id(store.sessionID ?? "welcome")
+                .allowsHitTesting(store.accountExit == nil)
+                .accessibilityHidden(store.accountExit != nil)
             if store.welcomeVisible { WelcomeCoinDrop() }
             CoinSpendOverlay()
             NoticeOverlay()
+            AccountExitOverlay()
         }.onChange(of: store.sessionID) { _, _ in path = [] }
             .onChange(of: store.walletRequest) { _, _ in if path.last != .wallet { path.append(.wallet) } }
             .onChange(of: store.state?.hiddenContent) { _, _ in removeHiddenDestinations() }
@@ -85,10 +88,10 @@ struct MainTabs: View {
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
             if let room = store.minimizedRoom {
-                NavigationLink(value: Route.room(room.id)) { HStack { Artwork(name: "icon-room-chat").frame(width: 30, height: 30); Text(room.title).font(.tutuCaption.bold()); Spacer(); Text("Open").font(.tutuCaption) }.padding(10).background(Palette.blush) }.buttonStyle(.plain)
+                NavigationLink(value: Route.room(room.id)) { HStack { if room.isBroadcasting == true { RoomLiveBadge() } else { Artwork(name: "icon-room-chat").frame(width: 30, height: 30) }; Text(room.title).font(.tutuCaption.bold()); Spacer(); Text("Open").font(.tutuCaption) }.padding(10).background(Palette.blush) }.buttonStyle(.plain)
             }
             HStack(spacing: 0) { ForEach(0..<5) { index in
-                Button { store.tab = index } label: { Artwork(name: assets[index] + (store.tab == index ? "-active" : "")).frame(width: 28, height: 28).frame(maxWidth: .infinity).frame(height: 54).contentShape(Rectangle()) }.buttonStyle(.plain).accessibilityLabel(names[index]).accessibilityAddTraits(store.tab == index ? [.isSelected] : [])
+                Button { store.tab = index } label: { Artwork(name: assets[index] + (store.tab == index ? "-active" : "")).frame(width: 28, height: 28).frame(maxWidth: .infinity).frame(height: 54).contentShape(Rectangle()) }.buttonStyle(.plain).accessibilityLabel(Text(ui: names[index])).accessibilityAddTraits(store.tab == index ? [.isSelected] : [])
             } }.background(.white)
         }.background(SceneBackground()).foregroundStyle(Palette.ink).onAppear { store.arriveHome() }
     }

@@ -67,6 +67,9 @@ struct RoomView: View {
                 HStack {
                     NavigationLink(value: Route.leaderboard) { Artwork(name: "lucky-star-banner").frame(width: 128, height: 38).frame(minHeight: 44) }.buttonStyle(.plain)
                     Spacer()
+                    if room.isBroadcasting == true && supportsRoomActivity {
+                        RoomLiveBadge(animated: roomVisible && panel == nil)
+                    }
                 }
                 if room.voice && !composing {
                     voiceSeats
@@ -278,7 +281,7 @@ struct RoomView: View {
                         ArtButton(label: requestedVoiceSeat == seat ? "Waiting for host approval" : "Request mic \(seat + 1)", asset: "icon-mic", size: 54) {
                             requestVoiceSeat(seat)
                         }
-                        Text(requestedVoiceSeat == seat ? "Waiting" : "Mic \(seat + 1)")
+                        (requestedVoiceSeat == seat ? Text("Waiting") : Text("Mic \(seat + 1)"))
                             .font(.tutuCaption).foregroundStyle(requestedVoiceSeat == seat ? Palette.pink : Color.white)
                     }
                 }.frame(maxWidth: .infinity)
@@ -310,12 +313,12 @@ struct RoomView: View {
     }
     private var cameraStatus: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(own ? "Your room is ready" : "Room unavailable").font(.tutuHeadline)
-            Text(own ? "You can set up your camera and room. Live streaming is unavailable right now." : "This room isn't broadcasting right now. Try again later.").font(.tutuSubheadline)
+            Text(ui: own ? "Your room is ready" : "Room unavailable").font(.tutuHeadline)
+            Text(ui: own ? "You can set up your camera and room. Live streaming is unavailable right now." : "This room isn't broadcasting right now. Try again later.").font(.tutuSubheadline)
             if own {
-                Text(camera.status).font(.tutuCaption)
+                Text(ui: camera.status).font(.tutuCaption)
                 HStack {
-                    Button(video ? "Camera off" : "Camera on") { video.toggle(); if video { Task { await camera.start() } } else { camera.stop() } }
+                    Button(LocalizedStringKey(video ? "Camera off" : "Camera on")) { video.toggle(); if video { Task { await camera.start() } } else { camera.stop() } }
                     Spacer()
                     Button("Switch camera") { Task { await camera.flip() } }.disabled(!video)
                 }.font(.tutuSubheadline.bold()).frame(minHeight: 44)
@@ -380,7 +383,7 @@ struct RoomView: View {
         }
     }
     private func panelHeading(_ title: String) -> some View {
-        HStack { Text(title).font(.tutuTitle3); Spacer(); ArtButton(label: "Close", asset: "nav-close", size: 28) { panel = nil } }
+        HStack { Text(ui: title).font(.tutuTitle3); Spacer(); ArtButton(label: "Close", asset: "nav-close", size: 28) { panel = nil } }
     }
     private var viewerPanel: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -430,7 +433,7 @@ struct RoomView: View {
         return VStack(spacing: 5) {
             Avatar(person: person, size: 50)
             Text(person.name).font(.outfit(size: 12, weight: .medium)).lineLimit(1)
-            Text(isMe ? "You" : following ? "Following" : person.interests.first ?? "Viewer")
+            Text(ui: isMe ? "You" : following ? "Following" : person.interests.first ?? "Viewer")
                 .font(.outfit(size: 10)).foregroundStyle(isMe || following ? Palette.pink : Palette.secondary).lineLimit(1)
         }.frame(maxWidth: .infinity).contentShape(Rectangle()).accessibilityElement(children: .combine)
     }
@@ -534,7 +537,7 @@ private struct RoomGiftPicker: View {
                             VStack(spacing: 6) {
                                 Artwork(name: gift.image).frame(height: 54)
                                 Text(gift.name).font(.tutuCaption2).lineLimit(1)
-                                Text(gift.id == "heart" ? "Free" : (store.state?.inventory[gift.id] ?? 0) > 0 ? "Collected" : "\(gift.price) coins").font(.tutuCaption2).foregroundStyle(Palette.secondary)
+                                (gift.id == "heart" ? Text("Free") : (store.state?.inventory[gift.id] ?? 0) > 0 ? Text("Collected") : Text("\(gift.price) coins")).font(.tutuCaption2).foregroundStyle(Palette.secondary)
                             }.frame(maxWidth: .infinity).padding(.vertical, 10)
                                 .background(selected == gift ? Palette.pink.opacity(0.14) : .white, in: RoundedRectangle(cornerRadius: 16))
                                 .overlay(alignment: .topTrailing) { if selected == gift { Artwork(name: "control-check").frame(width: 16, height: 16).padding(4) } }
@@ -543,7 +546,7 @@ private struct RoomGiftPicker: View {
                 }
             }
             Text("Gift effects appear in this room on your device.").font(.tutuCaption).foregroundStyle(Palette.secondary)
-            PinkButton(title: canShow ? "Show \(selected.name)" : "Collect · \(selected.price) coins") {
+            PinkButton(title: canShow ? store.appLanguage.format("Show %@", selected.name) : store.appLanguage.format("Collect · %lld coins", selected.price)) {
                 if canShow { onShow(selected) } else { onCollect(selected) }
             }
         }.padding(20)
@@ -591,8 +594,8 @@ struct CreateRoomView: View {
                                         Spacer()
                                         if kind == option { Artwork(name: "control-selected").frame(width: 22, height: 22) }
                                     }
-                                    Text(option.rawValue).font(.outfit(size: 16, weight: .semibold))
-                                    Text(option.caption).font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
+                                    Text(ui: option.rawValue).font(.outfit(size: 16, weight: .semibold))
+                                    Text(ui: option.caption).font(.outfit(size: 12)).foregroundStyle(Palette.secondary)
                                 }.frame(maxWidth: .infinity, alignment: .leading).padding(16)
                                     .background(kind == option ? Palette.blush : .white, in: RoundedRectangle(cornerRadius: 20))
                                     .overlay { RoundedRectangle(cornerRadius: 20).strokeBorder(kind == option ? Palette.pink : .clear, lineWidth: 1.5) }
@@ -607,7 +610,7 @@ struct CreateRoomView: View {
                             Spacer()
                             Text("\(title.count)/60").font(.tutuCaption).foregroundStyle(Palette.secondary)
                         }
-                        TextField(kind == .voice ? "What's everyone talking about?" : "Give your look a headline", text: $title)
+                        TextField(LocalizedStringKey(kind == .voice ? "What's everyone talking about?" : "Give your look a headline"), text: $title)
                             .font(.tutuBody).padding(16).background(.white, in: RoundedRectangle(cornerRadius: 16))
                             .focused($editingTitle).submitLabel(.done).onSubmit { editingTitle = false }
                             .onChange(of: title) { _, value in
@@ -616,7 +619,7 @@ struct CreateRoomView: View {
                             }
                     }
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(kind == .voice ? "Conversation topic" : "Style category").font(.tutuHeadline)
+                        Text(ui: kind == .voice ? "Conversation topic" : "Style category").font(.tutuHeadline)
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                             ForEach(kind == .voice ? VoiceRoomTopics.options : RoomCategories.options, id: \.self) { value in
                                 topicButton(value)
@@ -632,7 +635,7 @@ struct CreateRoomView: View {
                             }
                         }
                     }
-                    if !error.isEmpty { Text(error).font(.tutuSubheadline).foregroundStyle(Palette.pink).accessibilityLabel("Room name error. " + error) }
+                    if !error.isEmpty { Text(ui: error).font(.tutuSubheadline).foregroundStyle(Palette.pink).accessibilityLabel("Room name error. " + error) }
                 }.padding(20)
             }.scrollDismissesKeyboard(.interactively)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -660,7 +663,7 @@ struct CreateRoomView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 14)).allowsHitTesting(false)
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Room cover").font(.tutuHeadline)
-                    Text(kind == .voice ? "Your avatar is the default cover." : "Pick a photo that sets the mood.")
+                    Text(ui: kind == .voice ? "Your avatar is the default cover." : "Pick a photo that sets the mood.")
                         .font(.tutuCaption).foregroundStyle(Palette.secondary)
                     Text("Change photo").font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink)
                 }
@@ -677,7 +680,7 @@ struct CreateRoomView: View {
         return Button {
             if kind == .voice { topic = value } else { category = value }
         } label: {
-            Text(value).font(.outfit(size: 14, weight: selected ? .semibold : .regular))
+            Text(ui: value).font(.outfit(size: 14, weight: selected ? .semibold : .regular))
                 .foregroundStyle(selected ? .white : Palette.ink).frame(maxWidth: .infinity).frame(minHeight: 44)
                 .background {
                     if selected { Image("button-base").resizable() } else { Color.white }
@@ -706,14 +709,14 @@ struct CallView: View {
             SceneBackground(name: "party-background")
             if video && camera.ready { CameraSurface(session: camera.capture).ignoresSafeArea() }
             VStack(spacing: 24) {
-                HStack { Text(video ? "Video call" : "Voice call").font(.tutuHeadline); Spacer(); ArtButton(label: "Close call", asset: "nav-close") { camera.stop(); dismiss() } }
+                HStack { Text(ui: video ? "Video call" : "Voice call").font(.tutuHeadline); Spacer(); ArtButton(label: "Close call", asset: "nav-close") { camera.stop(); dismiss() } }
                 Spacer()
                 Avatar(person: store.person(personID), size: 94)
                 Text(store.person(personID).name).font(.tutuTitle.bold())
                 Text(started ? camera.status : "Preparing…").font(.tutuSubheadline).multilineTextAlignment(.center).padding(16).background(.black.opacity(0.4), in: RoundedRectangle(cornerRadius: 18))
                 Text("No call has connected.").font(.tutuCaption)
                 Spacer()
-                HStack { if video { Button("Switch camera") { Task { await camera.flip() } } }; Spacer(); Button(camera.microphoneEnabled ? "Mute" : "Unmute") { camera.setMicrophoneEnabled(!camera.microphoneEnabled) }.disabled(!camera.ready) }.font(.tutuSubheadline.bold()).frame(minHeight: 44)
+                HStack { if video { Button("Switch camera") { Task { await camera.flip() } } }; Spacer(); Button(LocalizedStringKey(camera.microphoneEnabled ? "Mute" : "Unmute")) { camera.setMicrophoneEnabled(!camera.microphoneEnabled) }.disabled(!camera.ready) }.font(.tutuSubheadline.bold()).frame(minHeight: 44)
                 PinkButton(title: "End call") { camera.stop(); dismiss() }
             }.padding(24).foregroundStyle(.white)
         }.toolbar(.hidden, for: .navigationBar).task {
@@ -752,12 +755,12 @@ struct LeaderboardView: View {
                 }.padding(.horizontal, 16).padding(.bottom, 12)
             }
             HStack(spacing: 10) {
-                Text(myRank.map { "#\($0)" } ?? "—")
+                Text(ui: myRank.map { "#\($0)" } ?? "—")
                     .font(.outfit(size: 18, weight: .bold)).foregroundStyle(Palette.pink).frame(minWidth: 30)
                 Avatar(person: store.me, size: 42)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(store.me.name).font(.tutuHeadline).lineLimit(1)
-                    Text(myRank == nil ? "No coins spent yet" : "Your rank · " + selected.rawValue)
+                    Text(ui: myRank == nil ? "No coins spent yet" : "Your rank · " + selected.rawValue)
                         .font(.tutuCaption).foregroundStyle(Palette.secondary)
                 }
                 Spacer(minLength: 4)
