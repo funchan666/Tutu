@@ -13,6 +13,9 @@ settings:
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 packages:
+  TPInAppReceipt:
+    url: https://github.com/tikhop/TPInAppReceipt.git
+    exactVersion: 4.0.2
   Ably:
     url: https://github.com/ably/ably-cocoa.git
     exactVersion: 1.4.0
@@ -23,6 +26,7 @@ targets:
   Tutu:
     type: application
     dependencies:
+      - package: TPInAppReceipt
       - package: Ably
         product: Ably
       - package: Alamofire

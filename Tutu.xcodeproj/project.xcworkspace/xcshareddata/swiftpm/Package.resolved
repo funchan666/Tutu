@@ -1,5 +1,5 @@
 {
-  "originHash" : "aaabb9cf27b050d2550c43c622379b11f9267f813c6a2cd0518f8fe24eaf678d",
+  "originHash" : "b100f507878dc604acf1f870a00b5d8cf00612e498e58851537c17ed33076926",
   "pins" : [
     {
       "identity" : "ably-cocoa",
@@ -35,6 +35,42 @@
       "state" : {
         "revision" : "3e36b48e04ecd756cb927bd5f5b9bf6d45e475f9",
         "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "swift-asn1",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-asn1",
+      "state" : {
+        "revision" : "3b6410f7dee09eb33cdd26260c5fd47fda19b0e2",
+        "version" : "1.7.3"
+      }
+    },
+    {
+      "identity" : "swift-certificates",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-certificates.git",
+      "state" : {
+        "revision" : "ff86b924ead66f853b8baf91f3c41926a8f36177",
+        "version" : "1.21.0"
+      }
+    },
+    {
+      "identity" : "swift-crypto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-crypto.git",
+      "state" : {
+        "revision" : "da9d28d69ebe3894b18376c8f2395c2f37b8448f",
+        "version" : "4.5.2"
+      }
+    },
+    {
+      "identity" : "tpinappreceipt",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tikhop/TPInAppReceipt.git",
+      "state" : {
+        "revision" : "3ec500058c3cb62d0e736bf83c22b93b60279bd0",
+        "version" : "4.0.2"
       }
     }
   ],

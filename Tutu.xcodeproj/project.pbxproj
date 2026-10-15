@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74203B7CF46043938AF13C01 /* TPInAppReceipt in Frameworks */ = {isa = PBXBuildFile; productRef = 74203B7CF46043938AF13C02 /* TPInAppReceipt */; };
 		06699A782DF3DDD62CF259BF /* RoomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEC435F652A788A0F08EB8D /* RoomViews.swift */; };
 		07FDB6F8129296D672B1BDE1 /* editorial-video-09.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */; };
 		117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBD63FE692C4012229EDFE /* BrowseViews.swift */; };
@@ -135,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74203B7CF46043938AF13C01 /* TPInAppReceipt in Frameworks */,
 				CA7C0356ED51099625A2E7FB /* Ably in Frameworks */,
 				472A7E98CB4B1205C102647A /* Alamofire in Frameworks */,
 			);
@@ -323,6 +325,7 @@
 			);
 			name = Tutu;
 			packageProductDependencies = (
+				74203B7CF46043938AF13C02 /* TPInAppReceipt */,
 				C5CDE74445A1F26B288C7EFB /* Ably */,
 				FC35B6F9E6F3325BD4D88874 /* Alamofire */,
 			);
@@ -363,6 +366,7 @@
 			mainGroup = C92ACD06723CF0506CDA36BA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				74203B7CF46043938AF13C03 /* XCRemoteSwiftPackageReference "TPInAppReceipt" */,
 				AB8040A9A7D87399A800A6BE /* XCRemoteSwiftPackageReference "ably-cocoa" */,
 				C694CA5A9CFD8A03DFB3B2A0 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
@@ -667,6 +671,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		74203B7CF46043938AF13C03 /* XCRemoteSwiftPackageReference "TPInAppReceipt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tikhop/TPInAppReceipt.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.0.2;
+			};
+		};
 		AB8040A9A7D87399A800A6BE /* XCRemoteSwiftPackageReference "ably-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ably/ably-cocoa.git";
@@ -686,6 +698,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		74203B7CF46043938AF13C02 /* TPInAppReceipt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 74203B7CF46043938AF13C03 /* XCRemoteSwiftPackageReference "TPInAppReceipt" */;
+			productName = TPInAppReceipt;
+		};
 		C5CDE74445A1F26B288C7EFB /* Ably */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AB8040A9A7D87399A800A6BE /* XCRemoteSwiftPackageReference "ably-cocoa" */;

@@ -1,5 +1,6 @@
 import Foundation
-import StoreKit
+@preconcurrency import StoreKit
+import TPInAppReceipt
 
 struct AtelierOrder: Codable, Equatable, Identifiable {
     enum Mode: String, Codable { case hostLocal, ablyServer }
@@ -24,6 +25,7 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
     var transactionID: String?
     var environment: String?
     var finished = false
+    var paymentUsername: String? = nil
 }
 @MainActor enum AtelierOrders {
     static let service = "com.tutu.style.purchase-orders"
@@ -52,14 +54,14 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
 }
 @MainActor final class AtelierReceipt: NSObject, SKRequestDelegate {
     private var request: SKReceiptRefreshRequest?
-    private var continuation: CheckedContinuation<Void, Error>?
+    private var completions: [CheckedContinuation<Void, Error>] = []
     private var deadline: DispatchWorkItem?
     func refresh() async throws {
-        guard request == nil else { return }
-        try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
+        try await withCheckedThrowingContinuation { completion in
+            completions.append(completion)
+            guard request == nil else { return }
             let request = SKReceiptRefreshRequest(); self.request = request; request.delegate = self
-            let timeout = DispatchWorkItem { [weak self] in self?.finish(.failure(AtelierHTTP.Failure.invalidResponse)) }
+            let timeout = DispatchWorkItem { [weak self] in self?.finish(.failure(URLError(.timedOut))) }
             deadline = timeout; DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: timeout)
             request.start()
         }
@@ -72,32 +74,76 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
     } }
     private func finish(_ result: Result<Void, Error>) {
         deadline?.cancel(); deadline = nil; request?.delegate = nil; request?.cancel(); request = nil
-        let completion = continuation; continuation = nil; completion?.resume(with: result)
+        let pending = completions; completions.removeAll(); pending.forEach { $0.resume(with: result) }
+    }
+    struct Verified {
+        let data: Data
+        let environment: String
+        let purchase: InAppPurchase
+    }
+    func verified(transactionID: String, productID: String, quantity: Int, allowRefresh: Bool) async throws -> Verified {
+        do { return try await validate(transactionID: transactionID, productID: productID, quantity: quantity) }
+        catch {
+            guard allowRefresh else { throw error }
+            try await refresh()
+            return try await validate(transactionID: transactionID, productID: productID, quantity: quantity)
+        }
+    }
+    private func validate(transactionID: String, productID: String, quantity: Int) async throws -> Verified {
+        guard let url = Bundle.main.appStoreReceiptURL, let data = try? Data(contentsOf: url), !data.isEmpty else {
+            throw TutuFailure.message("Purchased; confirmation is pending. Please do not buy again.")
+        }
+        let receipt = try AppReceipt.receipt(from: data)
+        guard receipt.hasValidStructure else { throw AtelierHTTP.Failure.invalidResponse }
+        let environment: String
+        switch receipt.environment {
+        case .production: environment = "Production"
+        case .sandbox, .productionSandbox: environment = "Sandbox"
+        default: throw TutuFailure.message("An App Store receipt is required to confirm this purchase.")
+        }
+        guard case .valid = await receipt.validate(), receipt.bundleIdentifier == Bundle.main.bundleIdentifier else {
+            throw TutuFailure.message("Apple couldn't verify a purchase. No coins were added.")
+        }
+        let matches = receipt.purchases.filter { $0.transactionIdentifier == transactionID }
+        guard matches.count == 1, let purchase = matches.first,
+              purchase.productIdentifier == productID, purchase.quantity == quantity, quantity > 0,
+              purchase.productType == .consumable || purchase.productType == .unknown,
+              purchase.subscriptionExpirationDate == nil else { throw AtelierHTTP.Failure.invalidResponse }
+        return Verified(data: data, environment: environment, purchase: purchase)
     }
 }
 
-@MainActor final class AtelierProductQuery {
-    private var continuation: CheckedContinuation<[Product], Error>?
-    private var request: Task<Void, Never>?
+@MainActor final class AtelierProductQuery: NSObject, SKProductsRequestDelegate {
+    private var continuation: CheckedContinuation<[SKProduct], Error>?
+    private var request: SKProductsRequest?
     private var deadline: DispatchWorkItem?
-    func fetch(_ sku: String) async throws -> [Product] {
+    func fetch(_ sku: String) async throws -> [SKProduct] {
         try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { completion in
                 continuation = completion
+                let request = SKProductsRequest(productIdentifiers: [sku]); self.request = request; request.delegate = self
                 let timeout = DispatchWorkItem { [weak self] in self?.finish(.failure(URLError(.timedOut))) }
-                deadline = timeout
-                DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: timeout)
-                request = Task {
-                    do { self.finish(.success(try await Product.products(for: [sku]))) }
-                    catch { self.finish(.failure(error)) }
-                }
-                if Task.isCancelled { finish(.failure(CancellationError())) }
+                deadline = timeout; DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: timeout)
+                if Task.isCancelled { finish(.failure(CancellationError())) } else { request.start() }
             }
         } onCancel: { Task { @MainActor in self.finish(.failure(CancellationError())) } }
     }
-    private func finish(_ result: Result<[Product], Error>) {
+    nonisolated func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) { Task { @MainActor in
+        guard self.request === request else { return }; self.finish(.success(response.products))
+    } }
+    nonisolated func request(_ request: SKRequest, didFailWithError error: Error) { Task { @MainActor in
+        guard self.request === request else { return }; self.finish(.failure(error))
+    } }
+    private func finish(_ result: Result<[SKProduct], Error>) {
         let completion = continuation; continuation = nil
-        deadline?.cancel(); deadline = nil; request?.cancel(); request = nil
+        deadline?.cancel(); deadline = nil; request?.delegate = nil; request?.cancel(); request = nil
         completion?.resume(with: result)
+    }
+}
+
+extension SKProduct {
+    var displayPrice: String {
+        let formatter = NumberFormatter(); formatter.numberStyle = .currency; formatter.locale = priceLocale
+        return formatter.string(from: price) ?? price.stringValue
     }
 }
