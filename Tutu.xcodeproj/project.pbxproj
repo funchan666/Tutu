@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A76E1E839314F16BC521B78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */; };
 		0042C69213717CB8FE46F5D0 /* editorial-video-09.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E1A27DB2FF3D27ABDA681515 /* editorial-video-09.mp4 */; };
 		0063EAEAE5183B1160B87C45 /* editorial-photo-055.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */; };
 		034A1960C348B814E548D3CD /* editorial-photo-063.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 305978C4883B394BEE7E8D1E /* editorial-photo-063.jpg */; };
@@ -30,12 +29,14 @@
 		29B94C03ED3A70D4D911E761 /* editorial-photo-042.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EA0A32B237AC61A6F3D55116 /* editorial-photo-042.jpg */; };
 		2A1A47BD6AB3E519F6207C10 /* TutuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1587ED47D831BA823E8FC734 /* TutuApp.swift */; };
 		2A32B6AC1524CC448E576569 /* TutuOutfit-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94D067FD835BEF09D57D9346 /* TutuOutfit-Medium.ttf */; };
+		2A76E1E839314F16BC521B78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */; };
 		2F2A8FA54FA13E1553B62622 /* editorial-video-07.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C334494EE8097457D7934FA6 /* editorial-video-07.mp4 */; };
 		2FD4974CDB9600F34ED50C2A /* editorial-photo-047.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 82E0888D11F4BDE4B7F59679 /* editorial-photo-047.jpg */; };
 		300D2A1236EE3D61B2CB86A4 /* editorial-photo-016.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 328A88E80A9B3EA532D16058 /* editorial-photo-016.jpg */; };
 		31E6601EDEB9FD7404DA148D /* CoinExperienceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFADFE51DFDE50A2761BF3 /* CoinExperienceViews.swift */; };
 		3766D4C8DE2460C49F8B4ED2 /* editorial-video-01.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 53B0B6045B2AEF92C4C4C55D /* editorial-video-01.mp4 */; };
 		3EF2736961AFE377943ADBFA /* editorial-photo-040.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */; };
+		3F179EC1DF1282F52750314A /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746F6A0FD924D63553F8D3A /* AppLanguage.swift */; };
 		40E2D1E8EEAE48FC45DF31DD /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637FBB04D9A570B5B6288EF8 /* MailComposer.swift */; };
 		44D666F57F13459F087BA8A2 /* editorial-photo-007.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 337F8B035CFDBF5CD53A7966 /* editorial-photo-007.jpg */; };
 		459DE423339BBC1657D37034 /* editorial-photo-068.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B095E893A85B104B951880A5 /* editorial-photo-068.jpg */; };
@@ -134,15 +135,13 @@
 		F69F9415EA16D1F7BCE43A64 /* editorial-photo-017.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2DCFA8E82E1414246283833C /* editorial-photo-017.jpg */; };
 		F6A058AF635D866B15412499 /* editorial-video-11.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4B76F69C3092782C2EBF8B72 /* editorial-video-11.mp4 */; };
 		F73FB17282222A9C3CBA4B67 /* editorial-photo-060.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B30FE09AB11D3BF5E2986654 /* editorial-photo-060.jpg */; };
+		F8F3F260F9683619531EC103 /* Localization/Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9E528409CDB2673D2C3F86EC /* Localization/Localizable.xcstrings */; };
 		F955C0D474182123C6668E44 /* StylistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBDB72E35E5DDC2BA51E32CE /* StylistService.swift */; };
 		FC5D95CE6743D7F8A6B8C681 /* editorial-photo-069.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */; };
 		FCA025953334CB898E6D6182 /* editorial-photo-035.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6941F07523BEA6F8ECB471DF /* editorial-photo-035.jpg */; };
-		3F179EC1DF1282F52750314A /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6746F6A0FD924D63553F8D3A /* AppLanguage.swift */; };
-		F8F3F260F9683619531EC103 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9E528409CDB2673D2C3F86EC /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0553B5AF7FF8BF34E6030CFD /* editorial-photo-066.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-066.jpg"; sourceTree = "<group>"; };
 		05EE02D4E79019B9510E679A /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		07544FC632D4C476D1166F32 /* editorial-photo-051.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-051.jpg"; sourceTree = "<group>"; };
@@ -206,6 +205,7 @@
 		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 		66E8F3CF373048730E7F66BE /* editorial-photo-028.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-028.jpg"; sourceTree = "<group>"; };
+		6746F6A0FD924D63553F8D3A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		67D7F29B2307EB1FB587548E /* editorial-photo-019.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-019.jpg"; sourceTree = "<group>"; };
 		6941F07523BEA6F8ECB471DF /* editorial-photo-035.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-035.jpg"; sourceTree = "<group>"; };
 		6A7CEFF666F1144A1B77EFA6 /* editorial-photo-018.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-018.jpg"; sourceTree = "<group>"; };
@@ -222,6 +222,7 @@
 		823ED19D3E247090668917F2 /* editorial-photo-011.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-011.jpg"; sourceTree = "<group>"; };
 		82E0888D11F4BDE4B7F59679 /* editorial-photo-047.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-047.jpg"; sourceTree = "<group>"; };
 		848C1307F6284AAE4A86F651 /* editorial-photo-014.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-014.jpg"; sourceTree = "<group>"; };
+		86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaServices.swift; sourceTree = "<group>"; };
 		8DD92DFEE49D4D6D4BDC1F24 /* editorial-photo-069.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-069.jpg"; sourceTree = "<group>"; };
 		8FABBB777D9EECDDC9DA98B6 /* editorial-photo-040.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-040.jpg"; sourceTree = "<group>"; };
@@ -231,6 +232,7 @@
 		94E2ED874B46143CB21FDA6A /* editorial-photo-006.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-006.jpg"; sourceTree = "<group>"; };
 		954FB0757FE7CDE8EBF6EAD4 /* editorial-photo-055.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-055.jpg"; sourceTree = "<group>"; };
 		983597FDB78176706528CE44 /* editorial-photo-044.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-044.jpg"; sourceTree = "<group>"; };
+		9E528409CDB2673D2C3F86EC /* Localization/Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localization/Localizable.xcstrings; sourceTree = "<group>"; };
 		9EA8F9AFEB29F62F52012AF1 /* editorial-photo-074.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-074.jpg"; sourceTree = "<group>"; };
 		9EE51A9D9B244168D83873CD /* editorial-photo-049.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-049.jpg"; sourceTree = "<group>"; };
 		A0F2BF69E2A3EA894B54AFAE /* WalletViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViews.swift; sourceTree = "<group>"; };
@@ -276,8 +278,6 @@
 		F316A58D53DE847DBA818ECC /* ProfileViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViews.swift; sourceTree = "<group>"; };
 		F83A7EE14B38B9AC4FFF8FE6 /* editorial-photo-004.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-004.jpg"; sourceTree = "<group>"; };
 		F8B91F2AC97986664B8C1B70 /* editorial-photo-013.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-photo-013.jpg"; sourceTree = "<group>"; };
-		6746F6A0FD924D63553F8D3A /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
-		9E528409CDB2673D2C3F86EC /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localization/Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -444,7 +444,7 @@
 		AABE0E246FC2796F535BB8E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9E528409CDB2673D2C3F86EC /* Localizable.xcstrings */,
+				9E528409CDB2673D2C3F86EC /* Localization/Localizable.xcstrings */,
 				86AAC8C868DE438081F83F1B /* LaunchScreen.storyboard */,
 				2D8DA50E15561B9B5E88865B /* Assets.xcassets */,
 				3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */,
@@ -561,7 +561,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8F3F260F9683619531EC103 /* Localizable.xcstrings in Resources */,
+				F8F3F260F9683619531EC103 /* Localization/Localizable.xcstrings in Resources */,
 				2A76E1E839314F16BC521B78 /* LaunchScreen.storyboard in Resources */,
 				80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */,
 				D747D72BE500E334AEA112B8 /* EditorialCatalog.json in Resources */,
@@ -842,17 +842,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				PRODUCT_BUNDLE_IDENTIFIER = im.seex.sao2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -869,17 +869,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Tutu/Tutu.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Tutu/Tutu-Simulator.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tutu.style;
+				PRODUCT_BUNDLE_IDENTIFIER = im.seex.sao2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

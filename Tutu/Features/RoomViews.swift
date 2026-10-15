@@ -814,10 +814,11 @@ struct CallView: View {
                 .font(.tutuCaption).foregroundStyle(.white.opacity(0.8))
             if !busy && (!camera.ready || !camera.microphoneAvailable) {
                 Text(ui: camera.status).font(.tutuCaption).foregroundStyle(.white.opacity(0.85))
-                Button(permissionDenied ? "Open Settings" : "Try again") {
+                Button {
                     if permissionDenied, let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
                     else { prepareCapture() }
-                }.font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44)
+                } label: { Text(ui: permissionDenied ? "Open Settings" : "Try again") }
+                .font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(minHeight: 44)
             }
         }.multilineTextAlignment(.center).padding(16).frame(maxWidth: .infinity)
             .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 20))
