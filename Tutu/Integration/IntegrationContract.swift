@@ -1,6 +1,7 @@
 import Foundation
 
 enum IntegrationContract {
+    static let realtimeTransport: String = "rtLink"
     static let namespace: String = "tutu"
     static let baseURLString: String? = "https://fjnvs.fdhewhf.top"
     static let ablyClientID: String = "app"

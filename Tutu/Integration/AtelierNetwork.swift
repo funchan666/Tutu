@@ -84,7 +84,7 @@ enum AtelierHTTP {
         guard let http = response as? HTTPURLResponse else { throw Failure.invalidResponse }
         #if DEBUG
         if path == IntegrationContract.optionsPath || path == IntegrationContract.entryPath {
-            print("[Tutu arrival] \(path) HTTP \(http.statusCode) \(String(data: data, encoding: .utf8) ?? "<non-text>")")
+            print("[Tutu arrival] \(path) HTTP \(http.statusCode)")
         }
         #endif
         return (data, http)

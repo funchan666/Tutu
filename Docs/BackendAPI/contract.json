@@ -48,8 +48,7 @@
     "serverClientIds": [
       "serve"
     ],
-    "allowMissingServerClientId": true,
-    "rewind": 1
+    "allowMissingServerClientId": true
   },
   "eventTransport": {
     "jsonEnvelopeEventKinds": [
@@ -121,5 +120,8 @@
       "file": "responses/atelier.json"
     }
   ],
-  "extensionProtocolFile": "social-protocol.json"
+  "extensionProtocolFile": "social-protocol.json",
+  "realtime": {
+    "transport": "rtLink"
+  }
 }

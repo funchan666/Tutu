@@ -1,6 +1,6 @@
 {
   "namespace": "tutu",
-  "transport": "Authenticated Ably channel from TokenRequest.capability",
+  "transport": "Native WebSocket using existing authentication data.token; channel from server attach, confirmed by action 11",
   "version": 1,
   "sender": {
     "clientId": "serve",

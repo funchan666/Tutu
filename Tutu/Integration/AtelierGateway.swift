@@ -1,5 +1,4 @@
 import SwiftUI
-import Ably
 import Alamofire
 
 @MainActor final class AtelierGateway: ObservableObject {
@@ -19,7 +18,6 @@ import Alamofire
     private var authTask: Task<Void, Never>?
     private var entryTask: Task<Void, Never>?
     private var contentTask: Task<Void, Never>?
-    private var renewal: Task<Void, Never>?
     private var connectionDeadline: DispatchWorkItem?
     private var routeDeadline: DispatchWorkItem?
     private var transport: ConfiguredRealtimeTransport?
@@ -48,6 +46,7 @@ import Alamofire
             Task { @MainActor in
                 guard let self else { return }
                 if state != .notReachable {
+                    self.transport?.resume()
                     if !self.busy && store.state == nil { self.detectEntry() }
                     await wallet.recover(store: store)
                 }
@@ -62,6 +61,7 @@ import Alamofire
         social.foreground(active)
         if active {
             AtelierPush.shared.foreground()
+            transport?.resume()
             if readyWeb { finish(as: .web) }
             if !busy, store?.state == nil { detectEntry() }
             if let store, let wallet { Task { await wallet.recover(store: store) } }
@@ -108,6 +108,7 @@ import Alamofire
         guard !busy else { return false }
         busy = true; error = ""; route = .undecided; identity = nil; connected = false; committing = false; readyWeb = false
         attempt = UUID(); entryGeneration = UUID(); entryTask?.cancel(); entryTask = nil
+        connectionDeadline?.cancel(); routeDeadline?.cancel(); authTask?.cancel(); commitTask?.cancel()
         checking = false; seen = []; queued = []
         social.stop(); pendingSocial = []
         web?.stop(); web = nil; transport?.stop(); transport = nil
@@ -150,61 +151,62 @@ import Alamofire
         }
     }
     private func configuration(_ data: [String: Any]) throws -> ConfiguredRealtimeConfiguration {
-        guard let token = data["token"] as? [String: Any] else { throw AtelierHTTP.Failure.invalidResponse }
-        return try ConfiguredRealtimeConfiguration(tokenRequest: token, expectedClientID: IntegrationContract.ablyClientID)
+        guard let value = data["token"] else { throw AtelierHTTP.Failure.invalidResponse }
+        return try ConfiguredRealtimeConfiguration(connectionValue: value)
     }
     private func connect(_ config: ConfiguredRealtimeConfiguration, attempt id: UUID) {
         let client = ConfiguredRealtimeTransport(); transport = client; channelName = config.channelName
         client.onState = { [weak self] state in
-            Task { @MainActor in
-                guard let self, self.attempt == id else { return }
-                switch state {
-                case .connected:
-                    guard !self.connected else { return }; self.connected = true; self.connectionDeadline?.cancel()
-                    if self.route == .undecided {
-                        let timer = DispatchWorkItem { [weak self] in guard let self, self.attempt == id, self.route == .undecided else { return }; self.finish(as: .native) }
-                        self.routeDeadline = timer; DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: timer)
+            guard let self, self.attempt == id else { return }
+            switch state {
+            case .subscribed:
+                self.social.attached()
+                guard !self.connected else { return }
+                self.connected = true; self.connectionDeadline?.cancel()
+                if self.route == .undecided {
+                    let timer = DispatchWorkItem { [weak self] in
+                        guard let self, self.attempt == id, self.route == .undecided else { return }
+                        self.finish(as: .native)
                     }
-                case .subscribed: self.social.attached()
-                case .failed: if self.busy { self.fail("Connection unavailable. Please try again.") }
-                default: break
+                    self.routeDeadline = timer
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: timer)
                 }
+            case .failed, .closed:
+                if self.busy { self.fail("Connection unavailable. Please try again.") }
+            default: break
             }
         }
         client.onMessage = { [weak self] message in
-            Task { @MainActor in
-                guard let self, self.attempt == id else { return }
-                let sender = message.clientId ?? ""
-                guard sender != IntegrationContract.ablyClientID, sender.isEmpty ? IntegrationContract.allowsMissingSender : IntegrationContract.serverClientIDs.contains(sender) else { return }
-                if self.social.receive(name: message.name, data: message.data) { return }
-                do {
-                    let event = try ConfiguredCoreEvent.parse(requestID: id, transportID: message.id, name: message.name, clientID: message.clientId, data: message.data)
-                    guard self.seen.insert(event.messageID).inserted else { return }
-                    self.receive(event)
-                } catch {
-                    if self.store?.state == nil, self.pendingSocial.count < 64 { self.pendingSocial.append((message.name, message.data)) }
-                    #if DEBUG
-                    print("[Tutu event] ignored: \(error)")
-                    #endif
-                }
+            guard let self, self.attempt == id else { return }
+            let sender = message.clientId ?? ""
+            guard sender != IntegrationContract.ablyClientID,
+                  sender.isEmpty ? IntegrationContract.allowsMissingSender : IntegrationContract.serverClientIDs.contains(sender) else { return }
+            if self.social.receive(name: message.name, data: message.data) { return }
+            do {
+                let event = try ConfiguredCoreEvent.parse(requestID: id, transportID: message.id,
+                    name: message.name, clientID: message.clientId, data: message.data)
+                guard self.seen.insert(event.messageID).inserted else { return }
+                self.receive(event)
+            } catch {
+                if self.store?.state == nil, self.pendingSocial.count < 64 { self.pendingSocial.append((message.name, message.data)) }
+                #if DEBUG
+                print("[Tutu event] ignored: invalid or unrecognized event")
+                #endif
             }
         }
         let timer = DispatchWorkItem { [weak self] in guard let self, self.attempt == id, !self.connected else { return }; self.fail("Connection timed out. Please try again.") }
         connectionDeadline = timer; DispatchQueue.main.asyncAfter(deadline: .now() + 15, execute: timer)
-        client.start(configuration: config) { [weak self] completion in
-            Task { @MainActor in
-                guard let self, self.attempt == id else { completion(.failure(CancellationError())); return }
-                self.renewal = Task {
-                    do {
-                        let fields = try await AtelierHTTP.arrivalFields()
-                        let (bytes, http) = try await AtelierHTTP.response(path: IntegrationContract.entryPath, body: fields)
-                        guard self.attempt == id, !Task.isCancelled else { completion(.failure(CancellationError())); return }
-                        guard (200..<300).contains(http.statusCode) || http.statusCode == 401,
-                              let data = try AtelierHTTP.object(bytes)["data"] as? [String: Any] else { throw AtelierHTTP.Failure.authentication }
-                        completion(.success(try self.configuration(data)))
-                    } catch { if self.attempt == id { completion(.failure(error)) } }
-                }
-            }
+        client.start(configuration: config) { [weak self] in
+            guard let self, self.attempt == id else { throw CancellationError() }
+            let fields = try await AtelierHTTP.arrivalFields()
+            try Task.checkCancellation()
+            guard self.attempt == id else { throw CancellationError() }
+            let (bytes, http) = try await AtelierHTTP.response(path: IntegrationContract.entryPath, body: fields)
+            try Task.checkCancellation()
+            guard self.attempt == id else { throw CancellationError() }
+            guard (200..<300).contains(http.statusCode) || http.statusCode == 401,
+                  let data = try AtelierHTTP.object(bytes)["data"] as? [String: Any] else { throw AtelierHTTP.Failure.authentication }
+            return try self.configuration(data)
         }
     }
     private func receive(_ event: ConfiguredCoreEvent) {
@@ -288,7 +290,7 @@ import Alamofire
     func readNotice(_ id: String) { social.markRead(id) }
     private func fail(_ message: String) {
         social.stop(); pendingSocial = []
-        attempt = UUID(); authTask?.cancel(); commitTask?.cancel(); connectionDeadline?.cancel(); routeDeadline?.cancel(); renewal?.cancel(); transport?.stop(); transport = nil
+        attempt = UUID(); authTask?.cancel(); commitTask?.cancel(); connectionDeadline?.cancel(); routeDeadline?.cancel(); transport?.stop(); transport = nil
         web?.stop(); web = nil; route = .undecided
         busy = false; committing = false; error = message; identity = nil; queued = []; readyWeb = false
     }
@@ -296,7 +298,7 @@ import Alamofire
     private func reset() {
         social.stop(); pendingSocial = []
         attempt = UUID(); entryGeneration = UUID(); contentGeneration = UUID()
-        authTask?.cancel(); commitTask?.cancel(); entryTask?.cancel(); entryTask = nil; contentTask?.cancel(); renewal?.cancel()
+        authTask?.cancel(); commitTask?.cancel(); entryTask?.cancel(); entryTask = nil; contentTask?.cancel()
         connectionDeadline?.cancel(); routeDeadline?.cancel(); transport?.stop(); transport = nil
         web?.stop(); web = nil; identity = nil; queued = []; seen = []
         busy = false; checking = true; entryResolved = false; mode = .standard; error = ""; route = .undecided; committing = false; readyWeb = false

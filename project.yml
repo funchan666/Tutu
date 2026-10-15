@@ -16,9 +16,6 @@ packages:
   TPInAppReceipt:
     url: https://github.com/tikhop/TPInAppReceipt.git
     exactVersion: 4.0.2
-  Ably:
-    url: https://github.com/ably/ably-cocoa.git
-    exactVersion: 1.4.0
   Alamofire:
     url: https://github.com/Alamofire/Alamofire.git
     exactVersion: 5.12.2
@@ -27,8 +24,6 @@ targets:
     type: application
     dependencies:
       - package: TPInAppReceipt
-      - package: Ably
-        product: Ably
       - package: Alamofire
     attributes:
       SystemCapabilities:
