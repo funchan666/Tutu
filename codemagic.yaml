@@ -1,64 +1,70 @@
 workflows:
-  unison-ios-app-store:
-    name: Unison iOS App Store
+  tutu-ios-app-store:
+    name: Tutu iOS App Store
     max_build_duration: 120
     instance_type: mac_mini_m2
 
     integrations:
-      app_store_connect: Unison
+      app_store_connect: Tutu
 
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.unisonvocal.community
+        bundle_identifier: com.tutustyleoutfit.lookbook
 
       vars:
-        BUNDLE_ID: "com.unisonvocal.community"
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
-        APP_STORE_APPLE_ID: "6802950506"
+        BUNDLE_ID: "com.tutustyleoutfit.lookbook"
+        XCODE_PROJECT: "Tutu.xcodeproj"
+        XCODE_SCHEME: "Tutu"
+        APP_STORE_APPLE_ID: "6823066661"
 
-      xcode: latest
+      xcode: "26.5"
 
     scripts:
       - name: Verify native iOS project configuration
         script: |
           set -e
-          test -d "$CM_BUILD_DIR/$XCODE_WORKSPACE"
-          test -f "$CM_BUILD_DIR/ios/Runner.xcodeproj/xcshareddata/xcschemes/$XCODE_SCHEME.xcscheme"
-          grep -q "PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;" \
-            "$CM_BUILD_DIR/ios/Runner.xcodeproj/project.pbxproj"
+          test -d "$CM_BUILD_DIR/$XCODE_PROJECT"
+          test -f "$CM_BUILD_DIR/$XCODE_PROJECT/xcshareddata/xcschemes/$XCODE_SCHEME.xcscheme"
+          test -f "$CM_BUILD_DIR/Tutu/Info.plist"
+          grep -Fq "PRODUCT_BUNDLE_IDENTIFIER = $BUNDLE_ID;" \
+            "$CM_BUILD_DIR/$XCODE_PROJECT/project.pbxproj"
 
       - name: Set up App Store signing
         script: |
           set -e
-          cd "$CM_BUILD_DIR/ios"
+          cd "$CM_BUILD_DIR"
           xcode-project use-profiles
 
       - name: Set next App Store build number
         script: |
           set -e
-          cd "$CM_BUILD_DIR/ios"
+          cd "$CM_BUILD_DIR"
 
           LATEST_BUILD_NUMBER="$(
-            app-store-connect get-latest-testflight-build-number \
-              "$APP_STORE_APPLE_ID" 2>/dev/null || true
+            app-store-connect get-latest-app-store-build-number \
+              "$APP_STORE_APPLE_ID"
           )"
 
-          if echo "$LATEST_BUILD_NUMBER" | grep -Eq '^[0-9]+$'; then
-            NEXT_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
-          else
-            NEXT_BUILD_NUMBER="${BUILD_NUMBER:-1}"
+          # An app with no previous builds starts at 1. API failures stop the step.
+          LATEST_BUILD_NUMBER="${LATEST_BUILD_NUMBER:-0}"
+          if ! echo "$LATEST_BUILD_NUMBER" | grep -Eq '^[0-9]+$'; then
+            echo "App Store Connect returned a non-integer build number." >&2
+            exit 1
           fi
+          NEXT_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
 
           echo "Using build number: $NEXT_BUILD_NUMBER"
           agvtool new-version -all "$NEXT_BUILD_NUMBER"
+          # This project uses a checked-in plist with a literal CFBundleVersion.
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEXT_BUILD_NUMBER" Tutu/Info.plist
 
       - name: Build signed IPA
         script: |
           set -e
+          cd "$CM_BUILD_DIR"
           xcode-project build-ipa \
-            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
 
     artifacts:
@@ -76,6 +82,7 @@ workflows:
           failure: true
 
       app_store_connect:
+        # Upload the IPA to App Store Connect without automatically submitting review.
         auth: integration
         submit_to_testflight: false
         submit_to_app_store: false
