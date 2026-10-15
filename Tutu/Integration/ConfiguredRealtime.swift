@@ -171,6 +171,7 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
     private var configuration: ConfiguredRealtimeConfiguration?
     private var refresh: Refresh?
     private var generation = UUID()
+    private var lifecycle = UUID()
     private var receiveTask: Task<Void, Never>?
     private var attachTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
@@ -201,6 +202,7 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
     }
 
     func stop() {
+        lifecycle = UUID()
         stopped = true
         retireSocket()
         refresh = nil
@@ -208,11 +210,11 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
         onState?(.stopped)
     }
 
-    private func retireSocket() {
+    private func retireSocket(cancelRefresh: Bool = true) {
         generation = UUID()
         receiveTask?.cancel(); receiveTask = nil
         attachTask?.cancel(); attachTask = nil
-        refreshTask?.cancel(); refreshTask = nil
+        if cancelRefresh { refreshTask?.cancel(); refreshTask = nil }
         retryTask?.cancel(); retryTask = nil
         expiryTask?.cancel(); expiryTask = nil
         idleTask?.cancel(); idleTask = nil
@@ -346,12 +348,13 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
             else { reconnect() }
         case 13:
             if frame.object["channel"] as? String == configuration.channelName { reconnect() }
-        case 17: reconnect(immediate: true)
+        case 17: renew()
         default: break
         }
     }
 
     private func terminate(_ state: State) {
+        lifecycle = UUID()
         stopped = true
         retireSocket()
         configuration = nil; refresh = nil
@@ -359,7 +362,12 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
     }
 
     private func reconnect(immediate: Bool = false) {
-        guard !stopped, refreshTask == nil, retryTask == nil else { return }
+        guard !stopped, retryTask == nil else { return }
+        if refreshTask != nil {
+            retireSocket(cancelRefresh: false)
+            onState?(.reconnecting)
+            return
+        }
         retireSocket()
         onState?(.reconnecting)
         if immediate, retryCount == 0 { retryCount = 1; renew(); return }
@@ -376,11 +384,11 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
 
     private func renew() {
         guard !stopped, refreshTask == nil, let refresh, let previous = configuration else { return }
-        let id = generation
+        let id = lifecycle
         refreshTask = Task { [weak self] in
             do {
                 let updated = try await refresh()
-                guard let self, self.generation == id, !self.stopped, !Task.isCancelled else { return }
+                guard let self, self.lifecycle == id, !self.stopped, !Task.isCancelled else { return }
                 self.refreshTask = nil
                 guard updated.channelName == previous.channelName,
                       previous.ticket.roomID == nil || updated.ticket.roomID == previous.ticket.roomID else {
@@ -389,7 +397,7 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
                 self.configuration = updated
                 self.open()
             } catch {
-                guard let self, self.generation == id, !self.stopped, !Task.isCancelled else { return }
+                guard let self, self.lifecycle == id, !self.stopped, !Task.isCancelled else { return }
                 self.refreshTask = nil
                 self.reconnect()
             }
@@ -407,7 +415,7 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
         expiryTask = Task { [weak self] in
             do { try await Self.wait(until: deadline) } catch { return }
             guard let self, self.generation == id, !self.stopped else { return }
-            self.reconnect(immediate: true)
+            self.renew()
         }
     }
 
@@ -443,7 +451,8 @@ private final class RealtimeRedirectPolicy: NSObject, URLSessionTaskDelegate {
     }
 
     func publish(name: String, payload: Any, completion: @escaping (Bool) -> Void) {
-        guard !stopped, ready, let socket, let configuration, pending.count < 256,
+        guard !stopped, ready, let socket, socket.state == .running, let configuration, pending.count < 256,
+              configuration.ticket.expiresAt.map({ $0 > Date() }) ?? true,
               serial < Int.max, JSONSerialization.isValidJSONObject(payload),
               let bytes = try? JSONSerialization.data(withJSONObject: payload),
               let json = String(data: bytes, encoding: .utf8) else { completion(false); return }

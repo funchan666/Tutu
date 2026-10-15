@@ -104,7 +104,7 @@
 - `ConfiguredRealtimeTransport` 为唯一 MainActor 连接所有者，URL 原样交系统；不增取地址接口、HTTP 头、subprotocol、AES、URL 参数或固定 rewind。`contract.realtime.transport = "rtLink"` 仅为技能兼容标记，不是接口调用。历史 `ablyClientID/ablyServer` 名称保持身份及账本含义。
 - action 4 发送服务端 attach；11 才 ready；15 全批逐条规范化，坏条目不影响后续条目。沿用原 SDK 的消息 ID 规则：有 message.id 则直接使用，否则仅在实际 frame.id 存在时用 frame.id 与批内索引组成 ID；两者缺失不伪造 ID。依据见 [原 SDK 的消息分发](https://github.com/ably/ably-cocoa/blob/1.4.0/Source/ARTRealtimeChannel.m)。订阅前消息在同代内有界暂存，ready 后交原发送方过滤、去重和事件处理。首次 ready 开始三秒路由等待，重连不重启期限。
 - 接收任意帧重置服务端 maxIdleInterval 加五秒 watchdog；连接/订阅有十五秒期限。重连按 1、2、4、8、16、30 秒基准加抖动，只有订阅成功清零。action 8 停止自动重连，前台/网络恢复不绕过终态；退出或新登录取消 socket、收发、刷新、订阅、续期、重连及 ACK 等待。
-- 到期元数据存在时提前刷新，短有效期避免零间隔循环；action 17、凭证失效与断线统一复用现有认证公共字段刷新来源，不重放密码/Apple 凭证。该来源原已有续期调用，继续遵守最多五秒 APNs 等待、HTTP 超时和登录 attempt 约束；相同会话频道和已有 roomId 不允许在刷新中漂移。没有额外 rtLink 调用或套用其限流规则。
+- 到期元数据存在时提前刷新，短有效期避免零间隔循环；健康连接续期或 action 17 先取新信息再切换，期间若连接断开则关闭旧 socket 并复用同一刷新任务。凭证失效与断线同样复用现有认证公共字段刷新来源，不重放密码/Apple 凭证。该来源原已有续期调用，继续遵守最多五秒 APNs 等待、HTTP 超时和登录 attempt 约束；相同会话频道和已有 roomId 不允许在刷新中漂移。没有额外 rtLink 调用或套用其限流规则。
 - `AtelierSocial.flush/sync` 的原事件和 payload 保留。原生上行按 [Ably 官方协议](https://github.com/ably/specification/blob/main/specifications/protocol.md) 使用 action 15/channel/msgSerial 与 JSON encoding；每帧一条，单连接序列分配并串行发送。action 1/2 对应传输 ACK/NACK，覆盖范围、重复确认及跳号处理；二十秒未确认、发送失败、断线、stop 均失败收尾。socket.send 成功不等于服务端确认；传输 ACK 不删除业务 outbox，只有原 `AtelierReceiptAccepted` 才删除持久回执。支付仍独立走原五字段 HTTP 验单与 Keychain 终态回读。
 - `ConfiguredEventDecoder.externalURL` 已符合最新版规则：绝对 URL 检查后交系统打开，不使用网页专属 HTTP(S) 白名单。现有 APNs 五秒等待、权限声明与 bid Scheme、局部登录反馈、WebView 媒体权限合并、支付纯文字遮罩均保留，未做视觉改动。
 - 本次静态检查覆盖源码接线、工程成员、依赖产品与锁项、JSON/plist、双模板与源数据一致性、差异空白及支付源码未变。已更新原离线审计工具的依赖断言；没有新增运行测试。此前执行记录属于对应历史交付，不代表本次再次运行。
