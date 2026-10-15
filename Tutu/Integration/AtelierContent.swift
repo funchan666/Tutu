@@ -34,7 +34,7 @@ struct AtelierSnapshot {
               Set(settings.gifts.map(\.id)).count == settings.gifts.count,
               Set(settings.packs.map(\.id)).count == settings.packs.count,
               settings.gifts.allSatisfy({ $0.price > 0 }), settings.packs.allSatisfy({ $0.coins > 0 && Decimal(string: $0.referenceUSD) != nil }),
-              rooms.allSatisfy({ ids.contains($0.hostID) && (1...8).contains($0.seats) && $0.viewerCount >= 0 }),
+              rooms.allSatisfy({ ids.contains($0.hostID) && (1...8).contains($0.seats) && ($0.viewerCount.map { $0 >= 0 } ?? true) }),
               settings.rankings.allSatisfy({ ids.contains($0.id) }),
               settings.counters.keys.allSatisfy({ ids.contains($0) }),
               settings.discoverIDs.allSatisfy({ id in editorial.contains { "look-" + $0.id == id && $0.video != nil } }) else {

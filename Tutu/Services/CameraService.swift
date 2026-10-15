@@ -1,5 +1,5 @@
 import SwiftUI
-import AVFoundation
+@preconcurrency import AVFoundation
 
 @MainActor final class CameraService: ObservableObject {
     let capture = AVCaptureSession()

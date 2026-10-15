@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -85,7 +85,7 @@
 		378C292FE1097359FDB0948C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		39DFF58096DF477BAD682CB3 /* editorial-video-08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-08.jpg"; sourceTree = "<group>"; };
 		3AA57621CCA688DA5568FC2C /* Tutu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tutu.entitlements; sourceTree = "<group>"; };
-		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3ED9EDEA2BA8B470F396AC28 /* editorial-video-12.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-12.jpg"; sourceTree = "<group>"; };
 		3FA84FC46FB974DA613A3AED /* AtelierNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtelierNetwork.swift; sourceTree = "<group>"; };
 		44225B7DD0FDDA64BBE5B954 /* Tutu-Simulator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Tutu-Simulator.entitlements"; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 		5B55C58196D1EE15222466BE /* TutuOutfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TutuOutfit-Bold.ttf"; sourceTree = "<group>"; };
 		5F11013EDA00AA4009B60989 /* EditorialMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorialMedia.swift; sourceTree = "<group>"; };
 		5FAD20B694D727B4E0DAE04F /* AtelierOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtelierOrders.swift; sourceTree = "<group>"; };
-		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		612ACA35758497C2F998DB6F /* Tutu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tutu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 		64388FA2D8D38C6128C68DBD /* ConfiguredEventDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfiguredEventDecoder.swift; sourceTree = "<group>"; };
 		6E1C1F398876A41400DB84EF /* editorial-video-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-10.jpg"; sourceTree = "<group>"; };
@@ -337,7 +337,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					9915FD2F8F5FA085256C78BC = {
 						DevelopmentTeam = JPTS6M4T5B;
@@ -368,7 +368,6 @@
 				AB8040A9A7D87399A800A6BE /* XCRemoteSwiftPackageReference "ably-cocoa" */,
 				C694CA5A9CFD8A03DFB3B2A0 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -459,6 +458,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -490,6 +490,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -514,6 +515,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -526,6 +528,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -557,6 +560,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -574,6 +578,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -590,7 +595,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -620,7 +624,6 @@
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = JPTS6M4T5B;
 				ENABLE_TESTABILITY = NO;
 				INFOPLIST_FILE = Tutu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -631,8 +634,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = im.seex.sao2;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				STRIP_INSTALLED_PRODUCT = YES;
-				STRIP_SWIFT_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
