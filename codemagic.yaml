@@ -42,22 +42,36 @@ workflows:
           cd "$CM_BUILD_DIR"
 
           LATEST_BUILD_NUMBER="$(
-            app-store-connect get-latest-app-store-build-number \
+            app-store-connect get-latest-build-number \
               "$APP_STORE_APPLE_ID"
           )"
 
-          # An app with no previous builds starts at 1. API failures stop the step.
-          LATEST_BUILD_NUMBER="${LATEST_BUILD_NUMBER:-0}"
+          # Include uploaded TestFlight builds, not only App Store releases.
+          # This app already has an uploaded build; an empty result is an error.
           if ! echo "$LATEST_BUILD_NUMBER" | grep -Eq '^[0-9]+$'; then
-            echo "App Store Connect returned a non-integer build number." >&2
+            echo "App Store Connect returned an empty or non-integer build number." >&2
             exit 1
           fi
-          NEXT_BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
+          LOCAL_BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' Tutu/Info.plist)
+          CI_BUILD_NUMBER="${PROJECT_BUILD_NUMBER:?Missing Codemagic project build number}"
+          NEXT_BUILD_NUMBER=$(python3 - "$LATEST_BUILD_NUMBER" "$LOCAL_BUILD_NUMBER" "$CI_BUILD_NUMBER" <<'PY'
+          import re
+          import sys
 
-          echo "Using build number: $NEXT_BUILD_NUMBER"
+          values = sys.argv[1:]
+          if any(re.fullmatch(r"[0-9]+", value) is None for value in values):
+              sys.exit("Build numbers must be non-negative integers.")
+          remote, local, ci = map(int, values)
+          print(max(remote + 1, local + 1, ci + 1))
+          PY
+          )
+
+          echo "Remote: $LATEST_BUILD_NUMBER; local: $LOCAL_BUILD_NUMBER; CI: $CI_BUILD_NUMBER; next: $NEXT_BUILD_NUMBER"
           agvtool new-version -all "$NEXT_BUILD_NUMBER"
           # This project uses a checked-in plist with a literal CFBundleVersion.
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEXT_BUILD_NUMBER" Tutu/Info.plist
+          echo "TUTU_EXPECTED_BUILD_NUMBER=$NEXT_BUILD_NUMBER" >> "$CM_ENV"
+          echo "TUTU_PREVIOUS_BUILD_NUMBER=$LATEST_BUILD_NUMBER" >> "$CM_ENV"
 
       - name: Build signed IPA
         script: |
@@ -66,6 +80,35 @@ workflows:
           xcode-project build-ipa \
             --project "$CM_BUILD_DIR/$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME"
+
+      - name: Verify IPA build number before publishing
+        script: |
+          set -e
+          cd "$CM_BUILD_DIR"
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import plistlib
+          import re
+          import zipfile
+
+          packages = list(pathlib.Path("build/ios/ipa").glob("*.ipa"))
+          if len(packages) != 1:
+              raise SystemExit("Expected exactly one IPA for publishing.")
+          with zipfile.ZipFile(packages[0]) as package:
+              entries = [name for name in package.namelist()
+                         if re.fullmatch(r"Payload/[^/]+\.app/Info\.plist", name)]
+              if len(entries) != 1:
+                  raise SystemExit("Expected exactly one main app Info.plist.")
+              info = plistlib.loads(package.read(entries[0]))
+          actual = str(info.get("CFBundleVersion", ""))
+          expected = os.environ["TUTU_EXPECTED_BUILD_NUMBER"]
+          if info.get("CFBundleIdentifier") != os.environ["BUNDLE_ID"]:
+              raise SystemExit("IPA bundle identifier does not match the configured app.")
+          if actual != expected or int(actual) <= int(os.environ["TUTU_PREVIOUS_BUILD_NUMBER"]):
+              raise SystemExit(f"IPA build number mismatch: expected {expected}, got {actual}.")
+          print(f"Verified {packages[0].name}: version {info.get('CFBundleShortVersionString')}, build {actual}")
+          PY
 
     artifacts:
       - build/ios/ipa/*.ipa
