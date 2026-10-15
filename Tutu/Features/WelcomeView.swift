@@ -1,5 +1,6 @@
 import SwiftUI
 import AuthenticationServices
+import UIKit
 
 struct WelcomeView: View {
     @EnvironmentObject private var store: AppStore
@@ -30,11 +31,11 @@ struct WelcomeView: View {
                             else if gateway.mode == .guestOnly {
                                 PinkButton(title: "Continue as Guest", busy: busy) { guard requireConsent() else { return }; gateway.guest() }
                             } else {
-                            SignInWithAppleButton(.signIn) { request in
-                                guard gateway.reserve() else { return }
-                                request.requestedScopes = [.fullName, .email]
+                            EnglishAppleSignInButton {
+                                guard requireConsent() else { return false }
+                                return gateway.reserve()
                             } onCompletion: { result in
-                                guard requireConsent() else { return }
+                                guard requireConsent() else { gateway.appleCancelled(); return }
                                 switch result {
                                 case .success(let auth):
                                     guard let credential = auth.credential as? ASAuthorizationAppleIDCredential else { gateway.appleCancelled(); return }
@@ -44,7 +45,7 @@ struct WelcomeView: View {
                                     gateway.appleCancelled()
                                     if (failure as? ASAuthorizationError)?.code != .canceled { error = "Apple sign-in couldn't be completed. Please try again." }
                                 }
-                            }.disabled(busy).signInWithAppleButtonStyle(.white).frame(height: 54).clipShape(Capsule())
+                            }.disabled(busy).frame(maxWidth: .infinity).frame(height: 54).clipShape(Capsule())
                                 .allowsHitTesting(accepted && !busy)
                                 .accessibilityHidden(!accepted || busy)
                                 .overlay {
@@ -262,5 +263,96 @@ struct WelcomeView: View {
         }
         .accessibilityAddTraits(.isModal)
         .onAppear { promptFocused = true }
+    }
+}
+
+/// A fixed English entry label with Apple's unmodified logo artwork.
+/// Authentication still uses the system authorization controller and sheet.
+private struct EnglishAppleSignInButton: UIViewRepresentable {
+    var onRequest: () -> Bool
+    var onCompletion: (Result<ASAuthorization, Error>) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
+
+    func makeUIView(context: Context) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = .white
+        button.accessibilityLabel = "Sign in with Apple"
+        button.accessibilityLanguage = "en-US"
+        button.semanticContentAttribute = .forceLeftToRight
+        let logo = UIImageView(image: UIImage(named: "apple-signin-mark"))
+        logo.contentMode = .scaleAspectFit
+        let title = UILabel()
+        // Do not localize: this entry must remain English in every app/device language.
+        title.text = "Sign in with Apple"
+        title.font = .systemFont(ofSize: 54 * 0.43, weight: .medium)
+        title.textColor = .black
+        title.adjustsFontSizeToFitWidth = true
+        title.minimumScaleFactor = 0.8
+        let content = UIStackView(arrangedSubviews: [logo, title])
+        content.axis = .horizontal
+        content.alignment = .center
+        content.spacing = 0 // Apple's PDF already includes the required logo padding.
+        content.semanticContentAttribute = .forceLeftToRight
+        content.isUserInteractionEnabled = false
+        content.accessibilityElementsHidden = true
+        content.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(content)
+        NSLayoutConstraint.activate([
+            content.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            content.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            content.widthAnchor.constraint(lessThanOrEqualTo: button.widthAnchor, multiplier: 0.84),
+            logo.heightAnchor.constraint(equalTo: button.heightAnchor),
+            logo.widthAnchor.constraint(equalTo: logo.heightAnchor, multiplier: 31.0 / 44.0)
+        ])
+        button.addTarget(context.coordinator, action: #selector(Coordinator.signIn(_:)), for: .touchUpInside)
+        return button
+    }
+
+    func updateUIView(_ button: UIButton, context: Context) {
+        context.coordinator.parent = self
+        button.isEnabled = context.environment.isEnabled
+        button.alpha = button.isEnabled ? 1 : 0.6
+    }
+
+    @MainActor
+    final class Coordinator: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+        var parent: EnglishAppleSignInButton
+        private var controller: ASAuthorizationController?
+        private var anchor: UIWindow?
+
+        init(parent: EnglishAppleSignInButton) { self.parent = parent }
+
+        @objc func signIn(_ button: UIButton) {
+            guard controller == nil, let window = button.window, parent.onRequest() else { return }
+            anchor = window
+            let request = ASAuthorizationAppleIDProvider().createRequest()
+            request.requestedScopes = [.fullName, .email]
+            let controller = ASAuthorizationController(authorizationRequests: [request])
+            self.controller = controller
+            controller.delegate = self
+            controller.presentationContextProvider = self
+            controller.performRequests()
+        }
+
+        func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+            // Stored from the tapped button before performRequests; retained until completion.
+            guard let anchor else { preconditionFailure("Apple authorization requires its presenting window") }
+            return anchor
+        }
+
+        func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+            complete(.success(authorization))
+        }
+
+        func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+            complete(.failure(error))
+        }
+
+        private func complete(_ result: Result<ASAuthorization, Error>) {
+            controller = nil
+            anchor = nil
+            parent.onCompletion(result)
+        }
     }
 }
