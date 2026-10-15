@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		74203B7CF46043938AF13C01 /* TPInAppReceipt in Frameworks */ = {isa = PBXBuildFile; productRef = 74203B7CF46043938AF13C02 /* TPInAppReceipt */; };
 		06699A782DF3DDD62CF259BF /* RoomViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEC435F652A788A0F08EB8D /* RoomViews.swift */; };
 		07FDB6F8129296D672B1BDE1 /* editorial-video-09.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 58061D7CA9A428BAEAA4043B /* editorial-video-09.jpg */; };
 		117EE37CF1CB054C2F4E1898 /* BrowseViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABBD63FE692C4012229EDFE /* BrowseViews.swift */; };
@@ -29,6 +28,8 @@
 		6AA62EEA317A6FBFDB011C49 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05EE02D4E79019B9510E679A /* AppStore.swift */; };
 		6F6B8367750521F9F71EA1A0 /* AtelierWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9B5450E53128A8A45ADD4C /* AtelierWeb.swift */; };
 		73EE1E8081E94F3D8863A3F1 /* ConfiguredRealtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A1C8855E63C69C7448EC7D /* ConfiguredRealtime.swift */; };
+		74203B7CF46043938AF13C01 /* TPInAppReceipt in Frameworks */ = {isa = PBXBuildFile; productRef = 74203B7CF46043938AF13C02 /* TPInAppReceipt */; };
+		74203B7CF46043938AF13C04 /* PurchaseLibraries-Licenses.txt in Resources */ = {isa = PBXBuildFile; fileRef = 74203B7CF46043938AF13C05 /* PurchaseLibraries-Licenses.txt */; };
 		7F6464DCECC01C1B0890B631 /* MediaServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE0F7653FF1A0256A6E8EB7 /* MediaServices.swift */; };
 		80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D8DA50E15561B9B5E88865B /* Assets.xcassets */; };
 		85FA821544196C3431207EDE /* TutuOutfit-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E15CF12320984CC67900B4FE /* TutuOutfit-SemiBold.ttf */; };
@@ -101,6 +102,7 @@
 		637FBB04D9A570B5B6288EF8 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 		64388FA2D8D38C6128C68DBD /* ConfiguredEventDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfiguredEventDecoder.swift; sourceTree = "<group>"; };
 		6E1C1F398876A41400DB84EF /* editorial-video-10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-10.jpg"; sourceTree = "<group>"; };
+		74203B7CF46043938AF13C05 /* PurchaseLibraries-Licenses.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PurchaseLibraries-Licenses.txt"; sourceTree = "<group>"; };
 		75876D1D029D9936D67E510E /* Outfit.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit.ttf; sourceTree = "<group>"; };
 		7BEA72680318092587EECA03 /* CoinEconomy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinEconomy.swift; sourceTree = "<group>"; };
 		7CE4368DE332BEAFD4CA7D74 /* editorial-video-02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "editorial-video-02.jpg"; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 		AABE0E246FC2796F535BB8E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				74203B7CF46043938AF13C05 /* PurchaseLibraries-Licenses.txt */,
 				2D8DA50E15561B9B5E88865B /* Assets.xcassets */,
 				830D392C7B3A9B076C5D3E1C /* LaunchScreen.storyboard */,
 				3AB24D04E5324CEE1B8B99C5 /* PrivacyInfo.xcprivacy */,
@@ -383,6 +386,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74203B7CF46043938AF13C04 /* PurchaseLibraries-Licenses.txt in Resources */,
 				80933714EA75342C4BF15FD9 /* Assets.xcassets in Resources */,
 				452DBF2FBAD7DB7B3FA0B7AE /* EditorialMediaAliases.json in Resources */,
 				928BE8FB6ED10E3ED977BBDA /* LaunchScreen.storyboard in Resources */,

@@ -53,7 +53,7 @@
 | F06 Ably | `Gateway.connect` → `ConfiguredRealtimeTransport.start` | 强持有 client/channel，先绑定全消息订阅与状态，再 connect；频道来自签名 capability；首次 token 与单个续期、stop completion 接通；Debug 回调、Release 关闭敏感全文。实连未验收。 |
 | F07 网页 | `prepareWeb` → 同一 `AtelierWebHost`/WKWebView → 当前 navigation 的有效 HTTP/MIME/didFinish + mounted | 初始化前设置 inline/AirPlay/autoplay；30 秒加载超时、失败/进程终止/重试；旧导航退役、失败停止加载；权限串行系统首授并逐项决定，未注入脚本。网页运行待验。 |
 | F08 路由 | `Gateway.finish` 唯一提交 → `RootView` 仅 native 状态创建 MainTabs | 首次 connected 后 3 秒期限不因重连重置；空地址正常 A；坏地址独立错误；有效 B 主文档完成后直接呈现；A 决议开始后不再接受迟到启动 URL。静默恢复有 generation、取消与 activeProfile 校验。 |
-| F09 购买 | 原 `WalletView.purchase` / 实时购买 → 唯一 `WalletService` → Keychain → 对应交付 → finish | 详见下节。只有交付状态回读成功后 finish；unknown 保留不猜测；30 秒商品查询/确认请求，有界 4/12/30 秒重试；启动 updates + unfinished 不依赖登录/内容。未触发购买。 |
+| F09 购买 | 原 `WalletView.purchase` / 实时购买 → 唯一 `WalletService` → Keychain → 对应交付 → finish | 详见下节。只有交付状态回读成功后 finish；unknown 保留不猜测；30 秒商品查询/确认请求，有界 4/12/30 秒重试；启动 SK1 observer + transactions 不依赖登录/内容。未触发购买。 |
 | F10 现有业务 | `Gateway` 全消息 → `AtelierSocial` → 原 `ProfileState`/系统消息页/人物/动态 | 系统通知、版本化在线状态、增量动态、received/applied/displayed/read 回执、持久 outbox 与 60 秒重放请求接通；按 origin+channel+本地账号隔离。后端 ack/replay 未验收。原通话仅设备权限/本地预览，没有 RTC/接听入口，本轮不增加虚假来电连接。 |
 | F11 生命周期 | `sessionEnded/reset`、expire、Scene 前后台、`.onOpenURL`、解锁通知 | 退出关连接/网页，取消旧登录/导航任务，清会话但不清设备/订单 Keychain；URL Scheme 仅唤醒；恢复交易不重新 purchase。未做杀进程/重装场景。 |
 
