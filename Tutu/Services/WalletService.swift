@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UIKit
 @preconcurrency import StoreKit
 
 struct CoinPack: Codable, Identifiable {
@@ -104,6 +105,7 @@ struct CoinPack: Codable, Identifiable {
         do { _ = try AtelierOrders.all() }
         catch { status = error.localizedDescription; return }
         for transaction in SKPaymentQueue.default().transactions { await handle(transaction) }
+        await reconcileRefunds()
     }
     private func handle(_ transaction: SKPaymentTransaction) async {
         switch transaction.transactionState {
@@ -198,7 +200,9 @@ struct CoinPack: Codable, Identifiable {
             }
             if interactive { paymentText = order.mode == .hostLocal ? "Saving your coins…" : "Confirming your purchase…" }
             let verified = try await receipt.verified(transactionID: transactionID, productID: order.productID,
-                quantity: transaction.payment.quantity, allowRefresh: interactive)
+                quantity: transaction.payment.quantity, canRefresh: { [weak self] in
+                    interactive && self?.activeOrder == order.id && store.sessionID == order.accountID && UIApplication.shared.applicationState == .active
+                })
             guard order.environment == nil || order.environment?.lowercased() == verified.environment.lowercased() else {
                 throw AtelierHTTP.Failure.invalidResponse
             }
@@ -206,15 +210,7 @@ struct CoinPack: Codable, Identifiable {
             if verified.purchase.cancellationDate != nil {
                 guard order.mode == .hostLocal, store.sessionID == order.accountID,
                       store.state?.walletInstance == order.walletInstance else { throw TutuFailure.message("A refunded purchase needs review.") }
-                guard store.commit({ value in
-                    guard !value.revokedTransactions.contains(transactionID) else { return }
-                    if let grant = value.transactionGrants?[transactionID], value.creditedTransactions.contains(transactionID) {
-                        let reversed = min(value.coins, grant)
-                        value.coins -= reversed; value.refundDebt = (value.refundDebt ?? 0) + grant - reversed
-                        value.ledger.insert(WalletEntry(title: "Purchase refunded", amount: -reversed, kind: .refund), at: 0)
-                    }
-                    value.revokedTransactions.insert(transactionID)
-                }) else { throw AtelierHTTP.Failure.storage }
+                try reverseRefund(transactionID, store: store)
                 order.phase = .localDelivered; try AtelierOrders.save(order)
             } else {
                 switch order.mode {
@@ -267,6 +263,41 @@ struct CoinPack: Codable, Identifiable {
                 }
             }
         }
+    }
+    nonisolated func paymentQueue(_ queue: SKPaymentQueue, didRevokeEntitlementsForProductIdentifiers productIdentifiers: [String]) {
+        Task { @MainActor in await self.reconcileRefunds() }
+    }
+    private func reconcileRefunds() async {
+        guard let store, let account = store.sessionID, let epoch = store.state?.walletInstance else { return }
+        do {
+            let refunds = try await receipt.refundedPurchases()
+            guard store.sessionID == account, store.state?.walletInstance == epoch else { return }
+            let orders = try AtelierOrders.all()
+            for verified in refunds {
+                let item = verified.purchase
+                let matches = orders.filter {
+                    $0.bundleID == Bundle.main.bundleIdentifier && $0.transactionID == item.transactionIdentifier
+                }
+                guard matches.count == 1, let order = matches.first, order.mode == .hostLocal,
+                      order.accountID == account, order.walletInstance == epoch, order.productID == item.productIdentifier,
+                      order.environment?.lowercased() == verified.environment.lowercased(),
+                      store.state?.creditedTransactions.contains(item.transactionIdentifier) == true else { continue }
+                try reverseRefund(item.transactionIdentifier, store: store)
+            }
+        } catch {
+            return
+        }
+    }
+    private func reverseRefund(_ transactionID: String, store: AppStore) throws {
+        guard store.commit({ value in
+            guard !value.revokedTransactions.contains(transactionID) else { return }
+            if let grant = value.transactionGrants?[transactionID], value.creditedTransactions.contains(transactionID) {
+                let reversed = min(value.coins, grant)
+                value.coins -= reversed; value.refundDebt = (value.refundDebt ?? 0) + grant - reversed
+                value.ledger.insert(WalletEntry(title: "Purchase refunded", amount: -reversed, kind: .refund), at: 0)
+            }
+            value.revokedTransactions.insert(transactionID)
+        }) else { throw AtelierHTTP.Failure.storage }
     }
     private func isDelivered(_ order: AtelierOrder) -> Bool {
         (order.mode == .hostLocal && order.phase == .localDelivered) || (order.mode == .ablyServer && order.phase == .serverConfirmed)

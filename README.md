@@ -14,7 +14,7 @@ Current room activity includes authored local messages and gift effects. Private
 
 ## Purchases and submission
 
-Purchases use Apple StoreKit products, Apple's payment sheet and verified transactions. No `.storekit` file or Xcode simulated-purchase configuration is included. Product availability and pricing must be configured in App Store Connect. A transaction is finished only after the corresponding durable delivery state is recorded. Sandbox purchase and backend settlement have not been verified for this revision.
+Purchases use StoreKit 1 (SKProductsRequest, SKMutablePayment and one SKPaymentTransactionObserver), Apple's payment sheet and locally validated Apple receipts through TPInAppReceipt 4.0.2. No `.storekit` file or Xcode simulated-purchase configuration is included. Product availability and pricing must be configured in App Store Connect. A transaction is finished only after the corresponding durable delivery state is recorded. Sandbox purchase and backend settlement have not been verified for this revision.
 
 - [App Store copy and current review-account status](Docs/AppStoreMetadata.md)
 - [In-App Purchase fields and reference USD prices](Docs/IAPProducts.csv)

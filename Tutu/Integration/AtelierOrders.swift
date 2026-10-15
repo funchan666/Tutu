@@ -81,15 +81,21 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
         let environment: String
         let purchase: InAppPurchase
     }
-    func verified(transactionID: String, productID: String, quantity: Int, allowRefresh: Bool) async throws -> Verified {
+    func verified(transactionID: String, productID: String, quantity: Int, canRefresh: () -> Bool) async throws -> Verified {
         do { return try await validate(transactionID: transactionID, productID: productID, quantity: quantity) }
         catch {
-            guard allowRefresh else { throw error }
+            guard canRefresh() else { throw error }
             try await refresh()
             return try await validate(transactionID: transactionID, productID: productID, quantity: quantity)
         }
     }
-    private func validate(transactionID: String, productID: String, quantity: Int) async throws -> Verified {
+    func refundedPurchases() async throws -> [Verified] {
+        let (data, environment, receipt) = try await validatedReceipt()
+        return receipt.purchases.filter { $0.cancellationDate != nil }.map {
+            Verified(data: data, environment: environment, purchase: $0)
+        }
+    }
+    private func validatedReceipt() async throws -> (Data, String, AppReceipt) {
         guard let url = Bundle.main.appStoreReceiptURL, let data = try? Data(contentsOf: url), !data.isEmpty else {
             throw TutuFailure.message("Purchased; confirmation is pending. Please do not buy again.")
         }
@@ -104,6 +110,10 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
         guard case .valid = await receipt.validate(), receipt.bundleIdentifier == Bundle.main.bundleIdentifier else {
             throw TutuFailure.message("Apple couldn't verify a purchase. No coins were added.")
         }
+        return (data, environment, receipt)
+    }
+    private func validate(transactionID: String, productID: String, quantity: Int) async throws -> Verified {
+        let (data, environment, receipt) = try await validatedReceipt()
         let matches = receipt.purchases.filter { $0.transactionIdentifier == transactionID }
         guard matches.count == 1, let purchase = matches.first,
               purchase.productIdentifier == productID, purchase.quantity == quantity, quantity > 0,

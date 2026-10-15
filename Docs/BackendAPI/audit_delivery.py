@@ -74,7 +74,7 @@ resource_names={project[project[x]['fileRef']]['path'] for x in resource_ids}
 assert 'EditorialMediaAliases.json' in resource_names
 assert not ({x['resource'] for x in mapping} & resource_names)
 products={o['productName'] for o in project.values() if o.get('isa')=='XCSwiftPackageProductDependency'}
-assert {'Ably','Alamofire'}<=products
+assert {'Ably','Alamofire','TPInAppReceipt'}<=products
 for o in project.values():
  if o.get('isa')=='XCBuildConfiguration' and 'PRODUCT_BUNDLE_IDENTIFIER' in o['buildSettings']:
   assert o['buildSettings']['PRODUCT_BUNDLE_IDENTIFIER']=='com.tutustyleoutfit.lookbook'
@@ -84,5 +84,6 @@ assert 'Docs/BackendAPI' not in (repo/'Tutu.xcodeproj/project.pbxproj').read_tex
 locks=json.loads((repo/'Tutu.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved').read_text())
 versions={x['identity']:x['state']['version'] for x in locks['pins']}
 assert versions['ably-cocoa']=='1.4.0' and versions['alamofire']=='5.12.2'
+assert versions['tpinappreceipt']=='4.0.2'
 assert not any('datasetVersion' in p.read_text() for p in (root/'responses').glob('*.json'))
 print(json.dumps({'interfaces':len(responses),'sourceRecords':len(editorial),'rooms':len(rooms),'comments':30,'mediaReferences':len(media),'targetSwiftFiles':len(source_names),'packages':versions,'result':'Offline artifacts and references consistent; no compilation or runtime verification'},ensure_ascii=False))

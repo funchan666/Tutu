@@ -47,7 +47,7 @@
 | --- | --- | --- |
 | F01 契约 | `contract.json` → 生成器 → `IntegrationContract.swift` / 双模板；`AtelierHTTP.response` | 六路径、七核心入参映射、三 H5 映射、四事件一致；无 datasetVersion。未探测部署。 |
 | F02 内容 | `Gateway.reserve/reloadContent` → 三并行 POST → `AtelierSnapshot.validate` → `Catalog.snapshot` → 原页面 | 完整导出与最终内部 JSON 深比较一致；114 个媒体引用已分类核对（86 个远程地址、28 个本地封面/原创素材）；本地互动独立。未执行 Swift 解码/渲染。 |
-| F03 工程 | `TutuApp` + `project.yml` → 实际 Xcode target | 33 个 Swift 文件在 Sources；Ably/Alamofire products 在 Frameworks；Info/entitlements plist 静态有效，原 build settings 未丢失。未编译/签名。 |
+| F03 工程 | `TutuApp` + `project.yml` → 实际 Xcode target | 33 个 Swift 文件在 Sources；Ably/Alamofire/TPInAppReceipt products 在 Frameworks；Info/entitlements plist 静态有效，原 build settings 未丢失。未编译/签名。 |
 | F04 启动 | `AtelierAppDelegate` → `AtelierPush`；`StartupGateView.task` → `Gateway.start` → `detectEntry/authenticate` | 独立 reachability + 同源 HEAD；APNs continuation 最多 5 秒，取消恰好收尾、迟到 token 留下次；HTTP2xx/401 非空 data 优先 Ably，无有效 token 不降级 A。 |
 | F05 入口 | `WelcomeView` → `reserve/email/guest/apple` → `finish` | 单锁覆盖 Apple 系统授权与后续阶段；游客协议默认勾选、可取消；局部动效尊重 Reduce Motion/前后台。赠币弹窗及触发状态已移除，原奖励保留。 |
 | F06 Ably | `Gateway.connect` → `ConfiguredRealtimeTransport.start` | 强持有 client/channel，先绑定全消息订阅与状态，再 connect；频道来自签名 capability；首次 token 与单个续期、stop completion 接通；Debug 回调、Release 关闭敏感全文。实连未验收。 |
@@ -59,14 +59,15 @@
 
 ## 支付持久化与已知边界
 
-`WalletService.start` 在登录前启动唯一 `Transaction.updates`，并枚举 `Transaction.unfinished`。前台、网络恢复、解锁及原生“检查待处理购买”均可触发恢复。订单 Keychain namespace 固定 `com.tutu.style.purchase-orders`，按属性枚举再逐条解码，坏记录保留隔离，存储失败不会当空库清除。
+`WalletService.start` 在登录前注册唯一 `SKPaymentTransactionObserver`，并枚举 `SKPaymentQueue.default().transactions`。商品查询使用 `SKProductsRequest`，价格来自 `SKProduct.price/priceLocale`，付款使用 `SKMutablePayment`。已移除 StoreKit 2 购买与交易监听。前台、网络恢复、解锁及原生“检查待处理购买”均可触发恢复。订单 Keychain namespace 固定 `com.tutu.style.purchase-orders`，按属性枚举再逐条解码，坏记录保留隔离，存储失败不会当空库清除。
 
-- 原生 `hostLocal`：付款前存模式、SKU、账号 UUID、walletInstance、版本/设备/App；保留原账号 UUID 的 appAccountToken 语义。通过 Apple 验签后，金币变更与 creditedTransactions/transactionGrants 在同一原子 profile 文件提交，再写/readback `localDelivered` 才 finish。
-- 后台 `ablyServer`：付款前还冻结订单号、消息 ID、origin、确认路径和字段数组，appAccountToken 使用逐单 UUID。成功回放可由 UUID 找回原单；POST 仅五字符串 `look_edition / atelier_stamp / apple_stitch / receipt_fabric / checkout_thread`，收据是实际 App receipt 的 Base64，不是 JWS。HTTP2xx + 整数0后保存/readback `serverConfirmed` 才 finish，不调用本地充值。
-- `processing` 按 App/环境/transactionId 合并；交互入口等待正在处理的同一交易，避免 Apple 返回早于确认时提前解除遮罩。商品查询及确认有有限超时，Apple 支付 sheet 不自行计时截断。取消/pending/失败或转待确认释放交互锁；待确认不表示到账。
+- 原生 `hostLocal`：付款前存模式、SKU、账号 UUID、walletInstance、版本/设备/App；保留旧 accountToken 与账号归属；新单另存逐单 paymentUsername 并传入 SKMutablePayment.applicationUsername。通过 TPInAppReceipt 4.0.2 的 Apple 证书链、收据创建时间签名、设备哈希及 App 元数据验证，并核对交易号、SKU 和数量后，金币变更与 creditedTransactions/transactionGrants 在同一原子 profile 文件提交，再写/readback `localDelivered` 才 finish。
+- 后台 `ablyServer`：付款前还冻结订单号、消息 ID、origin、确认路径和字段数组，新单 applicationUsername 使用逐单 UUID；旧后台单仍按原 accountToken UUID 恢复。成功回放可由 UUID 找回原单；POST 仅五字符串 `look_edition / atelier_stamp / apple_stitch / receipt_fabric / checkout_thread`，收据是实际 App receipt 的 Base64，不是 JWS。HTTP2xx + 整数0后保存/readback `serverConfirmed` 才 finish，不调用本地充值。
+- `processing` 按 App/transactionId 串行消费，已付款后从已验签收据确定环境并与原单比对；同交易存在多个环境/订单关联时隔离，不猜测。交互锁保留到本单回调处理结束，重复回调不会提前解除遮罩。商品查询及确认有有限超时，Apple 支付 sheet 不自行计时截断。取消/deferred/失败或转待确认释放交互锁；待确认不表示到账。
 - 原生历史已交付但没有新账本的交易，仅在原账号的可信 creditedTransactions 与 transactionGrants 存在时迁为 `localDelivered`，不从 SKU 猜来源。
-- **原生关联缺口**：因为保留既有账号级 appAccountToken，若 Apple 成功与 transactionId 写入 Keychain 之间崩溃，且没有原子钱包交付证据，不能唯一推导该次原生订单。此时保留未完成交易待核对，不盲目匹配同 SKU。后台逐单 UUID 可恢复此窗口。历史提前 finish/丢关联的交易也不能保证追回。
+- **历史原生关联缺口**：旧版账号级 appAccountToken 没有被重写，旧单若在 Apple 成功与 transactionId 落盘之间崩溃、又没有原子钱包交付证据，仍不能唯一推导订单。新单的 applicationUsername 单独保存逐单 UUID，可在 Apple 回放保留该值时关联；若 Apple 回放缺绑定且账本没有 transactionId，则保留待核对，不盲目匹配同 SKU。历史提前 finish/丢关联的交易也不能保证追回。
 - **重装边界**：Keychain 是否保留取决于同 App/访问配置/设备状态；本地消耗型余额不是 Keychain 订单记录。旧钱包文件丢失时，新 walletInstance 不接收旧单自动重发。`localDelivered` 只证明过去交付；不用于全量重建余额。未知、旧账号或证据丢失的交易保留，不能宣称无条件不丢单。
+- **SK1 验证与退款边界**：仅接受 Apple Production/Sandbox 收据，不接受 Xcode/LocalTesting 收据兜底。原目录九个 SKU 仍须在 App Store Connect 配成消耗品；SKProduct 无商品类型属性，receipt 类型存在时复核、旧收据未知类型不伪称已确认。启动与前台可检查已签名收据中的撤销记录，原钱包幂等冲销；已 finish 的消耗品可能不再留在收据，且 SK1 不提供等价的消耗品退款实时流，完整退款对账需要服务端 Apple 通知。依赖新增的最终包体增量尚未归档测量。
 - 后台须按 App/环境/交易幂等并校验归属；确认响应丢失后客户端只重验原单，不再次购买。退出不销毁已提交 Apple 的单，也不会恢复旧账号登录；旧交易反馈不会弹到新账号。
 
 ## 扩展实时协议
@@ -76,6 +77,8 @@
 ## 已执行与未执行
 
 已执行：离线导出、最终双文件及其内部 JSON 解析/深比较、源 SHA256/ID/顺序核对、114 项媒体引用、target 成员和 SDK product 检查、权限/Scheme/plist 检查、XcodeGen 工程生成、SPM 依赖解析、`git diff --check`。维护命令：`python3 Docs/BackendAPI/audit_delivery.py`。
+
+本次 StoreKit 1 迁移仅完成依赖解析、源码/API 对照及离线配置核对；未执行购买。支付接口、商品 ID 和双模板保持不变，无需为此次迁移重新导入控制台。
 
 未执行：Swift 编译/类型检查/测试、模拟器或真机运行、线上接口、TokenRequest 签名有效性、Ably 会话/续期、WKWebView 真实页面/媒体授权、APNs 真机注册、StoreKit 沙盒/服务器到账、退出/重装恢复、视觉截图。已移除项目自有 Swift 的普通独立行注释，保留素材、许可证、部署来源与维护文档；没有修改其他项目。
 

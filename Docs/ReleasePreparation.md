@@ -22,7 +22,9 @@ Release settings now explicitly enable COPY_PHASE_STRIP, STRIP_INSTALLED_PRODUCT
 
 ## StoreKit evidence
 
-There is no .storekit file, SKTestSession integration or StoreKitConfigurationFileReference in the project. WalletService requests Apple Product records, requires a consumable product, calls Product.purchase, accepts verified transactions and persists delivery before finishing. User cancellation, pending approval and errors do not fabricate purchased coins. Initial rewards and check-in rewards are distinct from purchase grants.
+There is no .storekit file, SKTestSession integration or StoreKitConfigurationFileReference in the project. WalletService now uses StoreKit 1: SKProductsRequest, SKMutablePayment and one application-level SKPaymentTransactionObserver. TPInAppReceipt 4.0.2 validates the Apple receipt chain, signature, device hash and app metadata before transaction/SKU/quantity checks and delivery. Only Apple production/sandbox receipts are accepted; local Xcode receipts cannot credit the wallet. The catalog must be configured as consumable products in App Store Connect; SKProduct itself has no product-type property. Durable delivery is read back before finishTransaction. Existing Keychain records remain compatible; new purchases carry a per-order applicationUsername UUID. User cancellation, pending approval and errors do not fabricate purchased coins. Initial rewards and check-in rewards are distinct from purchase grants.
+
+Receipt-based refund reconciliation is retained where a verified cancellation record is available. StoreKit 1 cannot guarantee notifications for finished consumable refunds; full refund reconciliation needs Apple server notifications. The added receipt-validation dependency has been resolved, but its compiled size and purchase behavior have not been measured or tested.
 
 The nine current product IDs, coin quantities and reference USD amounts match IAPProducts.csv and the backend content response. Names and descriptions comply with the documented 30/45 character limits. Prices in this sheet are configuration values; actual App Store Connect configuration and storefront prices have not been verified.
 
