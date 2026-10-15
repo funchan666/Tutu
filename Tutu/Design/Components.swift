@@ -143,7 +143,6 @@ struct MainHeading<Trailing: View>: View {
         }.frame(height: 44).padding(.horizontal, 16).padding(.top, 4).padding(.bottom, 8)
     }
 }
-/// A shared inbox destination for all five tabs, separate from member profiles.
 struct InboxEntryButton: View {
     var body: some View {
         NavigationLink(value: Route.inbox) {
@@ -165,7 +164,12 @@ struct MediaArtwork: View {
     var body: some View {
         GeometryReader { geo in
             Group {
-                if let url = store.mediaURL(reference), let image = UIImage(contentsOfFile: url.path) { Image(uiImage: image).resizable() }
+                if let url = store.mediaURL(reference), !url.isFileURL {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image { image.resizable().aspectRatio(contentMode: mode) }
+                        else { Image("wardrobe-placeholder").resizable().aspectRatio(contentMode: mode) }
+                    }
+                } else if let url = store.mediaURL(reference), let image = UIImage(contentsOfFile: url.path) { Image(uiImage: image).resizable() }
                 else { Image(reference.isEmpty || reference.hasPrefix("media/") ? "wardrobe-placeholder" : reference).resizable() }
             }.aspectRatio(contentMode: mode).frame(width: geo.size.width, height: geo.size.height, alignment: alignment).clipped()
         }.accessibilityLabel(reference == "wardrobe-placeholder" ? "Wardrobe illustration" : "Photo")
@@ -230,7 +234,6 @@ extension View {
 }
 
 
-/// Covers every pushed content surface, including destinations opened before a safety action.
 private struct ModerationVisibility: ViewModifier {
     let hidden: Bool
     func body(content: Content) -> some View {
@@ -245,7 +248,6 @@ extension View {
     func moderationVisibility(hidden: Bool) -> some View { modifier(ModerationVisibility(hidden: hidden)) }
 }
 
-/// Only app-owned labels use this initializer; member names, posts and chat text stay verbatim.
 extension Text {
     init(ui value: String) { self.init(LocalizedStringKey(value)) }
 }
@@ -280,7 +282,6 @@ struct AccountExitOverlay: View {
 }
 
 
-/// Shared live status artwork. Motion is decorative, never an audio-level meter.
 struct RoomLiveBadge: View {
     @Environment(\.scenePhase) private var scene
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

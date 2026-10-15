@@ -5,9 +5,9 @@
       "id": "film-03",
       "name": "Luca Bennett",
       "handle": "luca.afterhours",
-      "avatar": "bundle/editorial-photo-045.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DdzLHFTiT1o.jpg",
       "photos": [
-        "bundle/editorial-photo-045.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DdzLHFTiT1o.jpg",
         "bundle/editorial-video-03.jpg"
       ],
       "style": "Minimalist",
@@ -57,9 +57,9 @@
       "id": "film-05",
       "name": "Nora Ellis",
       "handle": "nora.on.the.way",
-      "avatar": "bundle/editorial-photo-004.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Cx0kqFPAiX6.jpg",
       "photos": [
-        "bundle/editorial-photo-004.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Cx0kqFPAiX6.jpg",
         "bundle/editorial-video-05.jpg"
       ],
       "style": "Streetwear",
@@ -115,9 +115,9 @@
       "id": "film-06",
       "name": "Adrian Cole",
       "handle": "adrian.wears",
-      "avatar": "bundle/editorial-photo-028.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd15BYGEeNh.jpg",
       "photos": [
-        "bundle/editorial-photo-028.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd15BYGEeNh.jpg",
         "bundle/editorial-video-06.jpg"
       ],
       "style": "Chic",
@@ -179,9 +179,9 @@
       "id": "film-08",
       "name": "Miles Turner",
       "handle": "miles.offduty",
-      "avatar": "bundle/editorial-photo-022.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbDxPnbDd_M.jpg",
       "photos": [
-        "bundle/editorial-photo-022.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbDxPnbDd_M.jpg",
         "bundle/editorial-video-08.jpg"
       ],
       "style": "Daily",
@@ -231,9 +231,9 @@
       "id": "film-10",
       "name": "Felix Hart",
       "handle": "felix.streetnotes",
-      "avatar": "bundle/editorial-photo-061.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeUJGJqEooW.jpg",
       "photos": [
-        "bundle/editorial-photo-061.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeUJGJqEooW.jpg",
         "bundle/editorial-video-10.jpg"
       ],
       "style": "Streetwear",
@@ -289,9 +289,9 @@
       "id": "film-12",
       "name": "Theo Parker",
       "handle": "theo.getsdressed",
-      "avatar": "bundle/editorial-photo-046.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeAUZO1lnCq.jpg",
       "photos": [
-        "bundle/editorial-photo-046.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeAUZO1lnCq.jpg",
         "bundle/editorial-video-12.jpg"
       ],
       "style": "Vintage",

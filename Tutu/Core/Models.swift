@@ -36,14 +36,13 @@ struct LookComment: Codable, Identifiable {
     var created = Date()
 }
 enum RoomCategories {
-    static let options = ["Daily", "Streetwear", "Minimalist", "Chic"]
-    static let filters = ["All"] + options
-    // Older locally saved rooms did not have a fashion category. Keep them discoverable.
+    static var options: [String] { Catalog.snapshot?.settings.roomCategories ?? [] }
+    static var filters: [String] { ["All"] + options }
     static func resolved(_ value: String) -> String { options.contains(value) ? value : "Daily" }
 }
 enum VoiceRoomTopics {
-    static let options = ["Outfit Tips", "Style Talk", "Vintage Finds"]
-    static let filters = ["All"] + options
+    static var options: [String] { Catalog.snapshot?.settings.voiceTopics ?? [] }
+    static var filters: [String] { ["All"] + options }
     static func resolved(_ topic: String?) -> String {
         guard let topic, options.contains(topic) else { return "Style Talk" }
         return topic
@@ -56,7 +55,6 @@ struct StyleRoom: Codable, Identifiable, Hashable {
     var category: String
     var voice: Bool
     var voiceTopic: String? = nil
-    // Explicit activity state. A saved room alone does not mean its host is broadcasting.
     var isBroadcasting: Bool? = nil
     var video: String? = nil
     var viewerCount: Int? = nil
@@ -80,17 +78,12 @@ struct ConversationMessage: Codable, Identifiable {
     var status: String = "Not sent"
     var replySource: String? = nil
 }
-struct Gift: Identifiable, Hashable {
+struct Gift: Codable, Identifiable, Hashable {
     let id: String
     let name: String
     let price: Int
     var image: String { "gift-" + id }
-    static let all: [Gift] = [
-        .init(id: "microphone", name: "Pop Star", price: 40), .init(id: "heart", name: "Heart Beat", price: 60),
-        .init(id: "bear", name: "Sweet Bear", price: 100), .init(id: "castle", name: "Dream Castle", price: 1200),
-        .init(id: "car", name: "Night Ride", price: 1800), .init(id: "flowers", name: "Pink Blooms", price: 160),
-        .init(id: "star", name: "Lucky Star", price: 240), .init(id: "music", name: "Mix Tape", price: 320)
-    ]
+    static var all: [Gift] { Catalog.snapshot?.settings.gifts ?? [] }
 }
 struct WalletEntry: Codable, Identifiable {
     enum Kind: String, Codable { case spending, credit, refund }
@@ -102,7 +95,6 @@ struct WalletEntry: Codable, Identifiable {
     var coinsSpent: Int {
         guard amount < 0, amount != Int.min else { return 0 }
         if let kind { return kind == .spending ? -amount : 0 }
-        // Old records have no kind. Recognize only the existing purchase titles.
         if title == "Runway Ribbon" { return -amount }
         for gift in Gift.all {
             let prefix = gift.name + " ×"
@@ -136,9 +128,9 @@ struct UserPreferences: Codable {
 }
 struct ProfileState: Codable {
     var person: Person
+    var social: [String: AtelierSocialState]? = nil
     var following = Set<String>()
     var followers = Set<String>()
-    // Catalog relationships never authorize real communications.
     var confirmedMutual = Set<String>()
     var blocked = Set<String>()
     var likedLooks = Set<String>()
@@ -152,7 +144,6 @@ struct ProfileState: Codable {
     var stylist: [ConversationMessage] = []
     var stylistFreeUsed: Int? = nil
     var stylistCompletedTurns: Set<String>? = nil
-    // Optional additions keep existing profiles decodable.
     var roomMessages: [String: [RoomMessage]]? = nil
     var hiddenContent: Set<ModerationContent>? = nil
     var welcomeEligible: Bool? = nil
@@ -161,6 +152,7 @@ struct ProfileState: Codable {
     var ownedCosmetics: Set<String>? = nil
     var equippedFrame: String? = nil
     var featuredGift: String? = nil
+    var walletInstance: UUID? = nil
     var transactionGrants: [String: Int]? = nil
     var refundDebt: Int? = nil
     var coins = 0
@@ -233,74 +225,29 @@ struct EditorialItem: Decodable {
     let reservedForProfile: Bool?
 }
 enum Catalog {
-    static let items: [EditorialItem] = {
-        guard let url = Bundle.main.url(forResource: "EditorialCatalog", withExtension: "json"),
-              let data = try? Data(contentsOf: url), let items = try? JSONDecoder().decode([EditorialItem].self, from: data) else { return [] }
-        return items
-    }()
-    static let profileAvatar = items.first(where: { $0.reservedForProfile == true })?.image ?? "brand-mascot"
-    static let reservedProfileIDs = Set(items.filter { $0.reservedForProfile == true }.map(\.id))
-    static let people: [Person] = items.filter { $0.reservedForProfile != true }.map { item in
+    static var snapshot: AtelierSnapshot?
+    static var items: [EditorialItem] { snapshot?.editorial ?? [] }
+    static var profileAvatar: String { items.first(where: { $0.reservedForProfile == true })?.image ?? "brand-mascot" }
+    static var reservedProfileIDs: Set<String> { Set(items.filter { $0.reservedForProfile == true }.map(\.id)) }
+    static var people: [Person] { items.filter { $0.reservedForProfile != true }.map { item in
         Person(id: item.id, name: item.name, handle: item.handle,
                birthday: item.profile?.birthDate, country: item.profile?.country ?? "", city: item.profile?.city,
                gender: item.profile?.gender ?? "", bio: item.profile?.bio ?? "A personal edit of everyday style.",
                interests: item.profile?.interests ?? [item.style], avatar: item.avatar ?? item.image, photos: item.photos ?? [item.image])
     }
-    static let rooms: [StyleRoom] = {
-        // Six supplied videos, selected for readable first-frame covers.
-        // Viewer counts are fixed local presentation values, not live presence statistics.
-        let selections = [
-            ("film-01", "Soft Tailoring", "Chic", 48),
-            ("film-02", "Street Style Crew", "Streetwear", 56),
-            ("film-04", "After Dark Layers", "Streetwear", 45),
-            ("film-07", "A Walk in Style", "Daily", 52),
-            ("film-09", "Everyday Pairings", "Minimalist", 47),
-            ("film-11", "City Light Look", "Daily", 54)
-        ]
-        let liveRooms: [StyleRoom] = selections.compactMap { id, title, category, viewerCount in
-            guard let item = items.first(where: { $0.id == id }), let video = item.video else { return nil }
-            return StyleRoom(id: "room-\(id)", hostID: id, title: title, category: category,
-                             voice: false, isBroadcasting: true, video: video, viewerCount: viewerCount, cover: item.image)
-        }
-        // Voice-room covers use supplied host portraits; counts are local presentation data.
-        let voiceSelections: [(hostID: String, title: String, topic: String, count: Int)] = [
-            ("lily", "Vintage finds & coffee", "Vintage Finds", 48),
-            ("ava", "Everyday outfit chat", "Outfit Tips", 52),
-            ("editorial-001", "Color stories", "Outfit Tips", 46),
-            ("editorial-005", "The layering lounge", "Outfit Tips", 55),
-            ("editorial-008", "Weekend wardrobe", "Style Talk", 49),
-            ("noah", "City style conversations", "Style Talk", 51),
-            ("editorial-011", "Vintage closet favorites", "Vintage Finds", 47),
-            ("editorial-013", "Minimal mood", "Style Talk", 54),
-            ("mia", "Streetwear styling session", "Outfit Tips", 53),
-            ("ella", "Your capsule wardrobe", "Outfit Tips", 49),
-            ("editorial-007", "Sneakers meet tailoring", "Outfit Tips", 51),
-            ("editorial-009", "What are you wearing today?", "Style Talk", 48),
-            ("editorial-010", "Coffee break style chat", "Style Talk", 54),
-            ("editorial-024", "After-hours outfit club", "Style Talk", 50),
-            ("leo", "Denim through the decades", "Vintage Finds", 52),
-            ("editorial-012", "Thrift finds worth keeping", "Vintage Finds", 46),
-            ("editorial-014", "Retro accessories club", "Vintage Finds", 53),
-            ("editorial-025", "The secondhand style edit", "Vintage Finds", 50)
-        ]
-        let voiceRooms: [StyleRoom] = voiceSelections.compactMap { selection in
-            guard let person = people.first(where: { $0.id == selection.hostID }) else { return nil }
-            return StyleRoom(id: "room-\(selection.hostID)", hostID: selection.hostID, title: selection.title,
-                             category: RoomCategories.resolved(person.interests.first ?? "Daily"),
-                             voice: true, voiceTopic: selection.topic, isBroadcasting: true, viewerCount: selection.count, cover: person.avatar)
-        }
-        return liveRooms + voiceRooms
-    }()
-    static let looks: [Look] = items.filter { $0.reservedForProfile != true }.map { item in
+    }
+    static var rooms: [StyleRoom] { snapshot?.rooms ?? [] }
+    static var looks: [Look] { items.filter { $0.reservedForProfile != true }.map { item in
         Look(id: "look-\(item.id)", authorID: item.id, text: item.caption ?? (item.style + " inspiration. Find the details that feel like you."), media: [item.image], video: item.video,
              created: Date(timeIntervalSince1970: item.publishedAt ?? 1791792000), category: item.style)
     }
-    // The other six supplied videos belong to live rooms. Never mix them into Discover.
-    static let discoverIDs = ["film-03", "film-05", "film-06", "film-08", "film-10", "film-12"].map { "look-" + $0 }
-    static let comments: [LookComment] = items.flatMap { item in
+    }
+    static var discoverIDs: [String] { snapshot?.settings.discoverIDs ?? [] }
+    static var comments: [LookComment] { items.flatMap { item in
         (item.comments ?? []).map {
             LookComment(id: $0.id, postID: "look-\(item.id)", authorID: $0.authorID, text: $0.text,
                         created: Date(timeIntervalSince1970: $0.createdAt))
         }
+    }
     }
 }

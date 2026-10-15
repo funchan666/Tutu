@@ -1,40 +1,48 @@
-"""Package every supplied content file unchanged; derive video posters only."""
+"""Normalize supplied media to CDN references without copying or downloading binaries.
+
+ContentMapping retains original filenames and SHA256 provenance after local removal.
+EditorialCatalog is the maintained source of identities and authored content; this
+script preserves all records and only replaces known legacy media references.
+"""
 from pathlib import Path
-import json, shutil, subprocess, hashlib
-ROOT=Path(__file__).resolve().parents[1]
-DEST=ROOT/'Tutu/Resources/Content'; DEST.mkdir(parents=True,exist_ok=True)
-photos=sorted((ROOT/'picss').glob('*.jpg')); videos=sorted((ROOT/'videoss').glob('*.mp4'))
-# Separate editorial identities for unrelated files; no visual identity matching.
-first=[1,2,3,27,5,21]
-order=first+[i for i in range(len(photos)) if i not in first]
-primary=[('mia','Mia'),('lily','Lily'),('ella','Ella'),('noah','Noah'),('ava','Ava'),('leo','Leo')]
-names=['Harper','Riley','Alex','Jordan','Quinn','Sky','Avery','Taylor','Blair','Sage','Cameron','Morgan','Casey','Reese','Rowan','Robin','Jamie','Drew','Charlie','Parker','Remy','River','Emery','Phoenix']
-# Curated supplied portraits for room hosts; these are editorial associations, not identity matching.
-host_portraits={1:31,2:45,4:61,7:24,9:28,11:3}
-host_profiles=json.loads((ROOT/'Scripts/host_profiles.json').read_text())["profiles"]
-discover_content={item["id"]: item for item in json.loads((ROOT/"Scripts/discover_content.json").read_text())["items"]}
-records=[];manifest=[]
-for n,index in enumerate(order):
-    src=photos[index]; name=f'editorial-photo-{index+1:03}.jpg';shutil.copy2(src,DEST/name)
-    pid,display=primary[n] if n<6 else (f'editorial-{index+1:03}',names[(n-6)%len(names)])
-    records.append(dict(id=pid,name=display,handle=f'{display.lower()}.edit{index+1:02}',image='bundle/'+name,video=None,style=['Streetwear','Vintage','Minimalist','Daily'][n%4]))
-    # Reserve this supplied photo exclusively for the local account avatar.
-    if index + 1 == 70: records[-1]["reservedForProfile"] = True
-    manifest.append(dict(source=str(src.relative_to(ROOT)),resource=name,personID=pid,sha256=hashlib.sha256(src.read_bytes()).hexdigest()))
-for n,src in enumerate(videos):
-    name=f'editorial-video-{n+1:02}.mp4'; poster=f'editorial-video-{n+1:02}.jpg';shutil.copy2(src,DEST/name)
-    # The six homepage rooms use the first decoded frame, without a seek.
-    seek=[] if n+1 in {1,2,4,7,9,11} else ['-ss','0.5']
-    subprocess.run(['ffmpeg','-y','-v','error',*seek,'-i',str(src),'-frames:v','1','-q:v','2',str(DEST/poster)],check=True)
-    pid=f'film-{n+1:02}';display=names[n]
-    record=dict(id=pid,name=display,handle=f'{display.lower()}.motion{n+1:02}',image='bundle/'+poster,video='bundle/'+name,style=['Daily','Streetwear','Minimalist','Vintage'][n%4])
-    if n+1 in host_portraits:
-        record["avatar"]=f'bundle/editorial-photo-{host_portraits[n+1]:03}.jpg'
-        record["photos"]=[record["avatar"],record["image"]]
-    if pid in host_profiles: record["profile"]=host_profiles[pid]
-    if pid in discover_content: record.update(discover_content[pid])
-    records.insert(min(n*5+3,len(records)),record)
-    manifest.append(dict(source=str(src.relative_to(ROOT)),resource=name,poster=poster,posterTime=0 if n+1 in {1,2,4,7,9,11} else 0.5,personID=pid,sha256=hashlib.sha256(src.read_bytes()).hexdigest()))
-(DEST/'EditorialCatalog.json').write_text(json.dumps(records,indent=2)+'\n')
-(ROOT/'Docs/ContentMapping.json').write_text(json.dumps(manifest,indent=2)+'\n')
-print(f'Packaged {len(photos)} photos + {len(videos)} videos; {len(records)} separate editorial identities.')
+from urllib.parse import quote
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+BASE = 'https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/'
+mapping_path = ROOT / 'Docs/ContentMapping.json'
+mapping = json.loads(mapping_path.read_text())
+aliases = {}
+for row in mapping:
+    source = Path(row['source'])
+    folder = {'picss': 'pics', 'videoss': 'videoss'}[source.parts[0]]
+    url = BASE + folder + '/' + quote(source.name)
+    row['remoteURL'] = url
+    row['storage'] = 'remote'
+    aliases['bundle/' + row['resource']] = url
+assert len(aliases) == len(mapping), 'Duplicate legacy media references'
+
+def normalize(value):
+    if isinstance(value, str):
+        return aliases.get(value, value)
+    if isinstance(value, list):
+        return [normalize(item) for item in value]
+    if isinstance(value, dict):
+        return {key: normalize(item) for key, item in value.items()}
+    return value
+
+def save(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+for relative in [
+    'Docs/BackendAPI/sources/EditorialCatalog.json',
+    'Docs/HomeRoomMapping.json',
+    'Docs/VoiceRoomMapping.json',
+    'Docs/RoomHostCards.json',
+    'Scripts/discover_content.json',
+]:
+    path = ROOT / relative
+    save(path, normalize(json.loads(path.read_text())))
+save(mapping_path, mapping)
+save(ROOT / 'Tutu/Resources/Content/EditorialMediaAliases.json', aliases)
+print(f'Normalized {len(aliases)} remote media references; no binaries copied or downloaded.')

@@ -1,0 +1,59 @@
+# Synthetic request values only; do not send as a real purchase.
+### loginMethods
+POST https://fjnvs.fdhewhf.top/tutu/arrival/entry
+Accept: application/json
+Content-Type: application/json
+
+{
+  "look_edition": "1.0",
+  "ribbon_signal": "",
+  "atelier_stamp": "fixture-installation-id",
+  "runway_delivery": 2
+}
+
+### authenticate
+POST https://fjnvs.fdhewhf.top/tutu/passport/fitting-pass
+Accept: application/json
+Content-Type: application/json
+
+{
+  "look_edition": "1.0",
+  "ribbon_signal": "",
+  "atelier_stamp": "fixture-installation-id",
+  "runway_delivery": 2
+}
+
+### confirmPurchase
+POST https://fjnvs.fdhewhf.top/tutu/wallet/settlement
+Accept: application/json
+Content-Type: application/json
+
+{
+  "look_edition": "1.0",
+  "atelier_stamp": "fixture-installation-id",
+  "apple_stitch": "fixture-apple-transaction",
+  "receipt_fabric": "SYNTHETIC_RECEIPT_NOT_VALID_FOR_PAYMENT",
+  "checkout_thread": "fixture-backend-order"
+}
+
+### editorial
+POST https://fjnvs.fdhewhf.top/tutu/catalog/editorial
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+### rooms
+POST https://fjnvs.fdhewhf.top/tutu/catalog/rooms
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+### atelier
+POST https://fjnvs.fdhewhf.top/tutu/catalog/atelier
+Accept: application/json
+Content-Type: application/json
+
+{}
+

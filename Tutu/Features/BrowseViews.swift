@@ -47,7 +47,7 @@ struct FeaturedRoomsCarousel: View {
     @State private var selection = 0
     @State private var visible = false
     @State private var lastInteraction = Date()
-    private var canRotate: Bool { visible && scene == .active && !reduceMotion && !voiceOver && !store.welcomeVisible && rooms.count > 1 }
+    private var canRotate: Bool { visible && scene == .active && !reduceMotion && !voiceOver && rooms.count > 1 }
     var body: some View {
         if !rooms.isEmpty {
             ZStack(alignment: .bottom) {
@@ -56,7 +56,6 @@ struct FeaturedRoomsCarousel: View {
                         NavigationLink(value: Route.room(room.id)) {
                             GeometryReader { geometry in
                                 ZStack(alignment: .trailing) {
-                                    // The portrait stays intact; its blurred duplicate fills the wide stage.
                                     MediaArtwork(reference: room.cover).blur(radius: 18)
                                     MediaArtwork(reference: room.cover, mode: .fit)
                                         .frame(width: geometry.size.width * 0.58, height: geometry.size.height)

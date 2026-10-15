@@ -11,9 +11,24 @@ settings:
     GENERATE_INFOPLIST_FILE: NO
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     ENABLE_USER_SCRIPT_SANDBOXING: YES
+packages:
+  Ably:
+    url: https://github.com/ably/ably-cocoa.git
+    exactVersion: 1.4.0
+  Alamofire:
+    url: https://github.com/Alamofire/Alamofire.git
+    exactVersion: 5.12.2
 targets:
   Tutu:
     type: application
+    dependencies:
+      - package: Ably
+        product: Ably
+      - package: Alamofire
+    attributes:
+      SystemCapabilities:
+        com.apple.Push:
+          enabled: 1
     platform: iOS
     sources:
       - path: Tutu
@@ -25,6 +40,8 @@ targets:
       path: Tutu/Info.plist
       properties:
         CFBundleDisplayName: Tutu
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [im.seex.sao2]
         CFBundleLocalizations: [en, zh-Hans, es, fr, ja]
         UIAppFonts: [TutuOutfit-Regular.ttf, TutuOutfit-Medium.ttf, TutuOutfit-SemiBold.ttf, TutuOutfit-Bold.ttf]
         CFBundleShortVersionString: '1.0.0'
@@ -42,19 +59,37 @@ targets:
       path: Tutu/Tutu.entitlements
       properties:
         com.apple.developer.applesignin: [Default]
+        aps-environment: $(TUTU_APNS_ENVIRONMENT)
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.tutu.style
+        PRODUCT_BUNDLE_IDENTIFIER: im.seex.sao2
+        TARGETED_DEVICE_FAMILY: 1
+        SUPPORTED_PLATFORMS: iphoneos iphonesimulator
+        DEVELOPMENT_TEAM: JPTS6M4T5B
+        CODE_SIGN_IDENTITY: Apple Development
+        PROVISIONING_PROFILE_SPECIFIER: ""
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
         CODE_SIGN_STYLE: Automatic
         "CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]": Tutu/Tutu-Simulator.entitlements
+        TUTU_APNS_ENVIRONMENT: development
         MARKETING_VERSION: '1.0.0'
         CURRENT_PROJECT_VERSION: '1'
+      configs:
+        Release:
+          TUTU_APNS_ENVIRONMENT: production
+          COPY_PHASE_STRIP: YES
+          STRIP_INSTALLED_PRODUCT: YES
+          STRIP_SWIFT_SYMBOLS: YES
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+          ENABLE_TESTABILITY: NO
 schemes:
   Tutu:
     build:
       targets:
         Tutu: all
     run:
-      config: Debug
+      config: Release
     archive:
       config: Release

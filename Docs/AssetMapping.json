@@ -699,7 +699,7 @@
       40,
       40
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "empty-state",
@@ -753,7 +753,7 @@
       716,
       104
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "voice-banner",
@@ -762,7 +762,7 @@
       716,
       104
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "gift-microphone",
@@ -843,7 +843,7 @@
       204,
       288
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "style-streetwear",
@@ -852,7 +852,7 @@
       204,
       288
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "style-vintage",
@@ -861,7 +861,7 @@
       204,
       288
     ],
-    "bundled": true
+    "bundled": false
   },
   {
     "asset": "profile-background",

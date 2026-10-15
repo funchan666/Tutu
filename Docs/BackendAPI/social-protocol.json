@@ -1,0 +1,99 @@
+{
+  "namespace": "tutu",
+  "transport": "Authenticated Ably channel from TokenRequest.capability",
+  "version": 1,
+  "sender": {
+    "clientId": "serve",
+    "missingAllowed": true,
+    "selfEcho": "app is ignored"
+  },
+  "envelope": {
+    "stitch": "AtelierBulletin | RunwayPresence | CircleLookPublished",
+    "thread": "stable nonempty business ID, max 128 characters",
+    "issued": "integer Unix milliseconds, at most 30 seconds in future",
+    "until": "integer Unix milliseconds, strictly after issued, unexpired",
+    "detail": "object, max 60000 bytes"
+  },
+  "events": {
+    "AtelierBulletin": {
+      "detail": {
+        "heading": "string, 1..160 characters",
+        "copy": "string, max 4000 characters"
+      },
+      "ttl": "up to 7 days; read only on actual system-message selection"
+    },
+    "RunwayPresence": {
+      "detail": {
+        "member": "existing catalog person ID",
+        "online": "JSON boolean",
+        "revision": "nonnegative monotonic integer"
+      },
+      "ttl": "5..300 seconds; blocked or old version ignored; expires to offline"
+    },
+    "CircleLookPublished": {
+      "detail": {
+        "id": "stable post ID",
+        "authorID": "existing catalog person ID",
+        "text": "string, max 4000 characters",
+        "media": [
+          "asset, bundle/filename, or full HTTP(S) URL; max 12"
+        ],
+        "video": "optional media reference",
+        "created": "Unix milliseconds",
+        "category": "string",
+        "localOnly": false
+      },
+      "ttl": "up to 7 days; never overrides likes/comments; existing post IDs ignored"
+    }
+  },
+  "receipt": {
+    "name": "AtelierReceipt",
+    "data": {
+      "stitch": "AtelierReceipt",
+      "receipt": "thread:sequence, stable across retries",
+      "thread": "original business ID",
+      "kind": "original stitch",
+      "state": "success | failed",
+      "detail": {
+        "stage": "received | applied | displayed | read | ignored | expired | failed",
+        "sequence": "1 received / 2 applied / 3 displayed / 4 read / 5 terminal"
+      }
+    }
+  },
+  "ack": {
+    "name": "AtelierReceiptAccepted",
+    "data": {
+      "stitch": "AtelierReceiptAccepted",
+      "receipt": "exact receipt ID"
+    },
+    "rule": "Only backend ack removes durable outbox entry; duplicate receipts must be acknowledged again; ack has no ack"
+  },
+  "replay": {
+    "name": "AtelierReplayRequest",
+    "data": {
+      "stitch": "AtelierReplayRequest",
+      "revision": 1,
+      "request": "new UUID",
+      "reason": "session | attached | foreground | periodic",
+      "pending": [
+        "received but not applied thread IDs"
+      ],
+      "supported": [
+        "AtelierBulletin",
+        "RunwayPresence",
+        "CircleLookPublished"
+      ]
+    },
+    "rule": "attach/reconnect/foreground and at most periodic 60-second request; server preserves original IDs and expiry"
+  },
+  "limits": {
+    "envelopeBytes": 65536,
+    "recordsPerScope": 500,
+    "pendingReceiptsPerScope": 900,
+    "incrementalPosts": 300,
+    "preLoginQueue": 64,
+    "scope": "API origin + Ably channel + local account",
+    "retry": "2,4,8,16,32,60 seconds, foreground only; receipt ID unchanged"
+  },
+  "backendRequired": "Authenticate senders; publish non-conflicting stable IDs; only acknowledge persisted receipts; replay unapplied events/latest unexpired presence. No real RTC, incoming calls, VoIP or person-to-person delivery is added by this integration."
+}

@@ -72,7 +72,6 @@ struct DiscoverView: View {
             guard let look = looks.first(where: { $0.id == requested }),
                   let reference = look.video, let url = store.mediaURL(reference) else { stopPlayback(); return }
             if ownedURL != url { stopPlayback() }
-            // A quick swipe must not start an off-screen video or a second audio stream.
             do { try await Task.sleep(for: .milliseconds(180)) } catch { return }
             guard !Task.isCancelled, playbackKey == requested else { return }
             ownedURL = url
@@ -171,7 +170,6 @@ struct DiscoverLook: View {
     }
 }
 
-/// Uses the same persisted state in the feed and post detail, including unlike.
 struct LookLikeButton: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

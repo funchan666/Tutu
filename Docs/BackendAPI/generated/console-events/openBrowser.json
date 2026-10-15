@@ -1,0 +1,6 @@
+{
+  "stitch": "OpenStyleDestination",
+  "destination": {
+    "address": "#{openUrl}"
+  }
+}

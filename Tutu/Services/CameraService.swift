@@ -53,7 +53,6 @@ import AVFoundation
                 continuation.resume(returning: (session.isRunning ? nil : "Couldn't start capture. Please try again.", audioReady))
             }
         }
-        // Starts and stops are serialized. Never let an old completion stop a newer session.
         guard generation == ticket, !Task.isCancelled else { return }
         ready = result.error == nil; microphoneAvailable = ready && result.audio; microphoneEnabled = microphoneAvailable
         if let error = result.error { status = error }

@@ -1,33 +1,5 @@
 import SwiftUI
 
-struct WelcomeCoinDrop: View {
-    @EnvironmentObject private var store: AppStore
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var appeared = false
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Color(red: 0.10, green: 0.035, blue: 0.18).opacity(0.92).ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: 14) {
-                        Text("TUTU · FIRST STYLE DROP").font(.outfit(size: 11, weight: .semibold)).tracking(2.4).foregroundStyle(Color(red: 0.90, green: 0.72, blue: 0.97))
-                        Artwork(name: "welcome-wardrobe").frame(height: min(geometry.size.height * 0.36, 275))
-                            .scaleEffect(appeared ? 1 : 0.82).offset(y: appeared ? 0 : 22)
-                            .rotationEffect(.degrees(appeared ? 0 : -7))
-                        Text("Your style.\nYour opening act.").font(.outfit(size: 32, weight: .bold)).tracking(-0.8).multilineTextAlignment(.center).foregroundStyle(.white)
-                        HStack(alignment: .firstTextBaseline, spacing: 8) {
-                            Text("+\(CoinEconomy.welcomeCoins)").font(.outfit(size: 54, weight: .bold)).contentTransition(.numericText())
-                            Text("COINS").font(.outfit(size: 12, weight: .semibold)).tracking(2)
-                        }.foregroundStyle(Color(red: 1, green: 0.81, blue: 0.91))
-                        Text("Already in your wallet.\nPick a runway frame or start your charm collection.").font(.outfit(size: 14)).multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.8))
-                        PinkButton(title: "Make an entrance") { store.finishWelcome() }.padding(.top, 8)
-                        Text("A one-time welcome gift. Chatting is always free.").font(.outfit(size: 11)).foregroundStyle(.white.opacity(0.65)).multilineTextAlignment(.center)
-                    }.padding(28).frame(maxWidth: 420).frame(maxWidth: .infinity).frame(minHeight: geometry.size.height)
-                }
-            }.onAppear { withAnimation(reduceMotion ? nil : .spring(response: 0.75, dampingFraction: 0.72)) { appeared = true } }
-        }.accessibilityAddTraits(.isModal).zIndex(80)
-    }
-}
 struct CoinSpendOverlay: View {
     @EnvironmentObject private var store: AppStore
     var body: some View {

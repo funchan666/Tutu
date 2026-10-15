@@ -9,7 +9,10 @@ struct WelcomeView: View {
     @State private var password = ""
     @State private var name = ""
     @State private var accepted = false
-    @State private var busy = false
+    @EnvironmentObject private var gateway: AtelierGateway
+    @Environment(\.scenePhase) private var scene
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    private var busy: Bool { gateway.busy }
     @State private var error = ""
     @State private var legal: LegalPage?
     @State private var showingConsentPrompt = false
@@ -17,31 +20,34 @@ struct WelcomeView: View {
     @AccessibilityFocusState private var promptFocused: Bool
     var body: some View {
         Group {
-            if emailMode || store.returnToLogin { form }
+            if gateway.mode == .standard && (emailMode || store.returnToLogin) { form }
             else {
                 GeometryReader { geometry in
                     VStack(spacing: 18) {
                         Spacer(minLength: 200)
                         VStack(spacing: 14) {
+                            if gateway.checking { arrivalFeedback }
+                            else if gateway.mode == .guestOnly {
+                                PinkButton(title: "Continue as Guest", busy: busy) { guard requireConsent() else { return }; gateway.guest() }
+                            } else {
                             SignInWithAppleButton(.signIn) { request in
+                                guard gateway.reserve() else { return }
                                 request.requestedScopes = [.fullName, .email]
                             } onCompletion: { result in
                                 guard requireConsent() else { return }
                                 switch result {
                                 case .success(let auth):
-                                    guard let credential = auth.credential as? ASAuthorizationAppleIDCredential else { error = "Apple sign-in is unavailable."; return }
-                                    do {
-                                        let display = credential.fullName.map { PersonNameComponentsFormatter().string(from: $0) }
-                                        try store.acceptAppleIdentity(userID: credential.user, name: display, email: credential.email)
-                                    } catch { self.error = error.localizedDescription }
+                                    guard let credential = auth.credential as? ASAuthorizationAppleIDCredential else { gateway.appleCancelled(); return }
+                                    let display = credential.fullName.map { PersonNameComponentsFormatter().string(from: $0) }
+                                    gateway.apple(user: credential.user, token: credential.identityToken, code: credential.authorizationCode, name: display, email: credential.email)
                                 case .failure(let failure):
+                                    gateway.appleCancelled()
                                     if (failure as? ASAuthorizationError)?.code != .canceled { error = "Apple sign-in couldn't be completed. Please try again." }
                                 }
-                            }.signInWithAppleButtonStyle(.white).frame(height: 54).clipShape(Capsule())
-                                .allowsHitTesting(accepted)
-                                .accessibilityHidden(!accepted)
+                            }.disabled(busy).signInWithAppleButtonStyle(.white).frame(height: 54).clipShape(Capsule())
+                                .allowsHitTesting(accepted && !busy)
+                                .accessibilityHidden(!accepted || busy)
                                 .overlay {
-                                    // Gate the tap before the genuine Apple authorization button receives it.
                                     if !accepted {
                                         Button { _ = requireConsent() } label: {
                                             Color.clear.contentShape(Rectangle())
@@ -52,10 +58,15 @@ struct WelcomeView: View {
                                     }
                                 }
                             PinkButton(title: "Continue With Email", asset: "button-email") {
+                                guard !busy else { return }
                                 guard requireConsent() else { return }
                                 error = ""
                                 emailMode = true
                             }
+                            }
+                            if busy { arrivalFeedback }
+                            if !gateway.error.isEmpty { Text(gateway.error).font(.tutuCaption).foregroundStyle(.white).multilineTextAlignment(.center) }
+                            if gateway.route == .webFailure, gateway.web != nil { PinkButton(title: "Try again") { gateway.retryWeb() } }
                             if !error.isEmpty { Text(ui: error).font(.tutuCaption).foregroundStyle(.white).multilineTextAlignment(.center) }
                             legalFooter(onPhoto: true)
                         }.padding(.horizontal, 22).padding(.bottom, 16)
@@ -68,7 +79,21 @@ struct WelcomeView: View {
         .overlay {
             if showingConsentPrompt { consentPrompt }
         }
+        .onChange(of: gateway.mode) { _, mode in
+            accepted = mode == .guestOnly; emailMode = false; store.returnToLogin = false
+        }
         .sheet(item: $legal) { LegalWebView(page: $0) }
+    }
+    private var arrivalFeedback: some View {
+        HStack(spacing: 10) {
+            TimelineView(.animation(minimumInterval: 0.3, paused: scene != .active || reduceMotion)) { context in
+                Artwork(name: "tab-party-active").frame(width: 16, height: 16)
+                    .opacity(reduceMotion ? 1 : 0.55 + 0.45 * abs(sin(context.date.timeIntervalSinceReferenceDate * 2)))
+            }
+            Text(busy ? "Preparing your visit…" : "Finding your entrance…")
+        }
+            .font(.tutuSubheadline).foregroundStyle(.white).padding(16).frame(maxWidth: .infinity)
+            .background(.white.opacity(0.12), in: Capsule()).accessibilityAddTraits(.updatesFrequently)
     }
     var form: some View {
         ScrollView {
@@ -84,15 +109,14 @@ struct WelcomeView: View {
                 Field(title: "Email Address", text: $email).keyboardType(.emailAddress).textContentType(.emailAddress)
                 Field(title: "Password", text: $password, secure: true).textContentType(creating ? .newPassword : .password)
                 legalFooter(onPhoto: false)
+                if !gateway.error.isEmpty { Text(gateway.error).font(.tutuCaption).foregroundStyle(Palette.pink) }
+                if gateway.route == .webFailure, gateway.web != nil { PinkButton(title: "Try again") { gateway.retryWeb() } }
                 if !error.isEmpty { Text(ui: error).font(.tutuSubheadline).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
                 PinkButton(title: creating ? "Create Account" : "Log In", asset: creating ? "button-register" : "button-login", busy: busy) {
                     guard requireConsent() else { return }
-                    busy = true; error = ""
-                    Task {
-                        defer { busy = false }
-                        do { try await store.authenticate(email: email, password: password, creating: creating, name: name); password = "" }
-                        catch { self.error = error.localizedDescription }
-                    }
+                    error = ""
+                    gateway.email(email, password: password, creating: creating, name: name)
+
                 }.padding(.top, 24)
                 Button(LocalizedStringKey(creating ? "Already have an account? Log In" : "Don't have an account? Create Account")) { creating.toggle(); error = "" }.disabled(busy).font(.tutuSubheadline.bold()).foregroundStyle(Palette.pink).frame(maxWidth: .infinity).padding(.vertical, 12)
             }.padding(20)
@@ -114,7 +138,6 @@ struct WelcomeView: View {
                 error = ""
             } label: {
                 ZStack {
-                    // Input chrome only; the checkmark is the supplied original artwork.
                     RoundedRectangle(cornerRadius: 5)
                         .fill(onPhoto ? Color.white.opacity(0.12) : Color.white)
                     RoundedRectangle(cornerRadius: 5)

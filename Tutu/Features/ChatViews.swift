@@ -16,8 +16,17 @@ struct InboxView: View {
 }
 struct SystemMessagesView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var gateway: AtelierGateway
     var body: some View { Page(title: "System Messages") { ScrollView { VStack(alignment: .leading, spacing: 16) {
         VStack(alignment: .leading, spacing: 12) { Text("Welcome to your style world").font(.tutuHeadline); Text("Find inspiration, collect your favourite looks, and make your profile your own.").font(.tutuSubheadline).foregroundStyle(Palette.secondary) }.panel()
+        ForEach(store.socialState.notices) { item in
+            Button { gateway.readNotice(item.id); store.show(item.title, item.body) } label: {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(item.title).font(.tutuHeadline).foregroundStyle(item.read ? Palette.ink : Palette.pink)
+                    Text(item.body).font(.tutuSubheadline).foregroundStyle(Palette.secondary).lineLimit(3)
+                }.frame(maxWidth: .infinity, alignment: .leading).panel()
+            }.buttonStyle(.plain)
+        }
         ForEach(Array((store.state?.ledger ?? []).prefix(20))) { item in VStack(alignment: .leading, spacing: 8) { Text(ui: item.title).font(.tutuHeadline); Text("\(item.amount > 0 ? "+" : "")\(item.amount) coins").font(.tutuSubheadline); Text(item.date, style: .date).font(.tutuCaption).foregroundStyle(Palette.secondary) }.frame(maxWidth: .infinity, alignment: .leading).panel() }
     }.padding(20) } } }
 }
@@ -108,7 +117,6 @@ struct ChatView: View {
     func send() {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || attachment != nil else { return }
         guard store.canContact(personID) else { return }
-        // Only a server acknowledgement may create a delivered message.
         store.show("Message not sent", "Messaging is unavailable. Your text and attachment are still here.")
     }
     func retry(_ message: ConversationMessage) { text = message.text; send() }

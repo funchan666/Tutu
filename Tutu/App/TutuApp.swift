@@ -1,29 +1,31 @@
 import SwiftUI
 
 @main struct TutuApp: App {
+    @UIApplicationDelegateAdaptor(AtelierAppDelegate.self) private var appDelegate
+    @StateObject private var gateway = AtelierGateway()
     @StateObject private var store = AppStore()
     @StateObject private var wallet = WalletService()
     var body: some Scene {
-        WindowGroup { StartupGateView().font(.tutuBody).environmentObject(store).environmentObject(wallet).environment(\.locale, store.appLanguage.locale).preferredColorScheme(.light).tint(Palette.pink) }
+        WindowGroup { StartupGateView().font(.tutuBody).environmentObject(store).environmentObject(wallet).environmentObject(gateway).environment(\.locale, store.appLanguage.locale).preferredColorScheme(.light).tint(Palette.pink) }
     }
 }
 enum Route: Hashable {
     case atelier, profile(String), chat(String), room(String), post(String), album(String, Int), wallet, shop(Bool), checkin, settings, editProfile, inbox, systemMessages, search, leaderboard, createRoom, compose, relationships(String), info(String), stylist(String, String), call(String, Bool), security, privacy, language
 }
 struct RootView: View {
+    @EnvironmentObject private var gateway: AtelierGateway
     @EnvironmentObject private var store: AppStore
     @State private var path: [Route] = []
     var body: some View {
         ZStack {
             NavigationStack(path: $path) {
-                // Profile editing is a pushed destination, never an authentication gate.
-                Group { if store.state == nil { WelcomeView() } else { MainTabs() } }
+                Group { if store.state != nil && gateway.route == .native { MainTabs() } else { WelcomeView() } }
                     .navigationDestination(for: Route.self) { route in destination(route) }
                     .toolbar(.hidden, for: .navigationBar)
             }.id(store.sessionID ?? "welcome")
                 .allowsHitTesting(store.accountExit == nil)
                 .accessibilityHidden(store.accountExit != nil)
-            if store.welcomeVisible { WelcomeCoinDrop() }
+
             CoinSpendOverlay()
             NoticeOverlay()
             AccountExitOverlay()
@@ -73,19 +75,25 @@ struct RootView: View {
     }
 }
 struct MainTabs: View {
+    @EnvironmentObject private var gateway: AtelierGateway
     @EnvironmentObject private var store: AppStore
     private let names = ["Style Live", "Party", "Create Your Look", "Discover", "Profile"]
     private let assets = ["tab-live", "tab-party", "tab-studio", "tab-discover", "tab-profile"]
     var body: some View {
         VStack(spacing: 0) {
             Group {
-                switch store.tab {
+                if Catalog.snapshot == nil {
+                    VStack(spacing: 16) {
+                        Text(gateway.contentLoading ? "Loading your style collection…" : gateway.contentError).font(.tutuSubheadline)
+                        if !gateway.contentLoading { PinkButton(title: "Try again") { gateway.reloadContent() } }
+                    }.padding(24)
+                } else { switch store.tab {
                 case 0: LiveHomeView()
                 case 1: PartyHomeView()
                 case 2: StyleStudioView()
                 case 3: DiscoverView()
                 default: MyProfileView()
-                }
+                } }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
             if let room = store.minimizedRoom {
                 NavigationLink(value: Route.room(room.id)) { HStack { if room.isBroadcasting == true { RoomLiveBadge() } else { Artwork(name: "icon-room-chat").frame(width: 30, height: 30) }; Text(room.title).font(.tutuCaption.bold()); Spacer(); Text("Open").font(.tutuCaption) }.padding(10).background(Palette.blush) }.buttonStyle(.plain)
@@ -98,51 +106,35 @@ struct MainTabs: View {
 }
 
 
-/// Matches LaunchScreen.storyboard: full-screen black, a 112pt centered icon,
-/// then three 8pt pink lights 28pt below it. No full-screen image scaling.
-struct StartupSplashView: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var pulsing = false
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Color.black
-                Image("brand-mascot").resizable().scaledToFit()
-                    .frame(width: 112, height: 112)
-                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                HStack(spacing: 8) {
-                    ForEach(0..<3) { index in
-                        Image("tab-party-active").resizable().scaledToFit()
-                            .frame(width: 8, height: 8)
-                            .opacity(reduceMotion ? 0.7 : (pulsing ? 1 : [0.35, 0.65, 1.0][index]))
-                            .scaleEffect(reduceMotion ? 1 : (pulsing ? 1.15 : 1))
-                            .animation(reduceMotion ? nil : .easeInOut(duration: 0.65).repeatForever(autoreverses: true).delay(Double(index) * 0.16), value: pulsing)
-                    }
-                }.position(x: geometry.size.width / 2, y: geometry.size.height / 2 + 88)
-            }
-        }.ignoresSafeArea().statusBarHidden(true)
-            .accessibilityElement(children: .ignore).accessibilityLabel("Tutu is loading")
-            .onAppear { pulsing = true }
-    }
-}
-
 struct StartupGateView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var wallet: WalletService
-    @State private var ready = false
+    @EnvironmentObject private var gateway: AtelierGateway
+    @Environment(\.scenePhase) private var scene
     var body: some View {
-        Group {
-            if ready { RootView() }
-            else { StartupSplashView() }
-        }.task {
-            guard !ready else { return }
-            await store.restoreSession()
-            guard !Task.isCancelled else { return }
-            wallet.start(store: store)
-            // Move on as soon as local restoration finishes; no fake progress or fixed delay.
-            ready = true
-        }.onChange(of: store.sessionID) { _, _ in
-            if ready { Task { await wallet.recover(store: store) } }
+        ZStack {
+            RootView().opacity(gateway.route == .web ? 0 : 1).allowsHitTesting(gateway.route != .web)
+                .accessibilityHidden(gateway.route == .web)
+            if let web = gateway.web {
+                AtelierWebHost(owner: web).ignoresSafeArea().opacity(gateway.route == .web ? 1 : 0)
+                    .allowsHitTesting(gateway.route == .web).accessibilityHidden(gateway.route != .web)
+                if gateway.route == .web { AtelierWebFeedback(owner: web) }
+            }
+            if gateway.route == .web { NoticeOverlay() }
+            if wallet.purchasing != nil {
+                Color.black.opacity(0.55).ignoresSafeArea().accessibilityHidden(true)
+                Text(wallet.paymentText).font(.tutuHeadline).foregroundStyle(.white).multilineTextAlignment(.center).padding(28)
+                    .accessibilityAddTraits(.isModal)
+            }
+        }.task { gateway.start(store: store, wallet: wallet); gateway.foreground(scene == .active) }
+        .onChange(of: scene) { _, phase in gateway.foreground(phase == .active) }
+        .onChange(of: store.sessionID) { old, new in
+            if old != nil && new == nil { wallet.sessionEnded(); gateway.sessionEnded() }
+            if new != nil { Task { await wallet.recover(store: store) } }
+        }
+        .onOpenURL { gateway.wake($0) }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.protectedDataDidBecomeAvailableNotification)) { _ in
+            Task { await wallet.recover(store: store) }
         }
     }
 }

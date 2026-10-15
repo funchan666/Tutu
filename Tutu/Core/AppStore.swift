@@ -5,27 +5,26 @@ import UserNotifications
     @Published private(set) var state: ProfileState?
     @Published var notice: Notice?
     @Published var tab = 0
+    @Published var socialScope: String?
+    var socialState: AtelierSocialState { socialScope.flatMap { state?.social?[$0] } ?? AtelierSocialState() }
     @Published var returnToLogin = false
     @Published private(set) var appLanguage = AppLanguage.saved
     @Published private(set) var accountExit: AccountExitProgress?
 
     func selectLanguage(_ language: AppLanguage) {
         guard language != appLanguage else { return }
-        // Save the account copy first; don't display success if storage failed.
         if state != nil, !commit({ $0.preferences.language = language.rawValue }) { return }
         UserDefaults.standard.set(language.rawValue, forKey: AppLanguage.preferenceKey)
         appLanguage = language
         syncReminder()
     }
     @Published var minimizedRoom: StyleRoom?
-    @Published var welcomeVisible = false
     @Published var coinPrompt: CoinSpend?
     @Published var walletRequest = 0
     private let files = FileManager.default
     let root: URL
     var sessionID: String? { state?.person.id }
     var me: Person { state?.person ?? Person(id: "", name: "Your name", handle: "you", photos: [], catalog: false) }
-    /// Legacy scripted arrivals are not actual follower relationships.
     var followerIDs: Set<String> {
         guard let state else { return [] }
         return Set(state.followers.subtracting(state.catalogArrivalIDs).filter { !isPersonHidden($0) })
@@ -44,7 +43,7 @@ import UserNotifications
     }
     var people: [Person] { Catalog.people.filter { !isPersonHidden($0.id) }.map { person($0.id) } }
     var looks: [Look] {
-        ((state?.looks ?? []) + Catalog.looks).filter {
+        ((state?.looks ?? []) + socialState.posts + Catalog.looks).filter {
             !isPersonHidden($0.authorID) && !isContentHidden("post", $0.id)
                 && !$0.media.contains(where: { isContentHidden("photo", $0) })
         }
@@ -86,8 +85,7 @@ import UserNotifications
         do { try files.createDirectory(at: root, withIntermediateDirectories: true); try recoverDeletionJournal() }
         catch { notice = Notice(title: "Storage unavailable", message: "Changes cannot be saved on this device right now.") }
     }
-    /// Restore off the main actor so the in-app launch artwork can remain responsive.
-    func restoreSession() async {
+    func restoreSession(isCurrent: @MainActor () -> Bool) async {
         guard state == nil, let id = UserDefaults.standard.string(forKey: "activeProfile"), UUID(uuidString: id) != nil else { return }
         let profileURL = location(id)
         do {
@@ -96,15 +94,17 @@ import UserNotifications
                 guard accounts.contains(where: { $0.id == id }) else { return nil }
                 return try JSONDecoder().decode(ProfileState.self, from: Data(contentsOf: profileURL))
             }.value
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, isCurrent(), UserDefaults.standard.string(forKey: "activeProfile") == id else { return }
             state = try restored.map { try profileWithDefaultAvatar($0) }
             if restored != nil { syncReminder() }
         } catch {
+            guard isCurrent(), !Task.isCancelled else { return }
             notice = Notice(title: "Could not open your profile", message: "Your saved data was left unchanged. Please sign in again.")
         }
     }
     func person(_ id: String) -> Person {
         var value = id == me.id ? me : Catalog.people.first(where: { $0.id == id }) ?? Person(id: id, name: "Member", handle: "member")
+        if let presence = socialState.presence[id] { value.isOnline = presence.expires > Date().timeIntervalSince1970 * 1000 && presence.online }
         value.photos.removeAll { isContentHidden("photo", $0) }
         if isContentHidden("photo", value.avatar) { value.avatar = "brand-mascot" }
         return value
@@ -124,12 +124,12 @@ import UserNotifications
     private func read(_ id: String) throws -> ProfileState {
         try profileWithDefaultAvatar(JSONDecoder().decode(ProfileState.self, from: Data(contentsOf: location(id))))
     }
-    /// Upgrade only the old placeholder. Never replace a photo chosen by the account owner.
     private func profileWithDefaultAvatar(_ profile: ProfileState) throws -> ProfileState {
-        guard profile.person.avatar.isEmpty || profile.person.avatar == "brand-mascot",
-              Catalog.profileAvatar != "brand-mascot" else { return profile }
         var updated = profile
-        updated.person.avatar = Catalog.profileAvatar
+        if updated.walletInstance == nil { updated.walletInstance = UUID() }
+        if (profile.person.avatar.isEmpty || profile.person.avatar == "brand-mascot"), Catalog.profileAvatar != "brand-mascot" {
+            updated.person.avatar = Catalog.profileAvatar
+        }
         try write(updated)
         return updated
     }
@@ -143,66 +143,29 @@ import UserNotifications
         do { try operation(&next); try write(next); state = next; return true }
         catch { show("Could not save", error.localizedDescription); return false }
     }
-    func authenticate(email: String, password: String, creating: Bool, name: String) async throws {
-        let email = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let emailPattern = #"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$"#
-        guard email.utf8.count <= 254,
-              (email.split(separator: "@").first?.utf8.count ?? 0) <= 64,
-              email.range(of: emailPattern, options: .regularExpression) != nil else {
-            throw TutuFailure.message("Enter a valid email address.")
-        }
-        guard !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw TutuFailure.message("Enter your password to continue.")
-        }
+    func contentDidChange() {
+        objectWillChange.send()
+        if let profile = state, let updated = try? profileWithDefaultAvatar(profile) { state = updated }
+    }
+    func installAuthenticatedProfile(email: String, name: String, appleID: String?) throws {
         var accounts = try AccountVault.load()
-        if !creating, let account = accounts.first(where: { $0.email == email && $0.appleUserID == nil }) {
-            // Email entry selects a local profile; it does not verify ownership or a password.
-            // Keep existing profile IDs, wallet balances and credentials unchanged.
-            state = try read(account.id)
-        } else {
-            if creating {
-                guard password.count >= 8 else { throw TutuFailure.message("Use a password with at least 8 characters.") }
-                guard !accounts.contains(where: { $0.email == email }) else { throw TutuFailure.message("An account with this email already exists on this device. Please log in.") }
-                guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw TutuFailure.message("Add your name.") }
-            }
-            let salt: Data
-            let verifier: Data
-            if creating {
-                salt = try AccountVault.salt()
-                verifier = try await Task.detached(priority: .userInitiated) { try AccountVault.hash(password, salt: salt) }.value
-            } else {
-                // Format-only entry never stores the supplied password.
-                salt = Data()
-                verifier = Data()
-            }
+        let existing = accounts.first { account in
+            if let appleID { return account.appleUserID == appleID }
+            return account.appleUserID == nil && account.email == email
+        }
+        if let existing { state = try read(existing.id) }
+        else {
             let id = UUID().uuidString
-            let account = LocalAccount(id: id, email: email, salt: salt, verifier: verifier)
-            let displayName = creating ? String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(40)) : "Style Friend"
-            var profile = ProfileState(person: Person(id: id, name: displayName, handle: "style" + id.prefix(6).lowercased(), birthday: nil, avatar: Catalog.profileAvatar, photos: [], catalog: false))
-            profile.welcomeEligible = true
+            var profile = ProfileState(person: Person(id: id, name: String(name.prefix(40)), handle: "style" + id.prefix(6).lowercased(), birthday: nil, avatar: Catalog.profileAvatar, photos: [], catalog: false))
+            profile.walletInstance = UUID(); profile.welcomeEligible = true
             try write(profile)
-            accounts.append(account)
+            accounts.append(LocalAccount(id: id, email: email, salt: Data(), verifier: Data(), appleUserID: appleID))
             do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
             state = profile
         }
         UserDefaults.standard.set(sessionID, forKey: "activeProfile"); returnToLogin = false; tab = 0; syncReminder()
     }
-    func acceptAppleIdentity(userID: String, name: String?, email: String?) throws {
-        var accounts = try AccountVault.load()
-        if let account = accounts.first(where: { $0.appleUserID == userID }) { state = try read(account.id) }
-        else {
-            let id = UUID().uuidString
-            var profile = ProfileState(person: Person(id: id, name: name?.isEmpty == false ? name! : "Style Friend", handle: "style" + id.prefix(6).lowercased(), birthday: nil, avatar: Catalog.profileAvatar, photos: [], catalog: false))
-            profile.welcomeEligible = true
-            try write(profile)
-            accounts.append(LocalAccount(id: id, email: email ?? "", salt: Data(), verifier: Data(), appleUserID: userID))
-            do { try AccountVault.save(accounts) } catch { try? files.removeItem(at: location(id)); throw error }
-            state = profile
-        }
-        UserDefaults.standard.set(sessionID, forKey: "activeProfile"); tab = 0; syncReminder()
-    }
-    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); welcomeVisible = false; coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = false; UserDefaults.standard.removeObject(forKey: "activeProfile") }
-    /// Keep the current screen behind the progress overlay until the success phase finishes.
+    func signOut() { UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["daily-checkin"]); coinPrompt = nil; notice = nil; state = nil; minimizedRoom = nil; tab = 0; returnToLogin = false; UserDefaults.standard.removeObject(forKey: "activeProfile") }
     func finishAccountSession(deleting: Bool) {
         guard accountExit == nil, let profile = state else { return }
         let id = profile.person.id
@@ -211,7 +174,6 @@ import UserNotifications
         let accountRoot = root
         Task { @MainActor in
             do {
-                // Give the progress state time to render, then perform file/Keychain work off the UI actor.
                 try await Task.sleep(for: .milliseconds(350))
                 if deleting {
                     try await Task.detached(priority: .userInitiated) {
@@ -223,6 +185,7 @@ import UserNotifications
                 guard sessionID == id else { accountExit = nil; return }
                 accountExit = AccountExitProgress(deleting: deleting, succeeded: true)
                 try await Task.sleep(for: .milliseconds(1300))
+                guard sessionID == id else { accountExit = nil; return }
                 signOut()
                 accountExit = nil
             } catch {
@@ -333,6 +296,8 @@ import UserNotifications
         return "media/" + file
     }
     func mediaURL(_ ref: String) -> URL? {
+        let ref = EditorialMedia.resolvedReference(ref)
+        if let url = URL(string: ref), ["http", "https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil { return url }
         if ref.hasPrefix("bundle/"), !ref.contains("..") {
             let name = String(ref.dropFirst(7)) as NSString
             return Bundle.main.url(forResource: name.deletingPathExtension, withExtension: name.pathExtension)

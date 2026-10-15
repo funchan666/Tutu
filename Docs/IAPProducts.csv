@@ -1,10 +1,10 @@
-product_id,type,display_name,description,total_coins,usd_price,origin,configuration_status
-izfxfjwpsvwjonwq,Consumable,450 Tutu Coins,Add 450 coins for avatar frames and gift collectibles.,450,0.99,User supplied,Requires App Store Connect configuration and sandbox verification
-qoohvxhjfzgwnzsv,Consumable,950 Tutu Coins,Add 950 coins for avatar frames and gift collectibles.,950,1.99,User supplied,Requires App Store Connect configuration and sandbox verification
-mvnosjxwqeapluwc,Consumable,"2,600 Tutu Coins","Add 2,600 coins for avatar frames and gift collectibles.",2600,4.99,User supplied,Requires App Store Connect configuration and sandbox verification
-gogeyhnqocosotoj,Consumable,"5,500 Tutu Coins","Add 5,500 coins for avatar frames and gift collectibles.",5500,9.99,User supplied,Requires App Store Connect configuration and sandbox verification
-gkduqkyagqmdczvp,Consumable,"12,000 Tutu Coins","Add 12,000 coins for avatar frames and gift collectibles.",12000,19.99,User supplied,Requires App Store Connect configuration and sandbox verification
-hnqvktmrcxpslwad,Consumable,"19,000 Tutu Coins","Add 19,000 coins for avatar frames and gift collectibles.",19000,29.99,Added,Requires App Store Connect configuration and sandbox verification
-wvioqagpchpyenva,Consumable,"33,000 Tutu Coins","Add 33,000 coins for avatar frames and gift collectibles.",33000,49.99,User supplied,Requires App Store Connect configuration and sandbox verification
-zbrynfqjvctmksae,Consumable,"48,000 Tutu Coins","Add 48,000 coins for avatar frames and gift collectibles.",48000,69.99,Added,Requires App Store Connect configuration and sandbox verification
-gmmdvhzpaszwhajc,Consumable,"72,000 Tutu Coins","Add 72,000 coins for avatar frames and gift collectibles.",72000,99.99,User supplied,Requires App Store Connect configuration and sandbox verification
+product_id,type,display_name,description,total_coins,usd_price,configuration_status
+izfxfjwpsvwjonwq,Consumable,450 Tutu Coins,Add 450 coins for Tutu extras.,450,0.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+qoohvxhjfzgwnzsv,Consumable,950 Tutu Coins,Add 950 coins for Tutu extras.,950,1.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+mvnosjxwqeapluwc,Consumable,2600 Tutu Coins,Add 2600 coins for Tutu extras.,2600,4.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+gogeyhnqocosotoj,Consumable,5500 Tutu Coins,Add 5500 coins for Tutu extras.,5500,9.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+gkduqkyagqmdczvp,Consumable,12000 Tutu Coins,Add 12000 coins for Tutu extras.,12000,19.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+hnqvktmrcxpslwad,Consumable,19000 Tutu Coins,Add 19000 coins for Tutu extras.,19000,29.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+wvioqagpchpyenva,Consumable,33000 Tutu Coins,Add 33000 coins for Tutu extras.,33000,49.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+zbrynfqjvctmksae,Consumable,48000 Tutu Coins,Add 48000 coins for Tutu extras.,48000,69.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.
+gmmdvhzpaszwhajc,Consumable,72000 Tutu Coins,Add 72000 coins for Tutu extras.,72000,99.99,Reference USD price only. Requires App Store Connect configuration and sandbox verification.

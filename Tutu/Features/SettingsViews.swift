@@ -220,7 +220,7 @@ struct MemberActions: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 ScrollView {
                     VStack(spacing: 10) {
-                        ForEach(["Harassment or bullying", "Sexual or unsafe content", "Spam or scam", "Privacy violation", "Underage user", "Other"], id: \.self) { option in
+                        ForEach(Catalog.snapshot?.settings.reportReasons ?? [], id: \.self) { option in
                             Button { reason = option } label: {
                                 HStack {
                                     Text(ui: option).font(.tutuSubheadline)

@@ -35,13 +35,10 @@ extension ProfileState {
                 guard s.welcomeGranted != true else { return }
                 s.creditCoins(CoinEconomy.welcomeCoins, title: "Your first style drop")
                 s.welcomeGranted = true
-                s.welcomeSeen = false
+                s.welcomeSeen = true
             }) else { return }
         }
-        if state?.welcomeSeen != true { welcomeVisible = true }
-    }
-    func finishWelcome() {
-        if commit({ $0.welcomeSeen = true }) { welcomeVisible = false }
+
     }
     func requestCoins(for item: CoinSpend.Item) {
         guard let id = sessionID else { return }
@@ -93,19 +90,7 @@ struct StarRankingEntry: Identifiable {
     var id: String { personID }
 }
 enum StarRankings {
-    // Fixed local presentation data, separate from every account's actual wallet ledger.
-    private static let featured = [
-        (id: "mia", daily: 2860, weekly: 18400, total: 86400),
-        (id: "lily", daily: 2240, weekly: 21600, total: 72800),
-        (id: "ella", daily: 1980, weekly: 12960, total: 96400),
-        (id: "ava", daily: 1640, weekly: 14800, total: 64200),
-        (id: "noah", daily: 1280, weekly: 9840, total: 53200),
-        (id: "leo", daily: 960, weekly: 11200, total: 48600),
-        (id: "film-01", daily: 720, weekly: 7680, total: 35800),
-        (id: "film-02", daily: 580, weekly: 6240, total: 42400),
-        (id: "film-04", daily: 400, weekly: 4960, total: 28600),
-        (id: "film-07", daily: 240, weekly: 3280, total: 19400)
-    ]
+    private static var featured: [AtelierSettings.Ranking] { Catalog.snapshot?.settings.rankings ?? [] }
     static func ownCoins(in state: ProfileState?, period: StarRankingPeriod, now: Date) -> Int {
         (state?.ledger ?? []).filter { period.includes($0.date, now: now) }.reduce(0) { $0 + $1.coinsSpent }
     }

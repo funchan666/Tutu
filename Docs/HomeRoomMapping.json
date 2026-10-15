@@ -2,7 +2,7 @@
   {
     "roomID": "room-film-01",
     "source": "videoss/berivansworld_DXTxotbCFv2.mp4",
-    "video": "bundle/editorial-video-01.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/berivansworld_DXTxotbCFv2.mp4",
     "cover": "bundle/editorial-video-01.jpg",
     "coverFrame": 0,
     "featured": true,
@@ -13,7 +13,7 @@
   {
     "roomID": "room-film-02",
     "source": "videoss/btwsononicole_DcrMBIDRT7V.mp4",
-    "video": "bundle/editorial-video-02.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/btwsononicole_DcrMBIDRT7V.mp4",
     "cover": "bundle/editorial-video-02.jpg",
     "coverFrame": 0,
     "featured": true,
@@ -24,7 +24,7 @@
   {
     "roomID": "room-film-04",
     "source": "videoss/kllippy_Dcto5kmxS5l.mp4",
-    "video": "bundle/editorial-video-04.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/kllippy_Dcto5kmxS5l.mp4",
     "cover": "bundle/editorial-video-04.jpg",
     "coverFrame": 0,
     "featured": true,
@@ -35,7 +35,7 @@
   {
     "roomID": "room-film-07",
     "source": "videoss/ommyoungg_DbOIQ1boH7u.mp4",
-    "video": "bundle/editorial-video-07.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/ommyoungg_DbOIQ1boH7u.mp4",
     "cover": "bundle/editorial-video-07.jpg",
     "coverFrame": 0,
     "featured": false,
@@ -46,7 +46,7 @@
   {
     "roomID": "room-film-09",
     "source": "videoss/rebecaoksana_DceUNyXIVDh.mp4",
-    "video": "bundle/editorial-video-09.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/rebecaoksana_DceUNyXIVDh.mp4",
     "cover": "bundle/editorial-video-09.jpg",
     "coverFrame": 0,
     "featured": false,
@@ -57,7 +57,7 @@
   {
     "roomID": "room-film-11",
     "source": "videoss/yiyimiao__DNF51OzSjXw.mp4",
-    "video": "bundle/editorial-video-11.mp4",
+    "video": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/videoss/yiyimiao__DNF51OzSjXw.mp4",
     "cover": "bundle/editorial-video-11.jpg",
     "coverFrame": 0,
     "featured": false,

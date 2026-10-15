@@ -156,7 +156,6 @@ struct CheckinView: View {
                 PageHeader(title: "Daily Check")
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
-                        // Keep the supplied illustration and its baked-in headline above the rewards.
                         Color.clear.frame(height: max(120, geometry.size.width * 850 / 780 - geometry.safeAreaInsets.top - 50))
                             .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 14) {
@@ -204,7 +203,6 @@ struct CheckinView: View {
             }
             .background {
                 GeometryReader { canvas in
-                    // Full-width page artwork, anchored to the screen top without cropping its headline.
                     Image("checkin-background").resizable().scaledToFit()
                         .frame(width: canvas.size.width, height: canvas.size.width * 1688 / 780, alignment: .top)
                         .frame(maxHeight: .infinity, alignment: .top)

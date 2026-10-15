@@ -5,7 +5,7 @@
       "roomID": "room-lily",
       "hostID": "lily",
       "title": "Vintage finds & coffee",
-      "cover": "bundle/editorial-photo-003.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/CsA20mbIOMa.jpg",
       "viewerCount": 48,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 4
@@ -14,7 +14,7 @@
       "roomID": "room-ava",
       "hostID": "ava",
       "title": "Everyday outfit chat",
-      "cover": "bundle/editorial-photo-006.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DCwo-Zeo8a-.jpg",
       "viewerCount": 52,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 4
@@ -23,7 +23,7 @@
       "roomID": "room-editorial-001",
       "hostID": "editorial-001",
       "title": "Color stories",
-      "cover": "bundle/editorial-photo-001.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/C8Wlj2ztRRQ.jpg",
       "viewerCount": 46,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 5
@@ -32,7 +32,7 @@
       "roomID": "room-editorial-005",
       "hostID": "editorial-005",
       "title": "The layering lounge",
-      "cover": "bundle/editorial-photo-005.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DBq5wjxo9Vy.jpg",
       "viewerCount": 55,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 5
@@ -41,7 +41,7 @@
       "roomID": "room-editorial-008",
       "hostID": "editorial-008",
       "title": "Weekend wardrobe",
-      "cover": "bundle/editorial-photo-008.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DLxaZp_RvIC.jpg",
       "viewerCount": 49,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 4
@@ -50,7 +50,7 @@
       "roomID": "room-noah",
       "hostID": "noah",
       "title": "City style conversations",
-      "cover": "bundle/editorial-photo-028.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd15BYGEeNh.jpg",
       "viewerCount": 51,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 4
@@ -59,7 +59,7 @@
       "roomID": "room-editorial-011",
       "hostID": "editorial-011",
       "title": "Vintage closet favorites",
-      "cover": "bundle/editorial-photo-011.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DPgU5XYiGjX.jpg",
       "viewerCount": 47,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 4
@@ -68,7 +68,7 @@
       "roomID": "room-editorial-013",
       "hostID": "editorial-013",
       "title": "Minimal mood",
-      "cover": "bundle/editorial-photo-013.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DQymf_Jkr08.jpg",
       "viewerCount": 54,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 4
@@ -77,7 +77,7 @@
       "roomID": "room-mia",
       "hostID": "mia",
       "title": "Streetwear styling session",
-      "cover": "bundle/editorial-photo-002.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/CoX_AVDIo8R.jpg",
       "viewerCount": 53,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 5
@@ -86,7 +86,7 @@
       "roomID": "room-ella",
       "hostID": "ella",
       "title": "Your capsule wardrobe",
-      "cover": "bundle/editorial-photo-004.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Cx0kqFPAiX6.jpg",
       "viewerCount": 49,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 4
@@ -95,7 +95,7 @@
       "roomID": "room-editorial-007",
       "hostID": "editorial-007",
       "title": "Sneakers meet tailoring",
-      "cover": "bundle/editorial-photo-007.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DG2-qKJgO4U.jpg",
       "viewerCount": 51,
       "voiceTopic": "Outfit Tips",
       "occupiedSeatCount": 5
@@ -104,7 +104,7 @@
       "roomID": "room-editorial-009",
       "hostID": "editorial-009",
       "title": "What are you wearing today?",
-      "cover": "bundle/editorial-photo-009.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DOawKQZjP1U.jpg",
       "viewerCount": 48,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 5
@@ -113,7 +113,7 @@
       "roomID": "room-editorial-010",
       "hostID": "editorial-010",
       "title": "Coffee break style chat",
-      "cover": "bundle/editorial-photo-010.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DPW0geFDJtk.jpg",
       "viewerCount": 54,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 5
@@ -122,7 +122,7 @@
       "roomID": "room-editorial-024",
       "hostID": "editorial-024",
       "title": "After-hours outfit club",
-      "cover": "bundle/editorial-photo-024.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbnonSGoA2s.jpg",
       "viewerCount": 50,
       "voiceTopic": "Style Talk",
       "occupiedSeatCount": 4
@@ -131,7 +131,7 @@
       "roomID": "room-leo",
       "hostID": "leo",
       "title": "Denim through the decades",
-      "cover": "bundle/editorial-photo-022.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbDxPnbDd_M.jpg",
       "viewerCount": 52,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 4
@@ -140,7 +140,7 @@
       "roomID": "room-editorial-012",
       "hostID": "editorial-012",
       "title": "Thrift finds worth keeping",
-      "cover": "bundle/editorial-photo-012.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DQ9P8IWiLk-.jpg",
       "viewerCount": 46,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 5
@@ -149,7 +149,7 @@
       "roomID": "room-editorial-014",
       "hostID": "editorial-014",
       "title": "Retro accessories club",
-      "cover": "bundle/editorial-photo-014.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DRhoWwnDLCz.jpg",
       "viewerCount": 53,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 5
@@ -158,7 +158,7 @@
       "roomID": "room-editorial-025",
       "hostID": "editorial-025",
       "title": "The secondhand style edit",
-      "cover": "bundle/editorial-photo-025.jpg",
+      "cover": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbsodcNGdPW.jpg",
       "viewerCount": 50,
       "voiceTopic": "Vintage Finds",
       "occupiedSeatCount": 5

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "namespace": "tutu",
+  "baseURL": "https://fjnvs.fdhewhf.top",
+  "sourceAppId": "75252159",
+  "endpoints": {
+    "loginMethods": "/tutu/arrival/entry",
+    "authenticate": "/tutu/passport/fitting-pass",
+    "confirmPurchase": "/tutu/wallet/settlement"
+  },
+  "endpointResponses": {
+    "loginMethods": "responses/login-methods.json",
+    "authenticate": "responses/auth-response.json",
+    "confirmPurchase": "responses/purchase-response.json"
+  },
+  "requestFields": {
+    "appVersion": "look_edition",
+    "pushToken": "ribbon_signal",
+    "deviceNo": "atelier_stamp",
+    "transactionId": "apple_stitch",
+    "payload": "receipt_fabric",
+    "callbackResult": "checkout_thread",
+    "roomPushMsgType": "runway_delivery"
+  },
+  "h5Fields": {
+    "orderCode": "fittingOrder",
+    "batchNo": "wardrobeProduct",
+    "openUrl": "styleDestination"
+  },
+  "additionalLoginFields": {
+    "loginType": "arrival_kind",
+    "scene": "arrival_scene",
+    "email": "style_mailbox",
+    "password": "style_secret",
+    "appleToken": "apple_identity",
+    "appleAuthorizationCode": "apple_exchange",
+    "appleUserId": "apple_member"
+  },
+  "responseFields": {
+    "code": "code",
+    "message": "message",
+    "data": "data",
+    "token": "token"
+  },
+  "loginEntryField": "atelier_passage",
+  "ably": {
+    "clientId": "app",
+    "serverClientIds": [
+      "serve"
+    ],
+    "allowMissingServerClientId": true,
+    "rewind": 1
+  },
+  "eventTransport": {
+    "jsonEnvelopeEventKinds": [
+      "logout"
+    ]
+  },
+  "events": {
+    "linkSuccessMessage": {
+      "name": "RunwayDoorReady",
+      "discriminator": [
+        "stitch"
+      ],
+      "template": {
+        "stitch": "RunwayDoorReady",
+        "runway": {
+          "destination": "#{h5Url}"
+        }
+      }
+    },
+    "pay": {
+      "name": "WardrobeCheckout",
+      "discriminator": [
+        "stitch"
+      ],
+      "template": {
+        "stitch": "WardrobeCheckout",
+        "checkout": {
+          "thread": "#{orderCode}",
+          "product": "#{batchNo}"
+        }
+      }
+    },
+    "logout": {
+      "name": "AtelierSessionEnded",
+      "discriminator": [
+        "stitch"
+      ],
+      "template": {
+        "stitch": "AtelierSessionEnded"
+      }
+    },
+    "openBrowser": {
+      "name": "OpenStyleDestination",
+      "discriminator": [
+        "stitch"
+      ],
+      "template": {
+        "stitch": "OpenStyleDestination",
+        "destination": {
+          "address": "#{openUrl}"
+        }
+      }
+    }
+  },
+  "contentRoutes": [
+    {
+      "key": "editorial",
+      "path": "/tutu/catalog/editorial",
+      "file": "responses/editorial.json"
+    },
+    {
+      "key": "rooms",
+      "path": "/tutu/catalog/rooms",
+      "file": "responses/rooms.json"
+    },
+    {
+      "key": "atelier",
+      "path": "/tutu/catalog/atelier",
+      "file": "responses/atelier.json"
+    }
+  ],
+  "extensionProtocolFile": "social-protocol.json"
+}

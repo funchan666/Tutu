@@ -1,0 +1,6 @@
+﻿scope,semantic_key,actual_field
+responseFields,code,code
+responseFields,message,message
+responseFields,data,data
+responseFields,token,token
+loginEntry,field,atelier_passage

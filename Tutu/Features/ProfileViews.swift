@@ -9,9 +9,9 @@ struct ProfileStats: View {
     }
     var body: some View {
         HStack(spacing: 0) {
-            stat(isMe ? store.followerIDs.count : 12 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 7 + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
+            stat(isMe ? store.followerIDs.count : (Catalog.snapshot?.settings.counters[person.id]?.followers ?? 0) + (store.state?.following.contains(person.id) == true ? 1 : 0), "Follower", route: isMe ? .relationships("Follower") : nil)
             Divider().frame(height: 26)
-            stat(isMe ? store.state?.following.count ?? 0 : 8 + (Catalog.people.firstIndex(where: { $0.id == person.id }) ?? 0) * 3, "Following", route: isMe ? .relationships("Following") : nil)
+            stat(isMe ? store.state?.following.count ?? 0 : (Catalog.snapshot?.settings.counters[person.id]?.following ?? 0), "Following", route: isMe ? .relationships("Following") : nil)
             Divider().frame(height: 26)
             stat(isMe ? store.likedLooks.count : receivedLikes, "Likes", route: nil)
         }.padding(.vertical, 12)
@@ -271,7 +271,6 @@ struct ProfileView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             if !person.interests.isEmpty {
-                // Adaptive cells keep every interest visible instead of clipping a single row.
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), alignment: .leading)], alignment: .leading, spacing: 8) {
                     ForEach(person.interests, id: \.self) { interest in
                         Text(interest).font(.outfit(size: 12, weight: .medium))
@@ -414,7 +413,6 @@ struct AlbumView: View {
 }
 
 
-/// Compact live-room business card. Profile and album navigation happen after dismissal.
 struct RoomHostCard: View {
     @EnvironmentObject private var store: AppStore
     let personID: String

@@ -287,7 +287,6 @@ struct StylistChatView: View {
         activeTask = Task { @MainActor in
             defer { if activeTurn == request.id { busy = false; submittedQuestion = nil; activeTurn = nil } }
             do {
-                // A short, cancelable presentation pause; no external processing is implied.
                 try await Task.sleep(for: .milliseconds(Int.random(in: 900...1600)))
                 let reply = try await StylistService.reply(to: request.question, style: style, occasion: occasion, history: history)
                 try Task.checkCancellation()

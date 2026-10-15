@@ -38,7 +38,6 @@ struct RoomView: View {
     var host: Person { store.person(room.hostID) }
     var own: Bool { room.hostID == store.me.id }
     var videoURL: URL? { room.video.flatMap { store.mediaURL($0) } }
-    // The configured count includes the current viewer, but excludes the host.
     private var audience: [Person] {
         let candidates = store.people.filter { $0.id != room.hostID && $0.id != store.me.id }
         guard !candidates.isEmpty else { return [] }
@@ -53,7 +52,6 @@ struct RoomView: View {
     private var supportsRoomActivity: Bool { room.voice || videoURL != nil }
     private var voiceSeatCount: Int { max(2, min(room.seats, 8)) }
     private var voiceMembers: [Person] {
-        // Authored local seat assignments, not a connected audio session.
         let guestCount = 3 + room.id.utf8.reduce(0) { $0 + Int($1) } % 2
         return [host] + Array(audience.prefix(min(guestCount, voiceSeatCount - 2)))
     }
@@ -309,7 +307,6 @@ struct RoomView: View {
             requestedVoiceSeat = seat
         }
         guard let seat = requestedVoiceSeat else { return }
-        // Waiting UI only: never request microphone access or synthesize host approval.
         store.show("Waiting for host approval", "Mic \(seat + 1) · Your microphone stays off while you wait. You can cancel your request at any time.")
     }
     private var cameraStatus: some View {
@@ -507,12 +504,13 @@ struct RoomView: View {
         if saveMyEntry(entry) { append(entry) }
     }
     private func advanceActivity() {
-        // Authored local room activity; never treated as received network messages or gifts.
         guard !audience.isEmpty else { return }
-        let captions = ["Love how this look comes together!", "The layers make it.", "That color combination is so good.", "Saving this outfit idea.", "I'd wear this for a city afternoon.", "The details are everything.", "Such a clean silhouette.", "This is my kind of style."]
+        let captions = Catalog.snapshot?.settings.roomCaptions ?? []
+        guard !captions.isEmpty else { return }
         let person = audience[activityStep % audience.count]
         if activityStep % 4 == 3 {
             let gifts = Gift.all.filter { ["heart", "flowers", "star", "bear"].contains($0.id) }
+            guard !gifts.isEmpty else { return }
             let gift = gifts[(activityStep / 4) % gifts.count]
             append(RoomMessage(id: "activity:\(room.id):\(person.id):gift:\(gift.id)", personID: person.id, text: "Cheered with " + gift.name, giftID: gift.id))
         } else { append(RoomMessage(id: "activity:\(room.id):\(person.id):text:\(activityStep % captions.count)", personID: person.id, text: captions[activityStep % captions.count])) }
@@ -755,7 +753,6 @@ struct CallView: View {
         }
         .onDisappear { stopCapture() }
         .onChange(of: scene) { _, phase in
-            // System permission sheets temporarily make the app inactive. Do not dismiss then.
             if phase == .background { endCall() }
         }
         .onChange(of: store.sessionID) { _, _ in endCall() }

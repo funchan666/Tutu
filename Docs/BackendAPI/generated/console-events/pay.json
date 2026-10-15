@@ -1,0 +1,7 @@
+{
+  "stitch": "WardrobeCheckout",
+  "checkout": {
+    "thread": "#{orderCode}",
+    "product": "#{batchNo}"
+  }
+}

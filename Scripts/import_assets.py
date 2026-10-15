@@ -17,7 +17,7 @@ mapping={
 'style-minimalist':'Rectangle 965','style-streetwear':'Rectangle 966','style-vintage':'Rectangle 967',
 }
 # Reviewed unused exports remain in sucai, outside the application bundle.
-excluded = {'button-done', 'button-recharge', 'button-start-live', 'icon-online', 'button-create-voice', 'button-send', 'button-next', 'icon-lucky-star', 'button-search', 'icon-calendar', 'button-entry', 'leaderboard-background', 'popup-background', 'button-create-live', 'notification-art', 'heading-feed', 'icon-live', 'icon-support', 'control-tick'}
+excluded = {'icon-flame', 'live-banner', 'voice-banner', 'style-minimalist', 'style-streetwear', 'style-vintage', 'button-done', 'button-recharge', 'button-start-live', 'icon-online', 'button-create-voice', 'button-send', 'button-next', 'icon-lucky-star', 'button-search', 'icon-calendar', 'button-entry', 'leaderboard-background', 'popup-background', 'button-create-live', 'notification-art', 'heading-feed', 'icon-live', 'icon-support', 'control-tick'}
 dest.mkdir(parents=True,exist_ok=True)
 manifest=[]
 for name,raw in mapping.items():

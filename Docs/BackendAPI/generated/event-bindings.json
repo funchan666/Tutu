@@ -1,0 +1,49 @@
+{
+  "linkSuccessMessage": {
+    "name": "RunwayDoorReady",
+    "discriminator": [
+      "stitch"
+    ],
+    "values": {
+      "h5Url": [
+        "runway",
+        "destination"
+      ]
+    }
+  },
+  "pay": {
+    "name": "WardrobeCheckout",
+    "discriminator": [
+      "stitch"
+    ],
+    "values": {
+      "orderCode": [
+        "checkout",
+        "thread"
+      ],
+      "batchNo": [
+        "checkout",
+        "product"
+      ]
+    }
+  },
+  "logout": {
+    "name": "AtelierSessionEnded",
+    "discriminator": [
+      "stitch"
+    ],
+    "values": {}
+  },
+  "openBrowser": {
+    "name": "OpenStyleDestination",
+    "discriminator": [
+      "stitch"
+    ],
+    "values": {
+      "openUrl": [
+        "destination",
+        "address"
+      ]
+    }
+  }
+}

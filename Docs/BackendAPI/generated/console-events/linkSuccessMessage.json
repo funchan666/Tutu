@@ -1,0 +1,6 @@
+{
+  "stitch": "RunwayDoorReady",
+  "runway": {
+    "destination": "#{h5Url}"
+  }
+}

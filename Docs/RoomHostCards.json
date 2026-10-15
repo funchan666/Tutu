@@ -5,9 +5,9 @@
       "personID": "film-01",
       "name": "Harper",
       "portraitSource": "picss/Dd6vaB5DmUu.jpg",
-      "avatar": "bundle/editorial-photo-031.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd6vaB5DmUu.jpg",
       "photos": [
-        "bundle/editorial-photo-031.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd6vaB5DmUu.jpg",
         "bundle/editorial-video-01.jpg"
       ],
       "roleProfile": {
@@ -27,9 +27,9 @@
       "personID": "film-02",
       "name": "Riley",
       "portraitSource": "picss/DdzLHFTiT1o.jpg",
-      "avatar": "bundle/editorial-photo-045.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DdzLHFTiT1o.jpg",
       "photos": [
-        "bundle/editorial-photo-045.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DdzLHFTiT1o.jpg",
         "bundle/editorial-video-02.jpg"
       ],
       "roleProfile": {
@@ -49,9 +49,9 @@
       "personID": "film-04",
       "name": "Jordan",
       "portraitSource": "picss/DeUJGJqEooW.jpg",
-      "avatar": "bundle/editorial-photo-061.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeUJGJqEooW.jpg",
       "photos": [
-        "bundle/editorial-photo-061.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DeUJGJqEooW.jpg",
         "bundle/editorial-video-04.jpg"
       ],
       "roleProfile": {
@@ -71,9 +71,9 @@
       "personID": "film-07",
       "name": "Avery",
       "portraitSource": "picss/DbnonSGoA2s.jpg",
-      "avatar": "bundle/editorial-photo-024.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbnonSGoA2s.jpg",
       "photos": [
-        "bundle/editorial-photo-024.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/DbnonSGoA2s.jpg",
         "bundle/editorial-video-07.jpg"
       ],
       "roleProfile": {
@@ -93,9 +93,9 @@
       "personID": "film-09",
       "name": "Blair",
       "portraitSource": "picss/Dd15BYGEeNh.jpg",
-      "avatar": "bundle/editorial-photo-028.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd15BYGEeNh.jpg",
       "photos": [
-        "bundle/editorial-photo-028.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/Dd15BYGEeNh.jpg",
         "bundle/editorial-video-09.jpg"
       ],
       "roleProfile": {
@@ -115,9 +115,9 @@
       "personID": "film-11",
       "name": "Cameron",
       "portraitSource": "picss/CsA20mbIOMa.jpg",
-      "avatar": "bundle/editorial-photo-003.jpg",
+      "avatar": "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/CsA20mbIOMa.jpg",
       "photos": [
-        "bundle/editorial-photo-003.jpg",
+        "https://pub-1e78b29dc9034ab296832bae0193b76c.r2.dev/pics/CsA20mbIOMa.jpg",
         "bundle/editorial-video-11.jpg"
       ],
       "roleProfile": {
