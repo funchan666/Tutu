@@ -1,11 +1,27 @@
 import Foundation
 import CoreFoundation
 
-enum ConfiguredRealtimeError: Error {
-    case invalidTicket
+enum ConfiguredRealtimeError: LocalizedError {
     case unresolvedPlaceholder
     case invalidConnectionContainer
     case invalidFrame
+    case legacyTokenRequest
+    case invalidConnectionURL
+    case invalidSubscription
+    case invalidIdentity
+    case invalidExpiry
+    case expiredConnection
+
+    var errorDescription: String? {
+        switch self {
+        case .expiredConnection:
+            return "Your sign-in connection has expired. Please sign in again."
+        case .invalidFrame:
+            return "The connection was interrupted. Please try again."
+        default:
+            return "Sign-in is temporarily unavailable. Please try again later."
+        }
+    }
 }
 
 struct ConfiguredRealtimeTicket {
@@ -25,7 +41,7 @@ struct ConfiguredRealtimeTicket {
                 throw ConfiguredRealtimeError.unresolvedPlaceholder
             }
             guard let bytes = text.data(using: .utf8),
-                  let object = try JSONSerialization.jsonObject(with: bytes) as? [String: Any] else {
+                  let object = (try? JSONSerialization.jsonObject(with: bytes)) as? [String: Any] else {
                 throw ConfiguredRealtimeError.invalidConnectionContainer
             }
             fields = object
@@ -36,6 +52,12 @@ struct ConfiguredRealtimeTicket {
     }
 
     init(connectionFields: [String: Any], now: Date = Date()) throws {
+        if connectionFields["url"] == nil,
+           connectionFields["keyName"] != nil,
+           connectionFields["mac"] != nil,
+           connectionFields["capability"] != nil {
+            throw ConfiguredRealtimeError.legacyTokenRequest
+        }
         guard let rawURL = connectionFields["url"] as? String,
               !rawURL.contains(where: { $0.isWhitespace }),
               let components = URLComponents(string: rawURL),
@@ -43,33 +65,37 @@ struct ConfiguredRealtimeTicket {
               let host = components.host, !host.isEmpty,
               components.user == nil, components.password == nil,
               components.fragment == nil,
-              let url = URL(string: rawURL),
-              let attach = connectionFields["attach"] as? [String: Any], !attach.isEmpty,
+              let url = URL(string: rawURL) else {
+            throw ConfiguredRealtimeError.invalidConnectionURL
+        }
+        guard let attach = connectionFields["attach"] as? [String: Any], !attach.isEmpty,
               JSONSerialization.isValidJSONObject(attach),
               let bytes = try? JSONSerialization.data(withJSONObject: attach),
               let json = String(data: bytes, encoding: .utf8) else {
-            throw ConfiguredRealtimeError.invalidTicket
+            throw ConfiguredRealtimeError.invalidSubscription
         }
         var room: String?
         if let value = connectionFields["roomId"] {
             guard let text = value as? String,
                   !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                throw ConfiguredRealtimeError.invalidTicket
+                throw ConfiguredRealtimeError.invalidIdentity
             }
             room = text
         }
         var client: String?
         if let value = connectionFields["clientId"] {
             guard let text = value as? String, text == "app" else {
-                throw ConfiguredRealtimeError.invalidTicket
+                throw ConfiguredRealtimeError.invalidIdentity
             }
             client = text
         }
         var expiry: Date?
         if let value = connectionFields["expiresAt"] {
-            guard let milliseconds = Self.number(value),
-                  milliseconds / 1000 > now.timeIntervalSince1970 else {
-                throw ConfiguredRealtimeError.invalidTicket
+            guard let milliseconds = Self.number(value) else {
+                throw ConfiguredRealtimeError.invalidExpiry
+            }
+            guard milliseconds / 1000 > now.timeIntervalSince1970 else {
+                throw ConfiguredRealtimeError.expiredConnection
             }
             expiry = Date(timeIntervalSince1970: milliseconds / 1000)
         }
@@ -132,7 +158,7 @@ struct ConfiguredRealtimeConfiguration {
               ConfiguredRealtimeTicket.integer(attach["action"]) == 10,
               let channel = attach["channel"] as? String,
               !channel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw ConfiguredRealtimeError.invalidTicket
+            throw ConfiguredRealtimeError.invalidSubscription
         }
         self.ticket = ticket
         channelName = channel

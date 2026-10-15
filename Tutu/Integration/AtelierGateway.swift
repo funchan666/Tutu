@@ -152,7 +152,14 @@ import Alamofire
     }
     private func configuration(_ data: [String: Any]) throws -> ConfiguredRealtimeConfiguration {
         guard let value = data["token"] else { throw AtelierHTTP.Failure.invalidResponse }
-        return try ConfiguredRealtimeConfiguration(connectionValue: value)
+        do {
+            return try ConfiguredRealtimeConfiguration(connectionValue: value)
+        } catch let failure as ConfiguredRealtimeError {
+            #if DEBUG
+            print("[Tutu connection configuration] \(failure)")
+            #endif
+            throw failure
+        }
     }
     private func connect(_ config: ConfiguredRealtimeConfiguration, attempt id: UUID) {
         let client = ConfiguredRealtimeTransport(); transport = client; channelName = config.channelName
