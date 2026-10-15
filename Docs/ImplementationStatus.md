@@ -435,3 +435,13 @@ RoomLiveBadge移至Design/Components统一复用：深紫胶囊底、粉色细�
 StyleDirection由用户素材编号改为stylist-*语义Asset Catalog名称，风格选择卡片与咨询页缩略图共用新图片。卡片改为3:4比例，缩略图42×56，使用fit显示完整穿搭；单选逻辑、用户自主上传的灵感照片、咨询计费及历史记录未改变。原创资源和每张生成提示词清单见Docs/StyleArtwork.md。
 
 静态核对8个独立图像、资源JSON与引用、原用户照片引用退出StyleDirection、git diff格式；未编译、测试或启动模拟器。
+
+## 聊天语音/视频入口与本地摄像头预览（2026-10-15）
+
+ChatView 顶部新增并列的 Voice / Video 原创图标按钮，保留资料和更多入口；通话页复用原创紫色房间背景，增加独立预览区域、麦克风开关、摄像头切换和底部结束按钮。Claude Design 指导原生层级与操作区布局，Garden gpt-image-2 / imagegen 生成图标；Taste 与网页工作流不适用于本次原生修改。素材及提示词见 Docs/CallArtwork.md。
+
+CameraService 通过 AVCaptureDevice 请求真正的系统权限：语音仅麦克风，视频摄像头与麦克风。视频支持摄像头授权后在麦克风拒绝时继续本地预览，提供设置入口；真实 AVCaptureVideoPreviewLayer 展示自己，支持前后摄像头切换并保留静音状态。采集配置和启动/停止使用串行队列，检查实际会话启动结果，退出、后台或会话改变时停止采集并取消任务。系统权限弹窗仅使 scene inactive 时不再关闭通话页。
+
+仍保留互相关注才能进入的规则；本地预览与音频采集未接入远端信令或实时通信服务，不模拟接通、响铃和通话计时。页面明确显示未连接。补充五语言相关文案，沿用现有 Camera / Microphone 用途说明。
+
+已进行源码分支、PNG透明通道、Asset Catalog JSON、文案键、Info.plist、资源与git diff静态核对。依照用户要求未编译、运行测试或启动模拟器；权限弹窗、采集、设备切换及排版仍需真机验收。

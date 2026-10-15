@@ -770,7 +770,7 @@ struct CallView: View {
                 Text(ui: video ? "Video call" : "Voice call").font(.tutuCaption).foregroundStyle(.white.opacity(0.75))
             }
             Spacer()
-            ArtButton(label: "Close call", asset: "nav-close", size: 28) { endCall() }
+            ArtButton(label: "End call", asset: "nav-close", size: 28) { endCall() }
                 .background(.white.opacity(0.9), in: Circle())
         }
     }
