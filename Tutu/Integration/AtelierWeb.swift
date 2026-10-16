@@ -2,6 +2,25 @@ import SwiftUI
 import WebKit
 import AVFoundation
 
+@MainActor private final class AtelierCaptureAuthorization {
+    static let shared = AtelierCaptureAuthorization()
+    private var pending: [AVMediaType: Task<Bool, Never>] = [:]
+
+    func authorize(_ kind: AVMediaType) async -> Bool {
+        if let task = pending[kind] { return await task.value }
+        switch AVCaptureDevice.authorizationStatus(for: kind) {
+        case .authorized: return true
+        case .notDetermined:
+            let task = Task { await AVCaptureDevice.requestAccess(for: kind) }
+            pending[kind] = task
+            let allowed = await task.value
+            pending[kind] = nil
+            return allowed
+        default: return false
+        }
+    }
+}
+
 @MainActor final class AtelierWeb: NSObject, ObservableObject, WKNavigationDelegate, WKUIDelegate {
     @Published private(set) var error: String?
     @Published private(set) var loading = false
@@ -16,10 +35,21 @@ import AVFoundation
     private var finished = false
     private var mounted = false
     private var stopped = false
+    private var committedOrigin: String?
+    private var cleaningMedia = false
+    private var mediaCompletions: [() -> Void] = []
     private var permissionTask: Task<Void, Never>?
-    private var permissions: [(WKMediaCaptureType, (WKPermissionDecision) -> Void)] = []
+    private struct Permission {
+        let id = UUID()
+        let page: UUID
+        let origin: String
+        let type: WKMediaCaptureType
+        let complete: (WKPermissionDecision) -> Void
+    }
+    private var permissions: [Permission] = []
     var onReady: (() -> Void)?
     var onFailure: (() -> Void)?
+    var isReady: Bool { !stopped && mounted && finished && validResponse && error == nil }
     init(url: URL) {
         self.url = url; trustedOrigin = Self.origin(url)
         let configuration = WKWebViewConfiguration()
@@ -33,33 +63,65 @@ import AVFoundation
         view.scrollView.contentInsetAdjustmentBehavior = .never
         view.isOpaque = false; view.backgroundColor = .white
     }
-    static func origin(_ url: URL) -> String { "\(url.scheme?.lowercased() ?? "")://\(url.host?.lowercased() ?? ""):\(url.port ?? (url.scheme == "https" ? 443 : 80))" }
+    static func origin(_ url: URL) -> String { "\(url.scheme?.lowercased() ?? "")://\(url.host?.lowercased() ?? ""):\(url.port ?? (url.scheme?.lowercased() == "https" ? 443 : 80))" }
+    private static func origin(_ origin: WKSecurityOrigin) -> String? {
+        let scheme = origin.protocol.lowercased(), host = origin.host.lowercased()
+        guard scheme == "https", !host.isEmpty, host != "null" else { return nil }
+        return "\(scheme)://\(host):\(origin.port == 0 ? 443 : origin.port)"
+    }
     func attach() { mounted = true; deliver() }
     func load(_ url: URL? = nil) {
         guard !stopped else { return }
         if let url { self.url = url }
         if let current { retiredNavigations.insert(ObjectIdentifier(current)) }
         self.current = nil; view.stopLoading()
-        beginNavigation(); current = view.load(URLRequest(url: self.url))
-        if current == nil { fail() }
+        beginNavigation()
+        let id = pageID, destination = self.url
+        stopMedia { [weak self] in
+            guard let self, !self.stopped, self.pageID == id, self.url == destination else { return }
+            self.current = self.view.load(URLRequest(url: destination))
+            if self.current == nil { self.fail() }
+        }
     }
     private func beginNavigation() {
         pageID = UUID(); validResponse = false; finished = false; loading = true; error = nil
+        committedOrigin = nil; cancelPermissions()
         timeout?.cancel()
         let id = pageID
         let timer = DispatchWorkItem { [weak self] in guard let self, self.pageID == id else { return }; self.fail() }
         timeout = timer; DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: timer)
     }
     func stop() {
-        stopped = true; pageID = UUID(); timeout?.cancel(); permissionTask?.cancel(); permissionTask = nil
-        let pending = permissions; permissions = []; pending.forEach { $0.1(.deny) }
+        guard !stopped else { return }
+        stopped = true; pageID = UUID(); timeout?.cancel(); committedOrigin = nil; cancelPermissions()
+        loading = false; finished = false; mounted = false
         onReady = nil; onFailure = nil; view.navigationDelegate = nil; view.uiDelegate = nil; view.stopLoading()
-        view.pauseAllMediaPlayback(completionHandler: nil)
+        stopMedia()
     }
-    private func deliver() { if !stopped && mounted && finished && validResponse { onReady?() } }
+    private func stopMedia(completion: (() -> Void)? = nil) {
+        if let completion { mediaCompletions.append(completion) }
+        guard !cleaningMedia else { return }
+        cleaningMedia = true
+        view.pauseAllMediaPlayback {
+            self.view.setCameraCaptureState(.none) {
+                self.view.setMicrophoneCaptureState(.none) {
+                    self.cleaningMedia = false
+                    let completions = self.mediaCompletions; self.mediaCompletions = []
+                    completions.forEach { $0() }
+                }
+            }
+        }
+    }
+    private func cancelPermissions() {
+        permissionTask?.cancel(); permissionTask = nil
+        let pending = permissions; permissions = []
+        pending.forEach { $0.complete(.deny) }
+    }
+    private func deliver() { if isReady { onReady?() } }
     private func fail() { guard !stopped else { return }; timeout?.cancel(); pageID = UUID(); loading = false; finished = false; validResponse = false
         if let current { retiredNavigations.insert(ObjectIdentifier(current)) }
-        current = nil; view.stopLoading(); error = "This page could not be opened. Please try again."; onFailure?() }
+        current = nil; committedOrigin = nil; cancelPermissions(); view.stopLoading(); stopMedia()
+        error = "This page could not be opened. Please try again."; onFailure?() }
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         guard !stopped, let navigation, !retiredNavigations.contains(ObjectIdentifier(navigation)) else { return }
         if current !== navigation {
@@ -80,6 +142,10 @@ import AVFoundation
         guard !stopped, current === navigation, validResponse else { return }
         timeout?.cancel(); loading = false; finished = true; deliver()
     }
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        guard !stopped, current === navigation, let url = webView.url else { return }
+        committedOrigin = Self.origin(url)
+    }
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) { if current === navigation { fail() } }
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) { if current === navigation { fail() } }
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) { fail() }
@@ -88,30 +154,35 @@ import AVFoundation
         if navigationAction.targetFrame == nil { load(url); decisionHandler(.cancel) } else { decisionHandler(.allow) }
     }
     func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
-        let port = origin.port == 0 ? (origin.protocol == "https" ? 443 : 80) : origin.port
-        let requested = "\(origin.protocol.lowercased())://\(origin.host.lowercased()):\(port)"
-        guard !stopped, frame.isMainFrame, requested == trustedOrigin else { decisionHandler(.deny); return }
-        permissions.append((type, decisionHandler)); processPermissions()
+        guard webView === view, let requested = Self.origin(origin),
+              Self.origin(frame.securityOrigin) == requested, acceptsCapture(from: requested),
+              type == .camera || type == .microphone || type == .cameraAndMicrophone else {
+            decisionHandler(.deny); return
+        }
+        permissions.append(Permission(page: pageID, origin: requested, type: type, complete: decisionHandler))
+        processPermissions()
+    }
+    private func acceptsCapture(from origin: String) -> Bool {
+        guard !stopped, !cleaningMedia, error == nil, let top = view.url else { return false }
+        return origin == trustedOrigin && committedOrigin == origin && Self.origin(top) == origin
     }
     private func processPermissions() {
         guard permissionTask == nil, !permissions.isEmpty else { return }
+        let page = pageID
         permissionTask = Task { @MainActor in
-            while !permissions.isEmpty && !Task.isCancelled {
-                let type = permissions[0].0
+            while let request = permissions.first, !Task.isCancelled, pageID == page {
+                guard request.page == page, acceptsCapture(from: request.origin) else {
+                    permissions.removeFirst().complete(.deny); continue
+                }
+                let type = request.type
                 var allowed = true
-                if type == .camera || type == .cameraAndMicrophone { allowed = await authorize(.video) }
-                if type == .microphone || type == .cameraAndMicrophone { let mic = await authorize(.audio); allowed = allowed && mic }
-                guard !Task.isCancelled, !stopped, !permissions.isEmpty else { return }
-                permissions.removeFirst().1(allowed ? .grant : .deny)
+                if type == .camera || type == .cameraAndMicrophone { allowed = await AtelierCaptureAuthorization.shared.authorize(.video) }
+                guard !Task.isCancelled, pageID == page, !stopped else { return }
+                if type == .microphone || type == .cameraAndMicrophone { let mic = await AtelierCaptureAuthorization.shared.authorize(.audio); allowed = allowed && mic }
+                guard !Task.isCancelled, pageID == page, !stopped, permissions.first?.id == request.id else { return }
+                permissions.removeFirst().complete(allowed && acceptsCapture(from: request.origin) ? .grant : .deny)
             }
-            permissionTask = nil
-        }
-    }
-    private func authorize(_ kind: AVMediaType) async -> Bool {
-        switch AVCaptureDevice.authorizationStatus(for: kind) {
-        case .authorized: return true
-        case .notDetermined: return await AVCaptureDevice.requestAccess(for: kind)
-        default: return false
+            if pageID == page, !Task.isCancelled { permissionTask = nil }
         }
     }
 }

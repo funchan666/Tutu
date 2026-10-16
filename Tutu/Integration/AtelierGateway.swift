@@ -62,7 +62,7 @@ import Alamofire
         if active {
             AtelierPush.shared.foreground()
             transport?.resume()
-            if readyWeb { finish(as: .web) }
+            if readyWeb, web?.isReady == true { finish(as: .web) }
             if !busy, store?.state == nil { detectEntry() }
             if let store, let wallet { Task { await wallet.recover(store: store) } }
             drainEvents()
@@ -250,10 +250,10 @@ import Alamofire
         route = .preparingWeb; let id = attempt
         let owner = AtelierWeb(url: url)
         owner.onReady = { [weak self] in guard let self, self.attempt == id else { return }; self.readyWeb = true; if self.active { self.finish(as: .web) } }
-        owner.onFailure = { [weak self] in guard let self, self.attempt == id else { return }; if self.route != .web { self.route = .webFailure; self.busy = false; self.error = "This page could not be opened. Please try again." } }
+        owner.onFailure = { [weak self] in guard let self, self.attempt == id else { return }; self.readyWeb = false; if self.route != .web { self.route = .webFailure; self.busy = false; self.error = "This page could not be opened. Please try again." } }
         web = owner; owner.load()
     }
-    func retryWeb() { guard let web else { return }; busy = true; error = ""; route = .preparingWeb; web.load() }
+    func retryWeb() { guard let web else { return }; busy = true; readyWeb = false; error = ""; route = .preparingWeb; web.load() }
     private func finish(as destination: RouteState) {
         guard route != .native, route != .web, !committing, let store, let identity else { return }
         committing = true; routeDeadline?.cancel(); connectionDeadline?.cancel()

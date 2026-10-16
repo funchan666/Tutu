@@ -37,9 +37,9 @@ struct AtelierOrder: Codable, Equatable, Identifiable {
                 let order = try JSONDecoder().decode(AtelierOrder.self, from: data)
                 guard order.id.uuidString == key else { continue }
                 orders.append(order)
-            } catch let error as DecodingError {
+            } catch is DecodingError {
                 #if DEBUG
-                print("[Tutu orders] quarantined undecodable record \(key): \(error)")
+                print("[Tutu orders] quarantined undecodable record")
                 #endif
             }
         }

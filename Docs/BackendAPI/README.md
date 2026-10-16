@@ -136,3 +136,20 @@
 后台必须动态展开占位符，不要把某次连接 URL 或房间值固化进模板。url 应是完整有效 wss 地址，roomId 应是非空实际房间字符串。可选 expiresAt 若日后返回，按现有解析器采用 Unix 毫秒数；本次模板不虚构期限。
 
 **验证边界**：本次完成模板生成及源码/JSON/差异静态检查，未编译、未运行自动化测试、未启动 App、未建立诊断 WebSocket、未触发支付。已授权的线上请求仅确认旧模板的实际响应结构；新版模板尚需用户导入保存，再核对占位符展开值与订阅结果。未宣称登录已经恢复。后台订阅动作依据：[Ably 原生连接与 attach 协议](https://ably.com/blog/how-to-connect-to-ably-directly-part-1)。
+
+## 2026-10-16 · Prada 增量核对与媒体生命周期同步
+
+复用 App ID `75252159`、原 API origin、Bundle ID、六个接口、四个核心事件和现有原生 WebSocket。未重新接入或生成后台协议；两份导入模板均未改变，无需为本次客户端修改重新导入。
+
+| 范围 | 本次实际核对入口与结论 |
+| --- | --- |
+| F01–F03 契约、内容、工程 | `contract.json`、最终双模板、`IntegrationContract`、`AtelierHTTP.content`、`Gateway.reloadContent`、`AtelierSnapshot.validate`：仍为 POST 空对象、三路并行后原子安装，保留本地互动；离线审计核对 6 个接口、86 条人物记录、24 个房间、30 条评论、114 项媒体引用、33 个 Swift target 成员及依赖。权限用途和 Bundle Scheme 保持有效配置。 |
+| F04–F06 认证与实时 | `AtelierAppDelegate` → `AtelierPush.waitForToken` → `arrivalFields`；`Gateway.authenticate/configuration/connect` → `ConfiguredRealtimeTransport`：保留五秒 APNs 等待、单字段入口、`data.token` 的 webSocketUrl/roomId 模板、原生连接、attach/ready/消息分发、续期与回执。未增加 rtLink HTTP、Ably SDK 或新字段。 |
+| F07 媒体与权限 | `AtelierWeb.requestMediaCapturePermissionFor` 同时比较已认证 origin、已提交主文档、当前顶层 URL、请求 origin 和 frame.securityOrigin；不再一律拒绝同源 iframe，未授权跨域或不透明来源仍拒绝。新建 `AtelierCaptureAuthorization` 位于现有 target 文件内，仅合并 B 面尚未完成的系统授权任务；首次系统提示保留，已授权复用，拒绝不反复申请。每个网页权限请求绑定 pageID，导航/失败/停止时仅拒绝一次，异步返回不能授权旧页或清除新队列。 |
+| F07 清理与重试 | `load/fail/stop` → `stopMedia`：串行暂停播放、结束相机采集、结束麦克风采集；清理中的重复请求合并，重试等待旧清理完成，再核对 pageID、owner 和目标地址后 load。重复 stop 无副作用。项目没有 `setAllMediaPlaybackSuspended` 调用，本次没有新增挂起计数或无依据的 resume。短暂 inactive 不停止或重建网页。 |
+| F07 音频所有权 | 已追踪 `VoiceRecorder.start/listen/stop/clean` 和 `CameraService`；原生录音与 WebKit 采集继续使用既有音频管理。B 预加载不增加 setCategory/setActive，不强制扬声器、不在网页退出时全局停音，也不覆盖已有 playAndRecord。没有建立新的全局音频租约或强制 playback 策略。H5 来电资源、用户手势、播放与 WebRTC 连接仍需真实页面及设备核对。 |
+| F08、F11 路由与退出 | `Gateway.foreground` 现在同时核对 `AtelierWeb.isReady`；网页失败/重试清除 readyWeb，防止旧的就绪标记在回前台时提交网页。原三秒无地址 A 分支、单次路由提交、WebView 重试反馈和 sessionEnded/reset 清理保留。 |
+| F09 支付 | `WalletService.start/buy/process/finish/recover` → `AtelierOrders`、`AtelierReceipt`：仍为唯一 StoreKit 1 observer，hostLocal/ablyServer 逐单来源、原收据验证、权益幂等、Keychain 写入回读、五字段确认及补单原样保留。只将账本解码失败的 Debug 日志改为固定分类，避免输出原订单标识和解码上下文。 |
+| F10 业务 | 原 `AtelierSocial`、消息回执、在线状态、邀请及本地内容操作保持不变；未新增 RTC、VoIP、CallKit、H5 桥或模拟铃声。 |
+
+完成源码与差异审阅、SDK 公开媒体 API 可用性核对、现有离线数据/资源/target 审计及 `git diff --check`。没有新增文件、依赖或待删除资源引用，没有扩展清理到无关业务文件。未编译、类型检查、测试、启动 App、请求业务接口或验证真实支付；宿主调用链已调整，设备/H5/双向音视频/铃声效果未验证。
